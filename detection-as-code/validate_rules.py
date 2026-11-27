@@ -93,6 +93,16 @@ def load_pin():
     )
 
 
+def _duration_seconds(value):
+    """Parse '10s' / '5m' / '1h' / '2d'. None when unparseable."""
+    if not isinstance(value, str):
+        return None
+    m = re.fullmatch(r"\s*(\d+)\s*([smhd])\s*", value)
+    if not m:
+        return None
+    return int(m.group(1)) * {"s": 1, "m": 60, "h": 3600, "d": 86400}[m.group(2)]
+
+
 def check(path, pinned, allowed_tactics, version):
     errors = []
     text = path.read_text(encoding="utf-8")
@@ -185,6 +195,32 @@ def check(path, pinned, allowed_tactics, version):
         errors.append("detection.condition missing")
     if "correlation" in doc and "rules" not in doc.get("correlation", {}):
         errors.append("correlation block has no rules")
+
+    # Suppression arithmetic. Every rule declares dedup_window and
+    # min_eval_interval, and nothing checked that they are sane: an eval interval
+    # longer than the dedup window means a rule can fire inside its own
+    # suppression gap, and a declared-but-unparsed duration is worse than none.
+    durations = {}
+    for key in ("dedup_window", "min_eval_interval"):
+        value = doc.get(key)
+        secs = _duration_seconds(value)
+        if value is not None and secs is None:
+            errors.append(f"{key} {value!r} is not a duration like 10s / 5m / 1h")
+        durations[key] = secs
+    if durations.get("dedup_window") and durations.get("min_eval_interval"):
+        if durations["min_eval_interval"] >= durations["dedup_window"]:
+            errors.append(
+                f"min_eval_interval {doc['min_eval_interval']} >= dedup_window "
+                f"{doc['dedup_window']}: the rule re-fires inside its own suppression window")
+
+    # Sysmon event 26 is FileDelete, added in Sysmon 11; a rule selecting it
+    # under sysmon_min_version < 15 is claiming a build that cannot emit it.
+    det_text = str(doc.get("detection", "")) + str(doc.get("correlation", ""))
+    floor = doc.get("sysmon_min_version")
+    if isinstance(floor, int):
+        if re.search(r"EventID:\s*(?:\[^\]]*\b)?26\b", det_text) and floor < 11:
+            errors.append(f"selects Sysmon 26 (FileDelete, added in 11) but "
+                          f"sysmon_min_version is {floor}")
 
     if not isinstance(doc.get("references"), list) or not doc["references"]:
         errors.append("references must be a non-empty list")

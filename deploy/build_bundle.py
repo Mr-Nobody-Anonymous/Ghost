@@ -56,6 +56,44 @@ def conversion_stamp(results):
     return "sha256:" + digest.hexdigest()[:16]
 
 
+# dedup_key tokens are conceptual ("host", "user", "dst"); a SIEM needs field
+# names. `host::host` is CIM lookup syntax and is invalid in
+# alert.suppress.fields, which takes plain field names.
+DEDUP_FIELD = {
+    "host": "host", "user": "user", "src": "src", "dst": "dest",
+    "process": "process_name", "target": "target_filename",
+    "directory": "file_path", "mutex": "process_name",
+}
+
+
+def _dedup_note(doc, backend):
+    """How to apply the rule's declared suppression on the target platform.
+
+    Emitted as guidance, not as SPL: pySigma produces the search, and suppression
+    in Splunk is a saved-search setting (`alert.suppress`), not a query clause.
+    Rewriting the SPL to dedupe would change what the rule proves.
+    """
+    raw = doc.get("dedup_key") or ""
+    key = raw.replace("rule:" + str(doc.get("id")) + ":", "").strip(":")
+    tokens = [x for x in key.split(":") if x]
+    fields = [DEDUP_FIELD.get(x, x) for x in tokens]
+    window = doc.get("dedup_window") or "5m"
+    interval = doc.get("min_eval_interval") or "1m"
+    note = {
+        "dedup_tokens": tokens,
+        "suppress_fields": fields,
+        "suppress_period": window,
+        "min_schedule": interval,
+        "unknown_tokens": [x for x in tokens if x not in DEDUP_FIELD],
+    }
+    if backend == "splunk":
+        note["splunk_savedsearch"] = (
+            "alert.suppress = 1; alert.suppress.fields = " + ", ".join(fields) +
+            f"; alert.suppress.period = {window}; "
+            f"alert.schedule — not faster than {interval}")
+    return note
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--backend", required=True, choices=["splunk", "elastic", "kusto"])
@@ -101,6 +139,14 @@ def main():
                 "level": doc.get("level"),
                 "lifecycle": doc.get("lifecycle"),
                 "correlation": bool(entry.get("correlation")),
+                # Suppression travels with the query. A rule that ships without
+                # these fires once per event: 37 rules x every matching process
+                # create is an unusable alert queue, and the numbers exist in the
+                # source but were never emitted anywhere.
+                "dedup_key": doc.get("dedup_key"),
+                "dedup_window": doc.get("dedup_window"),
+                "min_eval_interval": doc.get("min_eval_interval"),
+                "dedup_note": _dedup_note(doc, args.backend),
             })
         else:
             excluded.append({

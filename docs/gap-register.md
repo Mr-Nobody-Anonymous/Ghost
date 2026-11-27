@@ -23,7 +23,7 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | 8 | **Rules that could not fire on the telemetry they claimed** | Sysmon `23` for a delete (it is 26), `TargetImage` = a DLL on Sysmon 10, double-escaped path literals, a URI rule requiring a path *and* a query. | All fixed, with a field-contract check that rejects these shapes by name |
 | 9 | **The Sysmon config enabled nothing useful** | Archive path did not exist; the ProcessAccess selection could never match; it claimed EID 24 was off while enabling it. | Rewritten, XML-parsed, hash-pinned in `baseline/manifest.json` |
 | 10 | **No deployable artifact** | 37 rules and nothing a SIEM could ingest. | `deploy/build_bundle.py` emits real pySigma query text + manifest, refuses stale conversion results |
-| 11 | **Silent skips** | A missing dependency made stages "pass". | 9-stage gate; an absent dependency is a failure |
+| 11 | **Silent skips** | A missing dependency made stages "pass". | 10-stage gate; an absent dependency is a failure |
 | 12 | **The staleness check could not fail** | `deploy/build_bundle.py` compared a wall clock, then a stamp derived only from the stored results. Both agreed with themselves. | Stamp is sha256 over the rule files *and* the outcomes; a test edits a rule and asserts the build exits 1 |
 | 13 | **The gate rewrote the tree** | Wall clock in `conversion.json` and in the matrix header made `git status` dirty after every run, which hides real changes. | Two consecutive gate runs leave the tree clean |
 

@@ -95,6 +95,37 @@ class RuleTests(unittest.TestCase):
             self.assertEqual(set(d.get("tactics", []) or []), expected,
                              f"{f.name}: tactics should be exactly {sorted(expected)}")
 
+    def test_deploy_bundle_carries_suppression(self):
+        """A bundle of 37 queries with no dedup policy is 37 alert floods.
+
+        Every rule declares dedup_key / dedup_window / min_eval_interval and
+        nothing consumed them: pySigma emits the search and the suppression is a
+        saved-search setting, so the values have to travel in the manifest or
+        they do not exist operationally.
+        """
+        conv = ROOT / "attack" / "conversion.json"
+        if not conv.is_file():
+            self.skipTest("no conversion results")
+        out = ROOT / "dist" / "suppress-test.spl"
+        man = ROOT / "dist" / "suppress-test.json"
+        out.parent.mkdir(exist_ok=True)
+        r = subprocess.run(
+            [sys.executable, str(ROOT / "deploy" / "build_bundle.py"),
+             "--backend", "splunk", "--out", str(out), "--manifest", str(man)],
+            capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        data = json.loads(man.read_text())
+        self.assertTrue(data["deployable"])
+        for row in data["deployable"]:
+            note = row.get("dedup_note") or {}
+            self.assertTrue(note.get("suppress_fields"), f"{row['path']} has no fields")
+            self.assertTrue(note.get("suppress_period"), f"{row['path']} has no window")
+            self.assertFalse(note.get("unknown_tokens"),
+                             f"{row['path']}: unmapped dedup tokens {note['unknown_tokens']}")
+            self.assertIn("alert.suppress", note.get("splunk_savedsearch", ""))
+        out.unlink()
+        man.unlink()
+
     def test_deploy_bundle_refuses_stale_conversion(self):
         """A bundle built from results that predate a rule edit ships an unproven query.
 

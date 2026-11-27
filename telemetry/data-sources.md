@@ -12,7 +12,8 @@ uncollected field appear.
 
 | Field | Event / source | Notes |
 |---|---|---|
-| `EventID` | Sysmon 1, 8, 10, 11, 12-14, 19-21, 22, 26; Security 4663 | always present |
+| `EventID` | Sysmon 1, 8, 10, 11, 12-14, 19-21, 22, 26; Security 4663 | always present; the Sigma/Elastic name |
+| `EventCode` | same events, **Splunk only** | Splunk's name for `EventID` in a Windows channel. A hunt query written for Splunk uses this; a rule never does |
 | `Computer` | every event | the only join key shared by Sysmon and Security |
 | `Image` | Sysmon 1, 26 | full path of the acting process |
 | `ParentImage` | Sysmon 1 | full path of the parent process |

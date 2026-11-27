@@ -9,31 +9,36 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-echo "[1/9] structural validation (schema, Sigma status, ATT&CK pin, conversion claims)"
+echo "[1/10] structural validation (schema, Sigma status, ATT&CK pin, conversion claims)"
 python3 detection-as-code/validate_rules.py
 
-echo "[2/9] rule and contract tests"
+echo "[2/10] rule and contract tests"
 python3 -m unittest discover -s tests -p 'test_*.py'
 
-echo "[3/9] rule evaluation against concrete fixtures (TP/FP/sequence/frequency)"
+echo "[3/10] rule evaluation against concrete fixtures (TP/FP/sequence/frequency)"
 python3 detection-as-code/evaluate.py
 
-echo "[4/9] fixtures match their rules (stale fixture = failing test)"
+echo "[4/10] fixtures match their rules (stale fixture = failing test)"
 python3 tools/generate_fixtures.py --check
 
-echo "[5/9] telemetry field contract (every field a rule reads is documented)"
+echo "[5/10] emulation descriptors verify: every rule matches its expected event"
+python3 emulation/emit_expected_events.py >/dev/null
+python3 tools/generate_fixtures.py --check
+
+echo "[6/10] telemetry field contract (every field a rule reads is documented)"
 python3 pipeline/field_contract.py --strict
 
-echo "[6/9] query lint (hunt queries parse and use documented fields)"
+echo "[7/10] query + Suricata lint (hunt queries, signatures, SIDs, ATT&CK metadata)"
 python3 pipeline/lint_queries.py
+python3 pipeline/lint_suricata.py
 
-echo "[7/9] PENDING ratchet"
+echo "[8/10] PENDING ratchet"
 python3 ci/pending_ratchet.py main
 
-echo "[8/9] backend conversion: every rule's declared support is measured"
+echo "[9/10] backend conversion: every rule's declared support is measured"
 python3 ci/convert_check.py --backends splunk elastic kusto --quiet
 
-echo "[9/9] coverage + deployable bundle + package"
+echo "[10/10] coverage + deployable bundle + package"
 python3 tools/generate_matrix.py
 python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl
 mkdir -p dist

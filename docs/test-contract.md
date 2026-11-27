@@ -43,7 +43,7 @@ from these tests alone.
 | 1. Field assertions | fixture `assert_fields`, asserted against the event that matched | **enforced**; assertions must appear on a matching event, not any OR-branch |
 | 2. State reset | lab procedure only | **not enforced** - nothing verifies the VM was restored |
 | 3. Independent capture | `tools/capture_kit.py` + `lifecycle` state machine | **not achieved** - every fixture is derived from its rule |
-| 4. Failure semantics | `ci/gate.sh` (9 stages) | **enforced**, including a negative test that the gate fails on a broken rule |
+| 4. Failure semantics | `ci/gate.sh` (10 stages) | **enforced**, including a negative test that the gate fails on a broken rule |
 | 5. NTP discipline | lab procedure only | **not enforced** |
 | 6. Timeout | evaluator rejects out-of-window sequences | **enforced** for sequences only |
 

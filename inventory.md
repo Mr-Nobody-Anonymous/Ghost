@@ -18,7 +18,7 @@ claims; the Status column states which one holds.
 | Persistence | `schtasks /Create /SC ONLOGON` | T1053.005 | `schtask_onlogon.yml` | rule converts; no capture |
 | Persistence | WMI filter + consumer + binding | T1546.003 | `wmi_subscription_triple.yml` + 3 member rules | sequence converts on Splunk only; no capture |
 | Persistence | Startup folder script | T1547.001 | `startup_folder_cmd.yml` | rule converts; no capture |
-| C2 | `X-Id`/`X-Seq` headers, `/poll?id=&seq=`, browser UA | T1071.001 | `beacon_custom_headers.yml`, Suricata 9001001-9001003 | **header retention unproven**; the proxy export must keep custom headers |
+| C2 | `X-Id`/`X-Seq` headers, `/poll?id=&seq=`, browser UA | T1071.001 | `beacon_custom_headers.yml`, Suricata 1000001-1000003 | **header retention unproven**; the proxy export must keep custom headers |
 | C2 | jittered long-poll periodicity | T1071.001 | `beaconing_frequency.yml`, `beacon_interval_shift.yml` | count correlation converts on Splunk only; **jitter/variance analytics not implemented** |
 | C2 | self-signed TLS, `CERT_NONE`, JA3 | T1071.001 | `host_selfsigned_tls.yml`, `network/ja3-x509.md` | **telemetry gap** for the host half; the JA3 script is unexercised |
 | C2 | DGA fallback, NXDOMAIN burst | T1568.002 | `dga_high_entropy_dns.yml`, `nxdomain_long_label.yml`, `dns_query_burst_host.yml` | converts (Splunk for the correlation); requires DNS telemetry |

@@ -41,8 +41,8 @@ included or accepted. All emulation is loopback-only and inert.
 ## Quick start
 
 ```bash
-bash ci/gate.sh                       # 9 stages: validate, test, evaluate, fixtures,
-                                     # contract, lint, ratchet, convert, package
+bash ci/gate.sh                       # 10 stages: validate, test, evaluate, fixtures,
+                                     # emulation, contract, lint, ratchet, convert, package
 python3 detection-as-code/evaluate.py # TP/FP/sequence/frequency against fixtures
 python3 -m unittest discover -s tests -p 'test_*.py'
 python3 tools/capture_kit.py --rule <id-prefix>   # how to capture this rule for real
