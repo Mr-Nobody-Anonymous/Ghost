@@ -24,6 +24,8 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | 9 | **The Sysmon config enabled nothing useful** | Archive path did not exist; the ProcessAccess selection could never match; it claimed EID 24 was off while enabling it. | Rewritten, XML-parsed, hash-pinned in `baseline/manifest.json` |
 | 10 | **No deployable artifact** | 37 rules and nothing a SIEM could ingest. | `deploy/build_bundle.py` emits real pySigma query text + manifest, refuses stale conversion results |
 | 11 | **Silent skips** | A missing dependency made stages "pass". | 9-stage gate; an absent dependency is a failure |
+| 12 | **The staleness check could not fail** | `deploy/build_bundle.py` compared a wall clock, then a stamp derived only from the stored results. Both agreed with themselves. | Stamp is sha256 over the rule files *and* the outcomes; a test edits a rule and asserts the build exits 1 |
+| 13 | **The gate rewrote the tree** | Wall clock in `conversion.json` and in the matrix header made `git status` dirty after every run, which hides real changes. | Two consecutive gate runs leave the tree clean |
 
 ---
 
@@ -67,6 +69,7 @@ These cannot be fixed with a query. They need a sensor decision.
 | ID | Gap | Detail |
 |---|---|---|
 | G-17 | No sample, so `sample_ref: PIN-0000` everywhere | Absence is by design (defensive repo). The pin schema is ready; nothing to pin. |
+| G-22 | No baseline capture has been taken | `tools/verify_baseline.py` now exists and says exactly what a capture is missing; the capture itself is still G-02. |
 | G-21 | Captures are not reproducible | `tools/evtx_to_fixture.py` records the input hash, the config hash, and the evaluator's verdict, so a captured fixture is tied to the box it came from. Still no VM image hash. |
 | G-18 | `response/rules/*.md` triage steps are untested | Generated from metadata; no alert has been worked in the lab. |
 | G-19 | `attack/cache/` is 55 MB and gitignored | `--verify` prints MISSING until re-fetched. Correct, but it means CI cannot prove the pin hash without downloading. |
