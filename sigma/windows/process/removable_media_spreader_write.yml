@@ -42,11 +42,11 @@ detection:
   sel_autorun:
     EventID: 11
     TargetFilename|re: '(?i)^[D-Z]:\\autorun\.inf$'
-  filter_windows_temp:
-    TargetFilename|startswith:
-      - 'C:\'
-      - '\\?\Volume{'
-  condition: (sel_exec_on_volume or sel_autorun) and not filter_windows_temp
+  # No filter section here on purpose. The selection is already limited to D-Z
+  # by the drive-letter regex, so `TargetFilename|startswith: 'C:\'` could never
+  # match and was removed - a filter that excludes nothing reads as tuning and
+  # is not. A system-volume write is ordinary installer traffic and is deliberately not covered here.
+  condition: sel_exec_on_volume or sel_autorun
 falsepositives:
   - Legitimate installers and portable-app deployments to a USB stick
   - Backup and sync tools writing executables to an attached volume

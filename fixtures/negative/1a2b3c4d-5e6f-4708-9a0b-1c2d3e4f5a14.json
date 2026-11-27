@@ -11,7 +11,8 @@
     "events": [
       {
         "_ts": 0,
-        "destination_port": 0
+        "destination_port": 0,
+        "DestinationHostname": "C:\\Users\\lab\\AppData\\Local\\Temp\\.local"
       }
     ]
   }

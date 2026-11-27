@@ -20,6 +20,11 @@ references:
   - inventory.md
 logsource:
   category: proxy
+  # `Process` is not a standard proxy field. This rule only works where the
+  # export joins the socket owner (see telemetry/data-sources.md, which marks it
+  # "not always available"). Without that join the browser filter is dead and
+  # the rule fires on ordinary browser traffic to these hosts.
+  definition: proxy export must carry the owning process
 detection:
   selection:
     DestinationHostname|endswith: ['api.ipify.org', 'ifconfig.me', 'icanhazip.com']

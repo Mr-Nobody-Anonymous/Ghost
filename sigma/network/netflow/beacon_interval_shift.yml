@@ -28,9 +28,14 @@ logsource:
 detection:
   selection:
     destination_port: 443
-  filter_common_alt_ports:
-    destination_port: [80, 8080, 8443]
-  condition: selection and not filter_common_alt_ports
+  # The candidate set is 443 only, so a filter on any other port can never
+  # match: the previous `destination_port: [80, 8080, 8443]` was dead logic that
+  # made the rule look tuned when it was not. What actually removes noise from
+  # this candidate set is destination *reputation*, which Sigma cannot express -
+  # leave the filter to the SIEM job that consumes this rule.
+  filter_local_destination:
+    DestinationHostname|endswith: ['.local', '.internal', '.corp']
+  condition: selection and not filter_local_destination
 falsepositives:
   - Anything on 443 - this rule is a candidate filter, not an alert
 level: low

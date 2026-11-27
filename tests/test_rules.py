@@ -219,6 +219,92 @@ class RuleTests(unittest.TestCase):
                     offenders.append(f"{f.name}: {node!r}")
         self.assertEqual(offenders, [], "double-escaped path literal(s) found")
 
+    def test_filter_sections_can_actually_exclude_something(self):
+        """A filter that excludes no reachable event is dead tuning.
+
+        `beacon_interval_shift.yml` selected `destination_port: 443` and filtered
+        `destination_port: [80, 8080, 8443]`. Nothing is both, so the filter was
+        unreachable while the rule looked tuned - the same class of defect as a
+        test that cannot fail.
+
+        Probes are derived from the rule's own positive event rather than written
+        by hand, so a path-shaped field is exercised with a real path instead of
+        a fabricated string.
+        """
+        offenders = []
+        for f in RULES:
+            doc = load(f) or {}
+            det = doc.get("detection") or {}
+            if not det or "correlation" in doc:
+                continue
+            sels = {k: v for k, v in det.items()
+                    if k != "condition" and not k.startswith("filter") and isinstance(v, dict)}
+            filts = {k: v for k, v in det.items()
+                     if k.startswith("filter") and isinstance(v, dict)}
+            if not filts or not sels:
+                continue
+            base = evaluate.candidate_events({**doc, "detection": sels})
+            if not base:
+                continue
+            event = base[0]
+            sel_fields = {k.split("|")[0] for body in sels.values() for k in body}
+            filt_fields = {k.split("|")[0] for body in filts.values() for k in body}
+            shared = sel_fields & filt_fields
+            # A filter on a field no selection constrains is a context filter
+            # (destination reputation, host allowlist) and is out of scope.
+            if not shared:
+                continue
+
+            # If the selection constrains a field with a regex, a probe for that
+            # field has to satisfy the regex too; render one from the pattern.
+            from fieldtypes import render_regex
+            re_values = {}
+            for body in sels.values():
+                for k, v in body.items():
+                    if k.endswith("|re") and isinstance(v, str):
+                        re_values[k.split("|")[0]] = render_regex(v)
+
+            def probes_for(field, fkey, fval):
+                pos = re_values.get(field) or str(event.get(field, ""))
+                mods = fkey.split("|")[1:]
+                v = str(fval)
+                if "contains" in mods:
+                    # prepend, so the selection's own endswith still holds
+                    return [v + pos, v + pos.lstrip("C:")]
+                if "endswith" in mods:
+                    stem = pos.rsplit("\\", 1)[0] if "\\" in pos else ""
+                    return [stem + "\\" + v.lstrip("\\"), v]
+                if "startswith" in mods:
+                    return [v + "artifact.exe", v]
+                return [v]
+
+            reachable = False
+            for field in sorted(shared):
+                for fbody in filts.values():
+                    for fkey, fvalue in fbody.items():
+                        if fkey.split("|")[0] != field:
+                            continue
+                        for fv in (fvalue if isinstance(fvalue, list) else [fvalue]):
+                            for cand in probes_for(field, fkey, fv):
+                                probe = dict(event, **{field: cand})
+                                if not evaluate.match_selection(probe, fbody):
+                                    continue
+                                if any(evaluate.match_selection(probe, sb) for sb in sels.values()):
+                                    reachable = True
+                                    break
+                            if reachable:
+                                break
+                        if reachable:
+                            break
+                    if reachable:
+                        break
+                if reachable:
+                    break
+            if not reachable:
+                offenders.append(f"{f.name} ({sorted(shared)})")
+        self.assertEqual(offenders, [],
+                         f"filter(s) that can never exclude a selected event: {offenders}")
+
     def test_correlation_join_keys_exist_in_members(self):
         """Every group-by field must be selectable from each member rule."""
         collection = evaluate.load_collection(ROOT)
