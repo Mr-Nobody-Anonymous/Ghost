@@ -1,0 +1,14 @@
+{
+  "fixture_id": "NF-4663b1a0",
+  "rule_id": "4663b1a0-0000-4000-8000-000000000001",
+  "software_class": "benign lookalike from rule falsepositives",
+  "benign_lookalikes": [
+    "hardware inventory agents",
+    "licensing tools",
+    "installers checking specs"
+  ],
+  "why_it_should_not_alert": "tuning decision pending",
+  "tuning_decision": "pending",
+  "expected_events": [],
+  "sample_ref": "benign"
+}

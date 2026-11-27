@@ -1,0 +1,22 @@
+title: Public IP Discovery Service Egress from Unexpected Process
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0b
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0b:host:user"
+status: experimental
+description: Outbound request to api.ipify.org or similar public-IP echo services from a non-browser process.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1592.002]
+tactics: [attack.discovery]
+references:
+  - https://attack.mitre.org/techniques/T1592.002/
+  - inventory.md
+logsource:
+  category: proxy
+detection:
+  selection:
+    DestinationHostname|endswith: ['api.ipify.org', 'ifconfig.me', 'icanhazip.com']
+  filter_browser:
+    Process|endswith: ['\chrome.exe', '\msedge.exe', '\firefox.exe']
+  condition: selection and not filter_browser
+falsepositives: [VPN clients, network diagnostic tools, browsers]
+level: medium

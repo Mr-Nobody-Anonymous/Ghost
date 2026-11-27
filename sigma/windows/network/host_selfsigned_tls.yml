@@ -1,0 +1,26 @@
+title: Process TLS Session to Self-Signed Certificate on 443
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a12
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a12:host:process"
+status: experimental
+description: EDR TLS callback reports a self-signed server certificate on 443 for a non-browser process; host-side twin of the Zeek x509 rule.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1071.001]
+tactics: [attack.command-and-control]
+references:
+  - https://attack.mitre.org/techniques/T1071/001/
+  - network/ja3-x509.md
+logsource:
+  product: windows
+  service: edr
+detection:
+  selection:
+    EventType: TlsConnect
+    DestinationPort: 443
+    CertificateSelfSigned: true
+  filter_browser:
+    Image|endswith: ['\chrome.exe', '\msedge.exe', '\firefox.exe']
+  condition: selection and not filter_browser
+falsepositives: [internal appliances using self-signed certificates, development tools]
+level: medium
+notes: Requires EDR TLS callback telemetry; the network twin is in network/ja3-x509.md.

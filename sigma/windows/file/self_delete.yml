@@ -1,0 +1,22 @@
+title: Self-Deleting Executable on Kill Command
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0f
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0f:host:process"
+status: experimental
+description: A process deletes its own image file shortly after starting, consistent with a kill-switch cleanup.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1070.004]
+tactics: [attack.defense-evasion]
+references:
+  - https://attack.mitre.org/techniques/T1070/004/
+  - inventory.md
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    EventID: 23
+  condition: selection | count() by ProcessGuid >= 1
+falsepositives: [installers removing temporary copies, update helpers]
+level: high
+notes: Requires Sysmon FileDelete (event 23) enabled in telemetry/sysmon-config.xml.

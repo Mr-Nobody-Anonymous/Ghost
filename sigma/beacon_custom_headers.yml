@@ -1,0 +1,33 @@
+title: Beacon with Custom X-Id / X-Seq Headers
+id: 2d7f4b90-8e31-4c5a-b2d6-9f1a0c3e7d52
+dedup_key: "rule:2d7f4b90-8e31-4c5a-b2d6-9f1a0c3e7d52:host:user"
+status: experimental
+description: >
+  Detects outbound HTTP(S) requests carrying the non-standard headers X-Id and
+  X-Seq together with a generic browser UA and octet-stream content type, or a
+  /poll?id=&seq= URI pattern. Field names are from a typical proxy/SWG export.
+author: ghost-detection-lab
+date: 2026-11-27
+tactics: [attack.command-and-control]
+tags: [attack.t1071.001]
+logsource:
+  category: proxy
+detection:
+  sel_headers:
+    cs-header-X-Id|exists: true
+    cs-header-X-Seq|exists: true
+  sel_uri:
+    cs-uri-stem|endswith: '/poll'
+    cs-uri-query|contains:
+      - 'id='
+      - 'seq='
+  sel_ua:
+    cs-user-agent: 'Mozilla/5.0'
+    cs-content-type: 'application/octet-stream'
+  condition: sel_headers or (sel_uri and sel_ua)
+falsepositives:
+  - Internal applications that use similarly named custom headers
+  - Misconfigured monitoring agents
+level: high
+references:
+  - https://attack.mitre.org/techniques/T1071/001/

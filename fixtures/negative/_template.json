@@ -1,0 +1,12 @@
+{
+  "fixture_id": "NF-0000",
+  "rule_id": "00000000-0000-0000-0000-000000000000",
+  "software_class": "name of the legitimate software",
+  "expected_events": [
+    {"event_id": 0, "fields": {"Field": "benign value that resembles the rule selection"}, "occurs_within_seconds": 0}
+  ],
+  "why_it_should_not_alert": "explain the disambiguating field",
+  "tuning_decision": "allowlist | threshold | keep",
+  "decision_date": "",
+  "sample_ref": "benign"
+}

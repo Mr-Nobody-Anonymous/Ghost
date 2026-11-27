@@ -1,0 +1,24 @@
+title: Encrypted Keylog Staging File Appended in Temp
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0a
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0a:host:user"
+status: experimental
+description: Repeated append writes to kl.enc or similarly named staging files under %TEMP%.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1056.001]
+tactics: [attack.collection]
+references:
+  - https://attack.mitre.org/techniques/T1056.001/
+  - inventory.md
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    EventID: 11
+    TargetFilename|contains: '\AppData\Local\Temp\'
+    TargetFilename|endswith: ['.enc', 'kl.enc']
+  condition: selection
+falsepositives: [application cache files, encrypted local storage, backup staging]
+level: low
+fixture_ref: fixtures/malicious/T1056.001.json

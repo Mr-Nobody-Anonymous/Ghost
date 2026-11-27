@@ -1,0 +1,16 @@
+{
+  "fixture_id": "FX-T1113",
+  "attack_id": "T1113",
+  "technique": "screenshot capture via GDI BitBlt",
+  "rule_id": "PENDING",
+  "telemetry_source": "file artifact / API sensor",
+  "expected_events": [
+    {"event_id": 11, "fields": {"TargetFilename": "%TEMP%\\*.bmp", "Header": "BM + 54-byte BITMAPINFOHEADER", "Resolution": "matches screen metrics", "EXIF": "absent"}, "occurs_within_seconds": 0}
+  ],
+  "fields_rule_reads": ["TargetFilename", "Header", "Resolution"],
+  "benign_lookalikes": ["screenshot utilities", "remote support tools", "print spooler renders", "game overlays"],
+  "sample_ref": "PIN-0000",
+  "status": "designed",
+  "captured_utc": "",
+  "notes": "No host log source. Cheapest path is a file-artifact rule on a 54-byte BMP header matching screen resolution. Capture at two resolutions."
+}

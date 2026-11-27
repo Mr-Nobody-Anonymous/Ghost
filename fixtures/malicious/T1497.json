@@ -1,0 +1,18 @@
+{
+  "fixture_id": "FX-T1497",
+  "attack_id": "T1497",
+  "technique": "anti-analysis triage / sleep skew",
+  "rule_id": "PENDING",
+  "telemetry_source": "Object Access audit with registry SACL / API sensor",
+  "expected_events": [
+    {"event_id": 4663, "fields": {"ObjectName": "HKLM\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0\\ProcessorNameString"}, "occurs_within_seconds": 0},
+    {"event_id": 4663, "fields": {"ObjectName": "memory status adjacent keys"}, "occurs_within_seconds": 5},
+    {"event_id": 0, "fields": {"Behavior": "IsDebuggerPresent / GetTickCount64 skew"}, "occurs_within_seconds": 5}
+  ],
+  "fields_rule_reads": ["ObjectName", "ProcessId", "Behavior"],
+  "benign_lookalikes": ["inventory agents", "licensing tools", "hardware monitoring", "installers checking specs"],
+  "sample_ref": "PIN-0000",
+  "status": "designed",
+  "captured_utc": "",
+  "notes": "Add the SACL per telemetry/auditpol.md. A single registry read is not a finding; require correlation with skew behavior."
+}

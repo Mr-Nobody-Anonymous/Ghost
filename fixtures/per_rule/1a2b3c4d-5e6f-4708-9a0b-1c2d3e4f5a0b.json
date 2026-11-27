@@ -1,0 +1,25 @@
+{
+  "fixture_id": "FX-1a2b3c4d",
+  "rule_id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0b",
+  "attack_id": "T1592.002",
+  "telemetry_source": {
+    "category": "proxy"
+  },
+  "expected_events": [
+    {
+      "fields": {
+        "DestinationHostname|endswith": "<captured value>",
+        "Process|endswith": "<captured value>"
+      },
+      "occurs_within_seconds": 0
+    }
+  ],
+  "fields_rule_reads": [
+    "DestinationHostname|endswith",
+    "Process|endswith"
+  ],
+  "status": "designed",
+  "captured_utc": "",
+  "sample_ref": "PIN-0000",
+  "note": "DESIGNED stub - replace with an independent blind capture."
+}

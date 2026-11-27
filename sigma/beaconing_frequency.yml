@@ -1,0 +1,31 @@
+title: Beaconing - High Request Frequency with Regular Intervals
+id: 8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52
+dedup_key: "rule:8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52:host:user"
+status: experimental
+description: >
+  Sigma correlation rule: many requests to the same destination from one client
+  in a short window. Catches jittered long-poll beacons that evade simple
+  threshold rules. Backend support for correlation rules varies; validate with
+  sigma convert before deployment.
+author: ghost-detection-lab
+date: 2026-11-27
+tactics: [attack.command-and-control]
+tags: [attack.t1071.001]
+logsource:
+  category: proxy
+correlation:
+  type: frequency
+  rules:
+    - 2d7f4b90-8e31-4c5a-b2d6-9f1a0c3e7d52
+  timespan: 10m
+  condition:
+    gte: 20
+  group-by:
+    - SourceAddress
+    - DestinationHostname
+falsepositives:
+  - Polling dashboards and health checks
+  - Software update clients
+level: medium
+references:
+  - https://attack.mitre.org/techniques/T1071/001/

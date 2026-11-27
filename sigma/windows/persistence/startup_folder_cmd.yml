@@ -1,0 +1,26 @@
+title: Script Written to User Startup Folder
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a04
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a04:host:user"
+status: experimental
+description: A .cmd/.bat/.lnk file created in the user Startup folder by a non-installer process.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1547.001]
+tactics: [attack.persistence]
+references:
+  - https://attack.mitre.org/techniques/T1547.001/
+  - inventory.md
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    EventID: 11
+    TargetFilename|contains: '\Start Menu\Programs\Startup\'
+    TargetFilename|endswith: ['.cmd', '.bat', '.lnk', '.vbs', '.ps1']
+  filter_installer:
+    Image|endswith: ['\msiexec.exe', '\setup.exe']
+  condition: selection and not filter_installer
+falsepositives: [legitimate startup shortcuts created by installers]
+level: medium
+fixture_ref: fixtures/malicious/T1547.001-startup.json

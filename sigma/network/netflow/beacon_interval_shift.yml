@@ -1,0 +1,21 @@
+title: Beacon Interval Shift After Configuration Change
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a14
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a14:src:dst"
+status: experimental
+description: A host/destination pair changes its median inter-arrival period by more than 30 percent while keeping low variance, consistent with an in-memory sleep mutation.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1071.001]
+tactics: [attack.command-and-control]
+references:
+  - https://attack.mitre.org/techniques/T1071/001/
+  - docs/sequence-rules.md
+logsource:
+  category: netflow
+detection:
+  selection:
+    destination_port: 443
+  condition: selection | count() by SourceAddress, DestinationAddress > 20
+falsepositives: [polling dashboards changing refresh rate, backup agents]
+level: low
+notes: Requires distribution analysis at the collector; a fixed-threshold count rule cannot express the interval shift. Backend conversion likely unsupported.

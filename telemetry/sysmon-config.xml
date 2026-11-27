@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Lab Sysmon config fragment. Enable the events the rules in this folder read.
+     Validate with: sysmon64.exe -c sysmon-config.xml -->
+<Sysmon schemaversion="4.90">
+  <ConfigArchiveDirectory></ConfigArchiveDirectory>
+  <EventFiltering>
+    <RuleGroup name="" groupRelation="or">
+      <ProcessCreate onmatch="exclude">
+        <Image condition="begin with">C:\Windows\System32\</Image>
+      </ProcessCreate>
+      <FileCreate onmatch="include">
+        <TargetFilename condition="contains">_MEI</TargetFilename>
+        <TargetFilename condition="end with">autorun.inf</TargetFilename>
+        <TargetFilename condition="end with">.bmp</TargetFilename>
+        <TargetFilename condition="end with">.zip</TargetFilename>
+        <TargetFilename condition="end with">.db</TargetFilename>
+      </FileCreate>
+      <DnsQuery onmatch="include">
+        <QueryName condition="contains">.</QueryName>
+      </DnsQuery>
+      <FileDelete onmatch="include">
+        <TargetFilename condition="endswith">.exe</TargetFilename>
+      </FileDelete>
+      <RegistryEvent onmatch="include">
+        <TargetObject condition="contains">CurrentVersion\Run</TargetObject>
+        <TargetObject condition="contains">CurrentVersion\RunOnce</TargetObject>
+      </RegistryEvent>
+      <ProcessAccess onmatch="include">
+        <TargetImage condition="end with">amsi.dll</TargetImage>
+        <TargetImage condition="end with">ntdll.dll</TargetImage>
+        <TargetImage condition="end with">lsass.exe</TargetImage>
+      </ProcessAccess>
+      <WmiEventFilter onmatch="include">
+        <EventType condition="is">WmiFilterEvent</EventType>
+      </WmiEventFilter>
+      <WmiEventConsumer onmatch="include">
+        <EventType condition="is">WmiConsumerEvent</EventType>
+      </WmiEventConsumer>
+      <WmiEventConsumerToFilter onmatch="include">
+        <EventType condition="is">WmiConsumerToFilterEvent</EventType>
+      </WmiEventConsumerToFilter>
+      <ClipboardChange onmatch="include">
+        <!-- Event 24 is noisy: keep only non-shell processes -->
+        <Image condition="exclude">explorer.exe</Image>
+      </ClipboardChange>
+    </RuleGroup>
+  </EventFiltering>
+</Sysmon>

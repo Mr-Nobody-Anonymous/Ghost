@@ -1,0 +1,13 @@
+{
+  "fixture_id": "NF-e91d5c37",
+  "rule_id": "e91d5c37-0b82-4a1f-a6d8-3c7e9f2b4a60",
+  "software_class": "benign lookalike from rule falsepositives",
+  "benign_lookalikes": [
+    "Legitimate PyInstaller-packaged internal tools",
+    "Software build and QA environments"
+  ],
+  "why_it_should_not_alert": "tuning decision pending",
+  "tuning_decision": "pending",
+  "expected_events": [],
+  "sample_ref": "benign"
+}

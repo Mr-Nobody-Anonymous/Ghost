@@ -1,0 +1,26 @@
+title: Scheduled Task Created at Logon by Unusual Parent
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a02
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a02:host:user"
+status: experimental
+description: schtasks /Create /SC ONLOGON invoked by a non-installer parent process.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1053.005]
+tactics: [attack.persistence]
+references:
+  - https://attack.mitre.org/techniques/T1053.005/
+  - inventory.md
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    EventID: 1
+    Image|endswith: '\schtasks.exe'
+    CommandLine|contains: ['/Create', '/SC', 'ONLOGON']
+  filter_installer:
+    ParentImage|endswith: ['\msiexec.exe', '\setup.exe']
+  condition: selection and not filter_installer
+falsepositives: [software deployment, monitoring agent installation]
+level: high
+fixture_ref: fixtures/malicious/T1053.005.json

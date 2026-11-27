@@ -1,0 +1,28 @@
+{
+  "fixture_id": "FX-4663b1a0",
+  "rule_id": "4663b1a0-0000-4000-8000-000000000001",
+  "attack_id": "T1497",
+  "telemetry_source": {
+    "product": "windows",
+    "service": "security"
+  },
+  "expected_events": [
+    {
+      "fields": {
+        "EventID": "<captured value>",
+        "ObjectName|contains": "<captured value>",
+        "AccessMask|contains": "<captured value>"
+      },
+      "occurs_within_seconds": 0
+    }
+  ],
+  "fields_rule_reads": [
+    "EventID",
+    "ObjectName|contains",
+    "AccessMask|contains"
+  ],
+  "status": "designed",
+  "captured_utc": "",
+  "sample_ref": "PIN-0000",
+  "note": "DESIGNED stub - replace with an independent blind capture."
+}

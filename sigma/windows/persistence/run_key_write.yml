@@ -1,0 +1,25 @@
+title: Run Key Write by Non-Installer Process
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a01
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a01:host:user"
+status: experimental
+description: HKCU Run key write from a process that is not an installer or deployment tool.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1547.001]
+tactics: [attack.persistence]
+references:
+  - https://attack.mitre.org/techniques/T1547.001/
+  - inventory.md
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    EventID: [12, 13, 14]
+    TargetObject|contains: '\Software\Microsoft\Windows\CurrentVersion\Run'
+  filter_installer:
+    Image|endswith: ['\msiexec.exe', '\setup.exe', '\Windows\System32\reg.exe']
+  condition: selection and not filter_installer
+falsepositives: [software installers, IT deployment scripts]
+level: high
+fixture_ref: fixtures/malicious/T1547.001-runkey.json

@@ -1,0 +1,23 @@
+title: Host Process Resolving Many Random Labels
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0e
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0e:host:process"
+status: experimental
+description: Sysmon DnsQuery events with many long random labels from one process; host-side twin of the DGA DNS rule.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1568.002]
+tactics: [attack.command-and-control]
+references:
+  - https://attack.mitre.org/techniques/T1568/002/
+  - network/ja3-x509.md
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    EventID: 22
+    QueryName|re: '^[a-z]{14,}\.(com|net|org|info|biz|ru|top|xyz)$'
+  condition: selection | count() by ProcessGuid > 20
+falsepositives: [CDN clients, telemetry agents, DNS security probes]
+level: medium
+notes: Covers the DGA fallback only; the primary C2 path uses IP literals and never performs DNS.

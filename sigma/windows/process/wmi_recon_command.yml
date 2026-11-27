@@ -1,0 +1,24 @@
+title: Security Product Enumeration via SecurityCenter2
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0c
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0c:host:user"
+status: experimental
+description: powershell -NoP -NonI -C querying AntiVirusProduct from root/SecurityCenter2.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1592.002]
+tactics: [attack.discovery]
+references:
+  - https://attack.mitre.org/techniques/T1592.002/
+  - inventory.md
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    EventID: 1
+    Image|endswith: ['\powershell.exe', '\pwsh.exe']
+    CommandLine|contains: ['SecurityCenter2', 'AntiVirusProduct', '-NoP', '-NonI']
+  condition: selection
+falsepositives: [inventory agents, security product self-checks]
+level: medium
+fixture_ref: fixtures/malicious/T1592.002.json

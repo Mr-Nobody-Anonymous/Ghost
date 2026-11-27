@@ -1,0 +1,23 @@
+title: Named Mutex Created by Unsigned Temp Process
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0d
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0d:host:mutex"
+status: experimental
+description: EDR-reported creation of a named mutex by a process launched from a user-writable path.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1547.001]
+tactics: [attack.persistence]
+references:
+  - https://attack.mitre.org/techniques/T1547/001/
+  - inventory.md
+logsource:
+  product: windows
+  service: edr
+detection:
+  selection:
+    EventType: MutexCreate
+    Image|contains: ['\AppData\Local\Temp\', '\Downloads\']
+  condition: selection
+falsepositives: [legitimate single-instance guards in portable tools, installers]
+level: low
+notes: Requires EDR handle telemetry; no native Windows log source.

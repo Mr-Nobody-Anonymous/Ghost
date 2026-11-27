@@ -1,0 +1,13 @@
+{
+  "fixture_id": "NF-3f92b8d1",
+  "rule_id": "3f92b8d1-6a04-4c77-b0e9-2d8157ac4f30",
+  "software_class": "benign lookalike from rule falsepositives",
+  "benign_lookalikes": [
+    "Legitimate system management software (SCCM/Intune, monitoring agents)",
+    "Antimalware products using WMI for self-healing"
+  ],
+  "why_it_should_not_alert": "tuning decision pending",
+  "tuning_decision": "pending",
+  "expected_events": [],
+  "sample_ref": "benign"
+}

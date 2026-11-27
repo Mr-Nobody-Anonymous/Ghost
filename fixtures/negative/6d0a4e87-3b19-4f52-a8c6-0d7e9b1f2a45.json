@@ -1,0 +1,13 @@
+{
+  "fixture_id": "NF-6d0a4e87",
+  "rule_id": "6d0a4e87-3b19-4f52-a8c6-0d7e9b1f2a45",
+  "software_class": "benign lookalike from rule falsepositives",
+  "benign_lookalikes": [
+    "Helpdesk scripts and asset inventory tooling",
+    "Security product self-checks"
+  ],
+  "why_it_should_not_alert": "tuning decision pending",
+  "tuning_decision": "pending",
+  "expected_events": [],
+  "sample_ref": "benign"
+}

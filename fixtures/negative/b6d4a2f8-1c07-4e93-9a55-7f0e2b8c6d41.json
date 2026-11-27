@@ -1,0 +1,13 @@
+{
+  "fixture_id": "NF-b6d4a2f8",
+  "rule_id": "b6d4a2f8-1c07-4e93-9a55-7f0e2b8c6d41",
+  "software_class": "benign lookalike from rule falsepositives",
+  "benign_lookalikes": [
+    "Software installers and update mechanisms",
+    "IT deployment scripts"
+  ],
+  "why_it_should_not_alert": "tuning decision pending",
+  "tuning_decision": "pending",
+  "expected_events": [],
+  "sample_ref": "benign"
+}

@@ -1,0 +1,14 @@
+{
+  "fixture_id": "NF-4e7b1c93",
+  "rule_id": "4e7b1c93-2a58-4d61-9f04-8c6d2e1a7b50",
+  "software_class": "benign lookalike from rule falsepositives",
+  "benign_lookalikes": [
+    "Browser updates and synchronization processes",
+    "Backup and migration tools",
+    "Forensic collection by sanctioned IR tooling"
+  ],
+  "why_it_should_not_alert": "tuning decision pending",
+  "tuning_decision": "pending",
+  "expected_events": [],
+  "sample_ref": "benign"
+}

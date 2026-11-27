@@ -1,0 +1,25 @@
+title: Unsigned Rewrite of Executable in Install Directory
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a10
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a10:host:target"
+status: experimental
+description: An unsigned process overwrites an existing executable in a user-writable install directory.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1105]
+tactics: [attack.command-and-control]
+references:
+  - https://attack.mitre.org/techniques/T1105/
+  - inventory.md
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    EventID: 11
+    TargetFilename|endswith: '.exe'
+    TargetFilename|contains: ['\AppData\Local\', '\Program Files (x86)\']
+  filter_signed:
+    Image|endswith: ['\msiexec.exe', '\setup.exe']
+  condition: selection and not filter_signed
+falsepositives: [legitimate updaters, portable app self-update]
+level: medium

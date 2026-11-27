@@ -1,0 +1,12 @@
+{
+  "fixture_id": "NF-9b3f6a12",
+  "rule_id": "9b3f6a12-7c40-4e85-b2d1-5e8a0c4f7d63",
+  "software_class": "benign lookalike from rule falsepositives",
+  "benign_lookalikes": [
+    "Legitimate setup media and enterprise imaging tools"
+  ],
+  "why_it_should_not_alert": "tuning decision pending",
+  "tuning_decision": "pending",
+  "expected_events": [],
+  "sample_ref": "benign"
+}

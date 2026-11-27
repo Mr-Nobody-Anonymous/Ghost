@@ -1,0 +1,18 @@
+{
+  "fixture_id": "FX-T1546-003",
+  "attack_id": "T1546.003",
+  "technique": "WMI subscription triple create",
+  "rule_id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03",
+  "telemetry_source": "sysmon 19/20/21",
+  "expected_events": [
+    {"event_id": 19, "fields": {"EventType": "WmiFilterEvent", "Name": "filter"}, "occurs_within_seconds": 0},
+    {"event_id": 20, "fields": {"EventType": "WmiConsumerEvent", "CommandLineTemplate": "inert marker"}, "occurs_within_seconds": 30},
+    {"event_id": 21, "fields": {"EventType": "WmiConsumerToFilterEvent"}, "occurs_within_seconds": 30}
+  ],
+  "fields_rule_reads": ["EventType", "Name", "CommandLine"],
+  "benign_lookalikes": ["SCCM", "Intune", "monitoring agents"],
+  "sample_ref": "PIN-0000",
+  "status": "designed",
+  "captured_utc": "",
+  "notes": "Inert marker only: no command execution, no real persistence."
+}

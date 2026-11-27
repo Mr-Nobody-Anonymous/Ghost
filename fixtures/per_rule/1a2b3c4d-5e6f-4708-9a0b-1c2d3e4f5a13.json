@@ -1,0 +1,27 @@
+{
+  "fixture_id": "FX-1a2b3c4d",
+  "rule_id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a13",
+  "attack_id": "T1071.001",
+  "telemetry_source": {
+    "category": "proxy"
+  },
+  "expected_events": [
+    {
+      "fields": {
+        "cs-user-agent": "<captured value>",
+        "cs-header-Accept-Language|exists": "<captured value>",
+        "cs-header-Cookie|exists": "<captured value>"
+      },
+      "occurs_within_seconds": 0
+    }
+  ],
+  "fields_rule_reads": [
+    "cs-user-agent",
+    "cs-header-Accept-Language|exists",
+    "cs-header-Cookie|exists"
+  ],
+  "status": "designed",
+  "captured_utc": "",
+  "sample_ref": "PIN-0000",
+  "note": "DESIGNED stub - replace with an independent blind capture."
+}

@@ -1,0 +1,30 @@
+{
+  "fixture_id": "FX-7a1c3e40",
+  "rule_id": "7a1c3e40-9b12-4d6e-8f21-0c3b5a9d7e11",
+  "attack_id": "T1562.001",
+  "telemetry_source": {
+    "product": "windows",
+    "service": "sysmon"
+  },
+  "expected_events": [
+    {
+      "fields": {
+        "EventID": "<captured value>",
+        "TargetImage|endswith": "<captured value>",
+        "GrantedAccess|contains": "<captured value>",
+        "SourceImage|endswith": "<captured value>"
+      },
+      "occurs_within_seconds": 0
+    }
+  ],
+  "fields_rule_reads": [
+    "EventID",
+    "TargetImage|endswith",
+    "GrantedAccess|contains",
+    "SourceImage|endswith"
+  ],
+  "status": "designed",
+  "captured_utc": "",
+  "sample_ref": "PIN-0000",
+  "note": "DESIGNED stub - replace with an independent blind capture."
+}

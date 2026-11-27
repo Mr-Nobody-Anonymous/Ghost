@@ -1,0 +1,49 @@
+title: Run Key, Scheduled Task, or Startup Folder Persistence
+id: b6d4a2f8-1c07-4e93-9a55-7f0e2b8c6d41
+dedup_key: "rule:b6d4a2f8-1c07-4e93-9a55-7f0e2b8c6d41:host:user"
+status: experimental
+description: >
+  Covers the common persistence layers: registry Run key,schtasks /Create, and
+  a script dropped into the user Startup folder. Correlate with a parent process
+  that is not an installer to reduce noise.
+author: ghost-detection-lab
+date: 2026-11-27
+tactics: [attack.persistence]
+tags: [attack.t1547.001, attack.t1053.005]
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  sel_runkey:
+    EventID:
+      - 12
+      - 13
+      - 14
+    TargetObject|contains:
+      - '\Software\Microsoft\Windows\CurrentVersion\Run'
+      - '\Software\Microsoft\Windows\CurrentVersion\RunOnce'
+  sel_schtask:
+    EventID: 1
+    Image|endswith: '\schtasks.exe'
+    CommandLine|contains: '/Create'
+  sel_startup:
+    EventID: 11
+    TargetFilename|contains: '\Start Menu\Programs\Startup\'
+    TargetFilename|endswith:
+      - '.cmd'
+      - '.bat'
+      - '.lnk'
+      - '.vbs'
+      - '.ps1'
+  filter_installers:
+    ParentImage|endswith:
+      - '\msiexec.exe'
+      - '\setup.exe'
+  condition: (sel_runkey or sel_schtask or sel_startup) and not filter_installers
+falsepositives:
+  - Software installers and update mechanisms
+  - IT deployment scripts
+level: medium
+references:
+  - https://attack.mitre.org/techniques/T1547/001/
+  - https://attack.mitre.org/techniques/T1053/005/

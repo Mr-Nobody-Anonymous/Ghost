@@ -1,0 +1,13 @@
+{
+  "fixture_id": "NF-8f2d5c71",
+  "rule_id": "8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52",
+  "software_class": "benign lookalike from rule falsepositives",
+  "benign_lookalikes": [
+    "Polling dashboards and health checks",
+    "Software update clients"
+  ],
+  "why_it_should_not_alert": "tuning decision pending",
+  "tuning_decision": "pending",
+  "expected_events": [],
+  "sample_ref": "benign"
+}

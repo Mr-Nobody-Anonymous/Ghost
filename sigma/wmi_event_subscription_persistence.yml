@@ -1,0 +1,36 @@
+title: WMI Event Subscription Persistence
+id: 3f92b8d1-6a04-4c77-b0e9-2d8157ac4f30
+dedup_key: "rule:3f92b8d1-6a04-4c77-b0e9-2d8157ac4f30:host:user"
+status: stable
+description: >
+  Detects creation of a WMI event filter, command-line consumer, or their binding
+  under root\subscription. This is a common no-file persistence mechanism and is
+  often missed by autoruns triage.
+author: ghost-detection-lab
+date: 2026-11-27
+tactics: [attack.persistence, attack.privilege-escalation]
+tags: [attack.t1546.003]
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection_filter:
+    EventID: 19
+  selection_consumer:
+    EventID: 20
+  selection_binding:
+    EventID: 21
+  selection_commandline:
+    EventID: 1
+    CommandLine|contains:
+      - '__EventFilter'
+      - 'CommandLineEventConsumer'
+      - 'FilterToConsumerBinding'
+      - 'Set-WmiInstance'
+  condition: selection_filter or selection_consumer or selection_binding or selection_commandline
+falsepositives:
+  - Legitimate system management software (SCCM/Intune, monitoring agents)
+  - Antimalware products using WMI for self-healing
+level: high
+references:
+  - https://attack.mitre.org/techniques/T1546/003/

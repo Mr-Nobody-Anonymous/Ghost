@@ -1,0 +1,24 @@
+title: ProcessorNameString Registry Read via Object Access Audit
+id: 4663b1a0-0000-4000-8000-000000000001
+dedup_key: "rule:4663b1a0-0000-4000-8000-000000000001:host:user"
+status: experimental
+description: SACL-triggered read of the CPU identifier; low signal alone, used as the first step of the patch-sequence correlation.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1497]
+tactics: [attack.discovery]
+references:
+  - https://attack.mitre.org/techniques/T1497/
+  - inventory.md
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4663
+    ObjectName|contains: 'HARDWARE\DESCRIPTION\System\CentralProcessor\0'
+    AccessMask|contains: '0x1'
+  condition: selection
+falsepositives: [hardware inventory agents, licensing tools, installers checking specs]
+level: low
+fixture_ref: fixtures/malicious/T1497.json

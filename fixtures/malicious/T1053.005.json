@@ -1,0 +1,16 @@
+{
+  "fixture_id": "FX-T1053-005",
+  "attack_id": "T1053.005",
+  "technique": "scheduled task created at logon",
+  "rule_id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a02",
+  "telemetry_source": "sysmon 1 / security 4698",
+  "expected_events": [
+    {"event_id": 1, "fields": {"Image": "schtasks.exe", "CommandLine": "/Create /SC ONLOGON /TN <label>"}, "occurs_within_seconds": 0}
+  ],
+  "fields_rule_reads": ["Image", "CommandLine", "ParentImage"],
+  "benign_lookalikes": ["software deployment", "monitoring agent setup"],
+  "sample_ref": "PIN-0000",
+  "status": "designed",
+  "captured_utc": "",
+  "notes": "Fixture writes no real task; it emits an inert command-line event."
+}

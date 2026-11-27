@@ -1,0 +1,22 @@
+{
+  "fixture_id": "FX-0000",
+  "attack_id": "T0000.000",
+  "technique": "description of the behavior",
+  "rule_id": "00000000-0000-0000-0000-000000000000",
+  "telemetry_source": "sysmon | etw | edr | zeek | proxy",
+  "expected_events": [
+    {
+      "event_id": 0,
+      "fields": {
+        "ExampleField": "expected value or shape"
+      },
+      "occurs_within_seconds": 0
+    }
+  ],
+  "fields_rule_reads": [],
+  "benign_lookalikes": [],
+  "sample_ref": "PIN-0000",
+  "status": "designed | captured | validated",
+  "captured_utc": "",
+  "notes": ""
+}

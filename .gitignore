@@ -1,0 +1,32 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Generated packages and local artifacts
+dist/
+build/
+*.tgz
+*.tar.gz
+
+# Local emulator output
+emulator_traffic.log
+canary_*.txt
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Editor / OS noise
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Secrets - never commit real credentials or keys
+*.pem
+*.key
+*.pfx
+*.env
+.env.*

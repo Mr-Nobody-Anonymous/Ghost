@@ -1,0 +1,17 @@
+{
+  "fixture_id": "FX-T1562-SEQ",
+  "attack_id": "T1562.001",
+  "technique": "triage followed by AMSI/ETW patch",
+  "rule_id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05",
+  "telemetry_source": "security 4663 + sysmon 10",
+  "expected_events": [
+    {"event_id": 4663, "fields": {"ObjectName": "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", "ProcessId": "same"}, "occurs_within_seconds": 0},
+    {"event_id": 10, "fields": {"TargetImage": "amsi.dll", "ProcessId": "same"}, "occurs_within_seconds": 5}
+  ],
+  "fields_rule_reads": ["ProcessId", "ObjectName", "TargetImage", "GrantedAccess"],
+  "benign_lookalikes": ["hardware inventory followed by security product module inspection"],
+  "sample_ref": "PIN-0000",
+  "status": "designed",
+  "captured_utc": "",
+  "notes": "No actual patching. Emits descriptor events only."
+}

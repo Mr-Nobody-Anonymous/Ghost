@@ -1,0 +1,27 @@
+title: Unsigned Executable Launched from User-Writable Path with No DNS
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a06
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a06:host:user"
+status: experimental
+description: "Stage-0 shape - a newly written unsigned PE under %TEMP% or Downloads that immediately makes outbound HTTPS connections without prior DNS resolution."
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1105, attack.t1027.002]
+tactics: [attack.execution]
+references:
+  - https://attack.mitre.org/techniques/T1105/
+  - inventory.md
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    EventID: 1
+    Image|contains:
+      - '\AppData\Local\Temp\'
+      - '\Downloads\'
+  filter_signed:
+    Image|endswith: ['\msiexec.exe', '\setup.exe', '\chrome.exe', '\OneDrive.exe']
+  condition: selection and not filter_signed
+falsepositives: [portable tools, self-extracting installers, browser helpers]
+level: medium
+notes: Correlate with proxy logs showing HTTPS to IP literals and no DNS lookup; DNS-only rules miss this path.

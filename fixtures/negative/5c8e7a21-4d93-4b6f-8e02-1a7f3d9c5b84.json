@@ -1,0 +1,14 @@
+{
+  "fixture_id": "NF-5c8e7a21",
+  "rule_id": "5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84",
+  "software_class": "benign lookalike from rule falsepositives",
+  "benign_lookalikes": [
+    "CDN and telemetry hostnames with long random labels",
+    "DNS security products generating probe queries",
+    "Broken internal name resolution"
+  ],
+  "why_it_should_not_alert": "tuning decision pending",
+  "tuning_decision": "pending",
+  "expected_events": [],
+  "sample_ref": "benign"
+}

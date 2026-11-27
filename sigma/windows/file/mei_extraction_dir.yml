@@ -1,0 +1,22 @@
+title: PyInstaller _MEI Extraction Directory Created
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a11
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a11:host:directory"
+status: experimental
+description: Creation of the _MEIxxxxxx extraction directory that PyInstaller onefile uses at runtime.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1027.002]
+tactics: [attack.defense-evasion]
+references:
+  - https://attack.mitre.org/techniques/T1027/002/
+  - yara/packers/packers.yar
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    EventID: 11
+    TargetFilename|contains: '\\_MEI'
+  condition: selection
+falsepositives: [legitimate PyInstaller-packaged tools]
+level: medium

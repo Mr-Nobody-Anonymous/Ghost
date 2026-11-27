@@ -1,0 +1,14 @@
+{
+  "fixture_id": "NF-1a2b3c4d",
+  "rule_id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0e",
+  "software_class": "benign lookalike from rule falsepositives",
+  "benign_lookalikes": [
+    "CDN clients",
+    "telemetry agents",
+    "DNS security probes"
+  ],
+  "why_it_should_not_alert": "tuning decision pending",
+  "tuning_decision": "pending",
+  "expected_events": [],
+  "sample_ref": "benign"
+}

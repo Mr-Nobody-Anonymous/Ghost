@@ -1,0 +1,27 @@
+title: Anti-Analysis Triage Followed by AMSI or ETW Patch
+id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05
+dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05:host:user"
+status: experimental
+description: Correlation of a CPU-info registry read with a process access to amsi.dll or ntdll.dll shortly after, from the same process.
+author: ghost-detection-lab
+date: 2026-11-27
+tags: [attack.t1562.001, attack.t1497]
+tactics: [attack.defense-evasion]
+references:
+  - https://attack.mitre.org/techniques/T1562.001/
+  - inventory.md
+logsource:
+  product: windows
+  service: sysmon
+correlation:
+  type: sequence
+  rules:
+    - 4663b1a0-0000-4000-8000-000000000001
+    - 7a1c3e40-9b12-4d6e-8f21-0c3b5a9d7e11
+  timespan: 5s
+  group-by:
+    - ProcessId
+  ordered: true
+falsepositives: [security products inspecting their own modules after hardware inventory]
+level: high
+fixture_ref: fixtures/malicious/T1562.001-sequence.json
