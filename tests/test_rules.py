@@ -547,6 +547,31 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(r.returncode, 1, "a 1-event baseline must not pass as complete")
         self.assertIn("have their EventIDs and fields in this capture", r.stdout)
 
+    def test_docs_do_not_cite_missing_rules_or_links(self):
+        """Documentation drifts silently; nothing used to check it.
+
+        77 Markdown files name 38 rules, and a renamed rule leaves a citation
+        that reads as fact. Links and rule filenames are both checked.
+        """
+        rules = {p.name for p in (ROOT / "sigma").rglob("*.yml")}
+        broken_links, missing_rules = [], []
+        for md in ROOT.rglob("*.md"):
+            if ".git" in md.parts:
+                continue
+            text = md.read_text(encoding="utf-8")
+            for link in re.findall(r"\]\(([^)#\s]+)\)", text):
+                if link.startswith(("http", "mailto", "#")):
+                    continue
+                if not (md.parent / link).exists() and not (ROOT / link).exists():
+                    broken_links.append(f"{md.relative_to(ROOT)}: {link}")
+            if md.name == "CHANGELOG.md":
+                continue
+            for _, name in re.findall(r"`([\w./-]*?([a-z0-9_]+\.yml))`", text):
+                if name not in rules:
+                    missing_rules.append(f"{md.relative_to(ROOT)}: {name}")
+        self.assertEqual(broken_links, [], f"broken relative links: {broken_links}")
+        self.assertEqual(missing_rules, [], f"citations of rules that do not exist: {missing_rules}")
+
     def test_baseline_config_drift(self):
         manifest = json.loads((ROOT / "baseline" / "manifest.json").read_text(encoding="utf-8"))
         for key, path in (

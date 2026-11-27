@@ -64,6 +64,12 @@ map field names so a rule does not evaluate against a null, how to apply the
 suppression the manifest carries, and how to verify the pipeline with
 `tools/verify_baseline.py` before trusting a quiet dashboard.
 
+## Measured
+
+`docs/assessment.md` holds the numbers: rule-quality profile, where the risk
+sits, and a claim-by-claim verdict. It is the page to read before quoting this
+repository as "coverage".
+
 ## Honest claim
 
 The repository proves that every rule parses, converts on a real backend,

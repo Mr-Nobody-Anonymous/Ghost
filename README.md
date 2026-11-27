@@ -15,7 +15,8 @@ contains **detection content and inert lab tooling only**. It answers:
 | `tests/`, `ci/`, `tools/` | Rule/fixture tests, CI gate, coverage generator |
 | `samples/` | Sample pin **schema** — no binary stored |
 | `network/`, `docs/`, `analysis/` | Fingerprint detections, runbook/tuning/maturity, triage templates |
-| `docs/gap-register.md` | **Start here for what is missing**, ordered by cost |
+| `docs/assessment.md` | **What this is, measured** - what is proven and what is not |
+| `docs/gap-register.md` | What is missing, ordered by cost |
 | `docs/deployment.md` | Host -> index -> scheduled search, with the silent failure modes |
 | `hunt-queries.md`, `lab-setup.md`, `inventory.md`, `os-matrix.md` | Hunting queries, lab build, behavior inventory, OS support |
 | `attack/` | Generated coverage matrix + per-rule conversion results (`conversion.json`) |
