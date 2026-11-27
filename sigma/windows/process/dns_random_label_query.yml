@@ -1,0 +1,42 @@
+title: Process Resolves a Random-Looking Label
+id: 0b6a2f19-8d34-4c72-9e51-3a7d5f0c2b84
+dedup_key: "rule:0b6a2f19-8d34-4c72-9e51-3a7d5f0c2b84:host:process"
+status: experimental
+lifecycle: designed
+description: >
+  Member rule of the host-side DGA burst correlation. Sysmon event 22 for a
+  name whose first label is at least 13 lowercase characters long. Single
+  queries are normal; the count correlation carries the signal.
+author: ghost-detection-lab
+date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
+tags: [attack.t1568.002]
+tactics: [attack.command-and-control]
+references:
+  - https://attack.mitre.org/techniques/T1568/002/
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    EventID: 22
+    ProcessGuid|exists: true
+    QueryName|re: '^[a-z]{13,}\.(com|net|org|info|biz|ru|top|xyz)$'
+  filter_known:
+    Image|endswith:
+      - '\svchost.exe'
+      - '\OneDrive.exe'
+  condition: selection and not filter_known
+falsepositives:
+  - CDN hostnames with long lowercase labels
+  - Telemetry agents using generated subdomains
+level: low
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported

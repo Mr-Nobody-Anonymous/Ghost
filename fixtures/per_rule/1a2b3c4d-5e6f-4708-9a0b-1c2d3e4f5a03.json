@@ -6,14 +6,167 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
       "EventID": 19,
-      "CommandLine": "prefix-__EventFilter-suffix"
+      "Computer": "LAB-WS01",
+      "_ts": 0
+    },
+    {
+      "EventID": 20,
+      "Computer": "LAB-WS01",
+      "Type": "CommandLineEventConsumer",
+      "_ts": 3
+    },
+    {
+      "EventID": 21,
+      "Computer": "LAB-WS01",
+      "_ts": 6
     }
   ],
   "assert_fields": {
     "EventID": 19,
-    "CommandLine": "prefix-__EventFilter-suffix"
+    "Computer": "LAB-WS01"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture.",
+  "members": {
+    "3b7e1c48-9d02-4a6f-8e15-c740b2d93af1": {
+      "title": "WMI Event Filter Created Under root\\subscription",
+      "id": "3b7e1c48-9d02-4a6f-8e15-c740b2d93af1",
+      "dedup_key": "rule:3b7e1c48-9d02-4a6f-8e15-c740b2d93af1:host:user",
+      "status": "experimental",
+      "lifecycle": "designed",
+      "description": "Sysmon event 19 - a permanent WMI event filter was registered. Member rule of the WMI triple sequence; low signal on its own because management tooling also creates filters.\n",
+      "author": "ghost-detection-lab",
+      "date": "2026-11-27",
+      "sample_ref": "PIN-0000",
+      "sigma_spec_version": "2.1.0",
+      "dedup_window": "5m",
+      "min_eval_interval": "10s",
+      "min_os": "Windows 10 21H2",
+      "sysmon_min_version": 13,
+      "tags": [
+        "attack.t1546.003"
+      ],
+      "tactics": [
+        "attack.persistence"
+      ],
+      "references": [
+        "https://attack.mitre.org/techniques/T1546/003/"
+      ],
+      "logsource": {
+        "product": "windows",
+        "service": "sysmon"
+      },
+      "detection": {
+        "selection": {
+          "EventID": 19,
+          "Computer|exists": true
+        },
+        "condition": "selection"
+      },
+      "falsepositives": [
+        "SCCM, Intune, monitoring agents"
+      ],
+      "level": "low",
+      "conversion": {
+        "splunk": "supported",
+        "elastic": "supported",
+        "kusto": "supported"
+      }
+    },
+    "7c4f9e02-5b83-4d61-a0f2-8e1d3c6b9a74": {
+      "title": "WMI Command-Line Event Consumer Created Under root\\subscription",
+      "id": "7c4f9e02-5b83-4d61-a0f2-8e1d3c6b9a74",
+      "dedup_key": "rule:7c4f9e02-5b83-4d61-a0f2-8e1d3c6b9a74:host:user",
+      "status": "experimental",
+      "lifecycle": "designed",
+      "description": "Sysmon event 20 - a permanent WMI consumer was registered. A CommandLineEventConsumer is the half that actually executes a command at trigger time, which is why it carries higher signal than the filter alone.\n",
+      "author": "ghost-detection-lab",
+      "date": "2026-11-27",
+      "sample_ref": "PIN-0000",
+      "sigma_spec_version": "2.1.0",
+      "dedup_window": "5m",
+      "min_eval_interval": "10s",
+      "min_os": "Windows 10 21H2",
+      "sysmon_min_version": 13,
+      "tags": [
+        "attack.t1546.003"
+      ],
+      "tactics": [
+        "attack.persistence",
+        "attack.execution"
+      ],
+      "references": [
+        "https://attack.mitre.org/techniques/T1546/003/",
+        "https://learn.microsoft.com/windows/win32/wmisdk/commandlineeventconsumer"
+      ],
+      "logsource": {
+        "product": "windows",
+        "service": "sysmon"
+      },
+      "detection": {
+        "selection_consumer": {
+          "EventID": 20,
+          "Computer|exists": true,
+          "Type|contains": "CommandLineEventConsumer"
+        },
+        "condition": "selection_consumer"
+      },
+      "falsepositives": [
+        "SCCM, Intune, monitoring agents",
+        "Endpoint agents that use WMI to self-heal"
+      ],
+      "level": "medium",
+      "conversion": {
+        "splunk": "supported",
+        "elastic": "supported",
+        "kusto": "supported"
+      }
+    },
+    "9e0d4b71-6c25-4f38-b7a9-2d5e8c1f0a63": {
+      "title": "WMI Filter-to-Consumer Binding Created Under root\\subscription",
+      "id": "9e0d4b71-6c25-4f38-b7a9-2d5e8c1f0a63",
+      "dedup_key": "rule:9e0d4b71-6c25-4f38-b7a9-2d5e8c1f0a63:host:user",
+      "status": "experimental",
+      "lifecycle": "designed",
+      "description": "Sysmon event 21 - an event filter was bound to a consumer. This is the step that arms a WMI subscription; without a binding nothing executes. Member rule of the WMI triple sequence.\n",
+      "author": "ghost-detection-lab",
+      "date": "2026-11-27",
+      "sample_ref": "PIN-0000",
+      "sigma_spec_version": "2.1.0",
+      "dedup_window": "5m",
+      "min_eval_interval": "10s",
+      "min_os": "Windows 10 21H2",
+      "sysmon_min_version": 13,
+      "tags": [
+        "attack.t1546.003"
+      ],
+      "tactics": [
+        "attack.persistence"
+      ],
+      "references": [
+        "https://attack.mitre.org/techniques/T1546/003/",
+        "https://learn.microsoft.com/windows/win32/wmisdk/binding-an-event-filter-with-a-logical-consumer"
+      ],
+      "logsource": {
+        "product": "windows",
+        "service": "sysmon"
+      },
+      "detection": {
+        "selection": {
+          "EventID": 21,
+          "Computer|exists": true
+        },
+        "condition": "selection"
+      },
+      "falsepositives": [
+        "SCCM, Intune, monitoring agents"
+      ],
+      "level": "medium",
+      "conversion": {
+        "splunk": "supported",
+        "elastic": "supported",
+        "kusto": "supported"
+      }
+    }
+  }
 }

@@ -1,7 +1,8 @@
 title: Generic Browser UA with No Accept-Language or Cookie Header
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a13
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a13:src:dst"
-status: designed
+status: experimental
+lifecycle: designed
 description: HTTP requests advertising Mozilla/5.0 but lacking the Accept-Language and Cookie headers a real browser sends.
 author: ghost-detection-lab
 date: 2026-11-27
@@ -20,11 +21,15 @@ logsource:
   category: proxy
 detection:
   selection:
-    cs-user-agent: 'Mozilla/5.0'
+    cs-user-agent|startswith: 'Mozilla/5.0'
   absence:
     cs-header-Accept-Language|exists: false
     cs-header-Cookie|exists: false
   condition: selection and absence
 falsepositives: [scripts and libraries with hard-coded browser UAs, health checkers]
 level: medium
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 notes: Single-sourced network detection; pair with a host process-owning-socket rule where available.

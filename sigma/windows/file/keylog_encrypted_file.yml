@@ -1,7 +1,8 @@
 title: Encrypted Keylog Staging File Appended in Temp
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0a
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0a:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: Repeated append writes to kl.enc or similarly named staging files under %TEMP%.
 author: ghost-detection-lab
 date: 2026-11-27
@@ -27,4 +28,8 @@ detection:
   condition: selection
 falsepositives: [application cache files, encrypted local storage, backup staging]
 level: low
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0a.json

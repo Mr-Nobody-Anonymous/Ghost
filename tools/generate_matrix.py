@@ -33,6 +33,7 @@ def load(path):
                 "tactics": doc.get("tactics", []) or [],
                 "sample_ref": doc.get("sample_ref", ""),
                 "fixture_ref": doc.get("fixture_ref", ""),
+                "lifecycle": doc.get("lifecycle", "unknown"),
                 "correlation": "correlation" in doc,
                 "logsource": doc.get("logsource", {}),
             }
@@ -43,7 +44,8 @@ def load(path):
         "title": re.search(r"^title:\s*(.+)$", text, re.M).group(1) if "title:" in text else path.stem,
         "id": "", "status": "unknown", "level": "", "tags": tags,
         "tactics": [x.strip() for x in lt.group(1).split(",")] if lt else [],
-        "sample_ref": "", "fixture_ref": "", "correlation": "correlation:" in text,
+        "sample_ref": "", "fixture_ref": "", "lifecycle": "",
+        "correlation": "correlation:" in text,
         "logsource": {},
     }
 
@@ -72,12 +74,12 @@ def main():
             if isinstance(t, str) and TECH_RE.match(t):
                 by_tech.setdefault(t.split(".", 1)[1].upper(), []).append(r)
 
-    fixtures = {p.stem for p in (ROOT / "fixtures" / "malicious").glob("*.json")}
+    fixtures = {p.stem for p in (ROOT / "fixtures" / "per_rule").glob("*.json")}
     out = []
     out.append("# Attack matrix (generated)\n")
     out.append(f"Generated {datetime.datetime.now(datetime.timezone.utc).isoformat()} from rule metadata. Do not edit by hand.\n")
     out.append(f"Rules: {len(rules)} | distinct techniques: {len(by_tech)} | tactic tags: {tactic_count} (not counted as techniques)\n")
-    out.append("| Technique | Rule | Source | Status | Level | Fixture | Pin | Flags |")
+    out.append("| Technique | Rule | Source | Lifecycle | Level | Fixture | Pin | Flags |")
     out.append("|---|---|---|---|---|---|---|---|")
     for tech in sorted(by_tech):
         for r in by_tech[tech]:
@@ -94,6 +96,28 @@ def main():
             )
     out.append("")
     out.append("A technique is covered only when telemetry, rule, compilation, TP fixture, and FP corpus all pass. See `docs/maturity.md`.\n")
+
+    conv_path = ROOT / "attack" / "conversion.json"
+    if conv_path.is_file():
+        import json as _json
+        conv = _json.loads(conv_path.read_text(encoding="utf-8"))
+        results = conv.get("results", {})
+        out.append("## Deployability (generated from ci/convert_check.py)\n")
+        out.append(f"Conversion run: {conv.get('generated_utc')}. "
+                   f"A rule is only deployable where the backend is `supported`.\n")
+        out.append("| Rule | splunk | elastic | kusto |")
+        out.append("|---|---|---|---|")
+        for path, entry in sorted(results.items()):
+            cells = []
+            for backend in ("splunk", "elastic", "kusto"):
+                state = (entry.get(backend) or {}).get("actual", "?")
+                cells.append("yes" if state == "supported" else "**no**")
+            out.append(f"| [{path}]({path}) | " + " | ".join(cells) + " |")
+        counts = {b: sum(1 for e in results.values()
+                         if (e.get(b) or {}).get("actual") == "supported")
+                  for b in ("splunk", "elastic", "kusto")}
+        out.append("")
+        out.append("Totals: " + ", ".join(f"{k} {v}/{len(results)}" for k, v in counts.items()) + "\n")
 
     target = ROOT / "attack"
     target.mkdir(exist_ok=True)

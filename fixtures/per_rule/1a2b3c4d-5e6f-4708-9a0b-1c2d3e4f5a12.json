@@ -6,10 +6,10 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
       "EventType": "TlsConnect",
       "DestinationPort": 443,
-      "CertificateSelfSigned": true
+      "CertificateSelfSigned": true,
+      "_ts": 0
     }
   ],
   "assert_fields": {
@@ -17,5 +17,5 @@
     "DestinationPort": 443,
     "CertificateSelfSigned": true
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

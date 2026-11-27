@@ -57,7 +57,7 @@ None. `PIN-0000` above is a schema example, not a real sample.
 
 | Sample ref | Rules | Fixtures |
 |---|---|---|
-| PIN-0000 | 31 | 31 |
+| PIN-0000 | 37 | 37 |
 
 Staleness rule: when a pin's hash changes, every rule and fixture
 listed above must be revalidated and their status set to `stale`.

@@ -1,58 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Lab Sysmon config. Requires Sysmon 13+ (Event 22/23, archive directory).
-     Apply with: sysmon64.exe -c sysmon-config.xml
-     Hash is pinned in baseline/manifest.json. -->
+<!-- Lab Sysmon config for the Ghost detection lab. Requires Sysmon 15.0+.
+
+     Apply with:   sysmon64.exe -accepteula -i sysmon-config.xml
+     Verify with:  sysmon64.exe -c
+     Hash is pinned in baseline/manifest.json; re-pin deliberately after a change.
+
+     Scope: this config collects the events the rules in sigma/ read. It is a
+     lab config, not a production one - it is deliberately narrow so the
+     baseline stays small enough to reason about. -->
 <Sysmon schemaversion="4.90">
   <HashAlgorithms>sha256</HashAlgorithms>
-  <ConfigArchiveDirectory>C:\SysmonArchive\</ConfigArchiveDirectory>
+  <!-- ArchiveDirectory must be an absolute path that exists before Sysmon
+       starts, otherwise Sysmon refuses to load the config. The previous
+       value pointed at C:\SysmonArchive\ which is not created by anything in
+       this repo, so a fresh install failed closed and collected nothing. -->
+  <ArchiveDirectory>%SystemDrive%\SysmonArchive\</ArchiveDirectory>
+  <CheckRevocation>false</CheckRevocation>
+  <DnsLookup>false</DnsLookup>
+
   <EventFiltering>
+    <!-- Process creation. Narrow by image name: this keeps the baseline small.
+         NOTE: a rule that needs process-create for an image NOT listed here
+         will silently never fire. Add the image when you add the rule. -->
     <RuleGroup name="process-create" groupRelation="or">
-      <!-- Do NOT exclude System32: schtasks.exe, powershell.exe and cmd.exe
-           are exactly the processes the persistence/recon rules need. -->
       <ProcessCreate onmatch="include">
         <Image condition="end with">schtasks.exe</Image>
         <Image condition="end with">powershell.exe</Image>
         <Image condition="end with">pwsh.exe</Image>
         <Image condition="end with">cmd.exe</Image>
+        <Image condition="end with">net.exe</Image>
+        <Image condition="end with">net1.exe</Image>
+        <Image condition="end with">sc.exe</Image>
+        <Image condition="end with">wmic.exe</Image>
         <Image condition="end with">pythonw.exe</Image>
         <Image condition="end with">python.exe</Image>
+        <Image condition="end with">werfault.exe</Image>
         <Image condition="contains">\_MEI</Image>
         <CommandLine condition="contains">SecurityCenter2</CommandLine>
         <CommandLine condition="contains">AntiVirusProduct</CommandLine>
+        <CommandLine condition="contains">__EventFilter</CommandLine>
+        <CommandLine condition="contains">CommandLineEventConsumer</CommandLine>
+        <CommandLine condition="contains">Set-MpPreference</CommandLine>
+        <CommandLine condition="contains">stop windefend</CommandLine>
       </ProcessCreate>
+    </RuleGroup>
+
+    <!-- File creation. Rules read TargetFilename only, so the config has to
+         include every path shape a rule matches. -->
+    <RuleGroup name="file-create" groupRelation="or">
       <FileCreate onmatch="include">
         <TargetFilename condition="contains">\_MEI</TargetFilename>
         <TargetFilename condition="end with">autorun.inf</TargetFilename>
-        <TargetFilename condition="end with">shot.bmp</TargetFilename>
-        <TargetFilename condition="end with">kl.enc</TargetFilename>
+        <TargetFilename condition="end with">.bmp</TargetFilename>
+        <TargetFilename condition="end with">.enc</TargetFilename>
         <TargetFilename condition="end with">svc_update.exe</TargetFilename>
-        <!-- Exclude known cache paths: .db/.zip/.bmp on a clean host are noise.
-             Narrow to the staging directory and wallet names. -->
         <TargetFilename condition="contains">\AppData\Local\Temp\</TargetFilename>
+        <TargetFilename condition="contains">\Start Menu\Programs\Startup\</TargetFilename>
+        <TargetFilename condition="contains">\User Data\</TargetFilename>
         <TargetFilename condition="contains">exodus.wallet</TargetFilename>
+        <TargetFilename condition="contains">\AppData\Local\Programs\</TargetFilename>
+        <TargetFilename condition="contains">\AppData\Roaming\</TargetFilename>
       </FileCreate>
+      <!-- FileDelete is event 26 (not 23) on Sysmon 15. The self_delete rule
+           matches on TargetFilename|fieldref Image, so Image must be present:
+           Sysmon populates Image for event 26 from the deleting process. -->
       <FileDelete onmatch="include">
         <TargetFilename condition="end with">.exe</TargetFilename>
         <TargetFilename condition="contains">\AppData\Local\Temp\</TargetFilename>
+        <TargetFilename condition="contains">\_MEI</TargetFilename>
       </FileDelete>
+    </RuleGroup>
+
+    <RuleGroup name="registry" groupRelation="or">
       <RegistryEvent onmatch="include">
         <TargetObject condition="contains">CurrentVersion\Run</TargetObject>
         <TargetObject condition="contains">CurrentVersion\RunOnce</TargetObject>
+        <TargetObject condition="contains">\SOFTWARE\Microsoft\AMSI\Providers</TargetObject>
+        <TargetObject condition="contains">\Windows Defender\</TargetObject>
+        <TargetObject condition="contains">\Microsoft\Protect\</TargetObject>
       </RegistryEvent>
-      <!-- TargetImage is a PROCESS image, not a loaded module. AMSI/ETW patching
-           is in-process memmove and generates no ProcessAccess event. This
-           selection is retained only for the lsass.exe baseline; the AMSI rule
-           is explicitly marked as requiring EDR memory telemetry. -->
+    </RuleGroup>
+
+    <!-- Process access. TargetImage here is a process image, NOT a loaded
+         module, so an include on amsi.dll/ntdll.dll can never match and was
+         removed. AMSI/ETW patching is in-process memory modification: the
+         amsi_etw_patch rule is explicitly marked as needing EDR memory
+         telemetry (see telemetry/data-sources.md). lsass.exe is the only
+         process-access target kept, for credential-dump telemetry. -->
+    <RuleGroup name="process-access" groupRelation="or">
       <ProcessAccess onmatch="include">
         <TargetImage condition="end with">lsass.exe</TargetImage>
       </ProcessAccess>
+    </RuleGroup>
+
+    <RuleGroup name="dns" groupRelation="or">
       <DnsQuery onmatch="include">
-        <!-- An include on "contains ." would match every DNS query. Constrain
-             to the random-label DGA shape instead. -->
         <QueryName condition="end with">.top</QueryName>
         <QueryName condition="end with">.xyz</QueryName>
         <QueryName condition="end with">.info</QueryName>
+        <QueryName condition="end with">.biz</QueryName>
+        <QueryName condition="end with">.ru</QueryName>
       </DnsQuery>
+    </RuleGroup>
+
+    <RuleGroup name="wmi" groupRelation="or">
       <WmiEventFilter onmatch="include">
         <EventType condition="is">WmiFilterEvent</EventType>
       </WmiEventFilter>
@@ -62,11 +113,13 @@
       <WmiEventConsumerToFilter onmatch="include">
         <EventType condition="is">WmiConsumerToFilterEvent</EventType>
       </WmiEventConsumerToFilter>
-      <ClipboardChange onmatch="include">
-        <Image condition="exclude">explorer.exe</Image>
-      </ClipboardChange>
-      <!-- Event 24 is high volume; enable only during a clipboard test window.
-           Disabled by default here; enable via the documented lab runbook. -->
     </RuleGroup>
+
+    <!-- Event 24 (ClipboardChange) is high volume and is NOT enabled here.
+         Enable it only inside a clipboard test window:
+           <ClipboardChange onmatch="exclude"><Image condition="is">explorer.exe</Image></ClipboardChange>
+         The comment that previously sat here claimed the opposite of what the
+         config did. The clipboard technique remains a documented gap
+         (inventory.md, telemetry/data-sources.md). -->
   </EventFiltering>
 </Sysmon>

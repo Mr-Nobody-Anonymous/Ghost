@@ -6,114 +6,191 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 0
     },
     {
-      "_ts": 1,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 1
     },
     {
-      "_ts": 2,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 2
     },
     {
-      "_ts": 3,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 3
     },
     {
-      "_ts": 4,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 4
     },
     {
-      "_ts": 5,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 5
     },
     {
-      "_ts": 6,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 6
     },
     {
-      "_ts": 7,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 7
     },
     {
-      "_ts": 8,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 8
     },
     {
-      "_ts": 9,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 9
     },
     {
-      "_ts": 10,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 10
     },
     {
-      "_ts": 11,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 11
     },
     {
-      "_ts": 12,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 12
     },
     {
-      "_ts": 13,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 13
     },
     {
-      "_ts": 14,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 14
     },
     {
-      "_ts": 15,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 15
     },
     {
-      "_ts": 16,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 16
     },
     {
-      "_ts": 17,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 17
     },
     {
-      "_ts": 18,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 18
     },
     {
-      "_ts": 19,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 19
     },
     {
-      "_ts": 20,
       "EventID": 22,
-      "QueryName": "abcdefghijklmnop.top"
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 20
     }
   ],
   "assert_fields": {
     "EventID": 22,
-    "QueryName": "abcdefghijklmnop.top"
+    "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+    "QueryName": "kxvqmzwprtbnl.com"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture.",
+  "members": {
+    "0b6a2f19-8d34-4c72-9e51-3a7d5f0c2b84": {
+      "title": "Process Resolves a Random-Looking Label",
+      "id": "0b6a2f19-8d34-4c72-9e51-3a7d5f0c2b84",
+      "dedup_key": "rule:0b6a2f19-8d34-4c72-9e51-3a7d5f0c2b84:host:process",
+      "status": "experimental",
+      "lifecycle": "designed",
+      "description": "Member rule of the host-side DGA burst correlation. Sysmon event 22 for a name whose first label is at least 13 lowercase characters long. Single queries are normal; the count correlation carries the signal.\n",
+      "author": "ghost-detection-lab",
+      "date": "2026-11-27",
+      "sample_ref": "PIN-0000",
+      "sigma_spec_version": "2.1.0",
+      "dedup_window": "5m",
+      "min_eval_interval": "10s",
+      "min_os": "Windows 10 21H2",
+      "sysmon_min_version": 13,
+      "tags": [
+        "attack.t1568.002"
+      ],
+      "tactics": [
+        "attack.command-and-control"
+      ],
+      "references": [
+        "https://attack.mitre.org/techniques/T1568/002/"
+      ],
+      "logsource": {
+        "product": "windows",
+        "service": "sysmon"
+      },
+      "detection": {
+        "selection": {
+          "EventID": 22,
+          "ProcessGuid|exists": true,
+          "QueryName|re": "^[a-z]{13,}\\.(com|net|org|info|biz|ru|top|xyz)$"
+        },
+        "filter_known": {
+          "Image|endswith": [
+            "\\svchost.exe",
+            "\\OneDrive.exe"
+          ]
+        },
+        "condition": "selection and not filter_known"
+      },
+      "falsepositives": [
+        "CDN hostnames with long lowercase labels",
+        "Telemetry agents using generated subdomains"
+      ],
+      "level": "low",
+      "conversion": {
+        "splunk": "supported",
+        "elastic": "supported",
+        "kusto": "supported"
+      }
+    }
+  }
 }

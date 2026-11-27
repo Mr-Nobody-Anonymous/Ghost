@@ -4,17 +4,15 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "CDN clients",
-    "telemetry agents",
-    "DNS security probes"
+    "CDN clients, telemetry agents, DNS security probes"
   ],
   "tuning_decision": "pending",
   "must_not_match": {
     "events": [
       {
         "_ts": 0,
-        "EventID": 999999,
-        "QueryName": "zzz"
+        "Image": "C:\\Windows\\explorer.exe",
+        "EventID": 1
       }
     ]
   }

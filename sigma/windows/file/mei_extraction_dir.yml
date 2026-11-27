@@ -1,7 +1,8 @@
 title: PyInstaller _MEI Extraction Directory Created
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a11
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a11:host:directory"
-status: designed
+status: experimental
+lifecycle: designed
 description: Creation of the _MEIxxxxxx extraction directory that PyInstaller onefile uses at runtime.
 author: ghost-detection-lab
 date: 2026-11-27
@@ -26,3 +27,7 @@ detection:
   condition: selection
 falsepositives: [legitimate PyInstaller-packaged tools]
 level: medium
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported

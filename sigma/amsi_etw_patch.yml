@@ -1,7 +1,8 @@
 title: AMSI or ETW Function Patch (Process Access to ntdll/amsi)
 id: 7a1c3e40-9b12-4d6e-8f21-0c3b5a9d7e11
 dedup_key: "rule:7a1c3e40-9b12-4d6e-8f21-0c3b5a9d7e11:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: >
   Detects a process obtaining writable/read-write access to amsi.dll or ntdll.dll,
   consistent with in-memory patching of AmsiScanBuffer or EtwEventWrite. A second
@@ -49,6 +50,10 @@ falsepositives:
   - Application compatibility tooling
   - Endpoint agents performing their own inline hooks
 level: high
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 references:
   - https://attack.mitre.org/techniques/T1562/001/
   - https://learn.microsoft.com/windows/win32/api/memoryapi/nf-memoryapi-virtualprotect

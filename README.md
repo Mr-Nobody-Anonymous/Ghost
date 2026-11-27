@@ -8,14 +8,15 @@ contains **detection content and inert lab tooling only**. It answers:
 
 | Path | Purpose |
 |---|---|
-| `sigma/` | Detection rules (Systematic 10 rules + schema + Suricata header rules) |
+| `sigma/` | 37 Sigma rules (32 single-event + 5 correlations) + schema + Suricata header rules |
 | `yara/` | Structural rules: packers, stage fingerprints, config artifacts |
 | `telemetry/` | Data-source map, Sysmon config, audit policy + SACLs, ETW provider list |
-| `fixtures/` | Expected-event fixtures for five gap techniques; benign FP corpus spec |
+| `fixtures/` | Generated positive/negative fixture per rule (37 pairs); benign FP corpus spec |
 | `tests/`, `ci/`, `tools/` | Rule/fixture tests, CI gate, coverage generator |
 | `samples/` | Sample pin **schema** — no binary stored |
-| `network/`, `hunting/`, `docs/`, `analysis/` | Fingerprint detections, hunting queries, runbook/tuning/maturity, triage |
-| `attack/`, `reports/` | Generated coverage matrix and precision reports |
+| `network/`, `docs/`, `analysis/` | Fingerprint detections, runbook/tuning/maturity, triage templates |
+| `hunt-queries.md`, `lab-setup.md`, `inventory.md`, `os-matrix.md` | Hunting queries, lab build, behavior inventory, OS support |
+| `attack/` | Generated coverage matrix + per-rule conversion results (`conversion.json`) |
 
 ## What is deliberately NOT here
 
@@ -39,15 +40,23 @@ included or accepted. All emulation is loopback-only and inert.
 ## Quick start
 
 ```bash
-bash ci/gate.sh          # validate -> tests -> evaluate -> ratchet -> convert -> matrix -> package
-python3 detection-as-code/evaluate.py     # TP/FP/sequence evaluation against concrete fixtures
+bash ci/gate.sh                       # 9 stages: validate, test, evaluate, fixtures,
+                                     # contract, lint, ratchet, convert, package
+python3 detection-as-code/evaluate.py # TP/FP/sequence/frequency against fixtures
 python3 -m unittest discover -s tests -p 'test_*.py'
-python3 tools/evtx_to_fixture.py --input captured.xml --rule-id <id> --output fixtures/per_rule/<id>.json
+python3 tools/capture_kit.py --rule <id-prefix>   # how to capture this rule for real
+python3 tools/evtx_to_fixture.py --input captured.xml --rule-id <id> \
+  --output fixtures/per_rule/<id>.json
+python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl
 ```
 
-The gate currently **fails at the backend-conversion stage**: pySigma's Splunk
-and KQL backends are not installed, so no rule is proven deployable. That is a
-real failure, not a glitch. See `docs/maturity.md` for the full honesty check.
+The gate passes today: 37/37 rules convert to Splunk, 31/37 to Elastic and Kusto
+(five correlations and one `fieldref` rule are Splunk-only in pySigma), every
+rule matches its generated fixture and stays silent on its negative fixture.
+
+What it does **not** prove: no event in this repository came off a machine.
+There is no blind capture, no benign-corpus run, no volume measurement. See
+`docs/maturity.md` - every fixture marked `designed` is saying exactly that.
 
 ## Safe use
 
@@ -56,7 +65,7 @@ real failure, not a glitch. See `docs/maturity.md` for the full honesty check.
 2. Start `emulation/local_listener.py`, then run the generators. All traffic stays
    on `127.0.0.1`.
 3. Compare the telemetry your SIEM/EDR actually produced against
-   `ATT&CK-coverage.md`.
+   `ATT&CK-coverage.md` and `inventory.md`.
 4. Clean up marker files and stop the listener; restore the snapshot.
 
 Do not run any of this against a system you do not own or an in-scope lab.

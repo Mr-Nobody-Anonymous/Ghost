@@ -6,16 +6,16 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
-      "EventID": 23
-    },
-    {
-      "_ts": 1,
-      "EventID": 23
+      "EventID": 26,
+      "TargetFilename": "C:\\Users\\lab\\self-image.exe",
+      "Image": "C:\\Users\\lab\\self-image.exe",
+      "_ts": 0
     }
   ],
   "assert_fields": {
-    "EventID": 23
+    "EventID": 26,
+    "TargetFilename": "C:\\Users\\lab\\self-image.exe",
+    "Image": "C:\\Users\\lab\\self-image.exe"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

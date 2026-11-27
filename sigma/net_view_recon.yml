@@ -1,7 +1,8 @@
 title: Internal Reconnaissance via net view and SecurityCenter2 Queries
 id: 6d0a4e87-3b19-4f52-a8c6-0d7e9b1f2a45
 dedup_key: "rule:6d0a4e87-3b19-4f52-a8c6-0d7e9b1f2a45:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: >
   Detects commands used to enumerate SMB shares and installed AV products, both
   common early steps before lateral movement or evasion decisions.
@@ -21,13 +22,13 @@ logsource:
 detection:
   sel_netview:
     EventID: 1
-    Image|endswith: '\\net.exe'
+    Image|endswith: '\net.exe'
     CommandLine|contains: 'view'
   sel_avquery:
     EventID: 1
     Image|endswith:
-      - '\\powershell.exe'
-      - '\\pwsh.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
     CommandLine|contains:
       - 'AntiVirusProduct'
       - 'SecurityCenter2'
@@ -36,5 +37,9 @@ falsepositives:
   - Helpdesk scripts and asset inventory tooling
   - Security product self-checks
 level: medium
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 references:
   - https://attack.mitre.org/techniques/T1135/

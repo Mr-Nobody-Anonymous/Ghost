@@ -1,7 +1,8 @@
 title: PyInstaller Onefile Staging Directory Execution
 id: e91d5c37-0b82-4a1f-a6d8-3c7e9f2b4a60
 dedup_key: "rule:e91d5c37-0b82-4a1f-a6d8-3c7e9f2b4a60:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: >
   PyInstaller onefile binaries unpack to a temporary _MEIxxxxxx directory and
   execute the child from there. Detects process creation from that path, which is
@@ -34,5 +35,9 @@ falsepositives:
   - Legitimate PyInstaller-packaged internal tools
   - Software build and QA environments
 level: medium
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 references:
   - https://attack.mitre.org/techniques/T1027/002/

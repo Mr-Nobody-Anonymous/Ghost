@@ -1,8 +1,14 @@
-title: Unsigned Executable Launched from User-Writable Path with No DNS
+title: Executable Launched from User-Writable Path with No Signer
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a06
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a06:host:user"
-status: designed
-description: "Stage-0 shape - a newly written unsigned PE under %TEMP% or Downloads that immediately makes outbound HTTPS connections without prior DNS resolution."
+status: experimental
+lifecycle: designed
+description: >
+  Process creation from a user-writable staging path (Temp, Downloads, or a
+  per-user _MEI extraction directory) where Sysmon could not resolve a
+  signature. Sysmon 1 exposes Signature and SignatureStatus, so "unsigned" is a
+  field test rather than an assumption; the original draft selected every
+  process under Temp and relied on an Image-name allowlist, which is unbounded.
 author: ghost-detection-lab
 date: 2026-11-27
 sample_ref: PIN-0000
@@ -15,19 +21,37 @@ tags: [attack.t1105, attack.t1027.002]
 tactics: [attack.execution]
 references:
   - https://attack.mitre.org/techniques/T1105/
+  - https://attack.mitre.org/techniques/T1027/002/
   - inventory.md
 logsource:
   product: windows
   service: sysmon
 detection:
-  selection:
+  selection_path:
     EventID: 1
     Image|contains:
       - '\AppData\Local\Temp\'
       - '\Downloads\'
+      - '\_MEI'
+  selection_role:
+    IntegrityLevel: Medium
   filter_signed:
-    Image|endswith: ['\msiexec.exe', '\setup.exe', '\chrome.exe', '\OneDrive.exe']
-  condition: selection and not filter_signed
-falsepositives: [portable tools, self-extracting installers, browser helpers]
+    Signature: 'Microsoft Windows'
+  filter_known_dirs:
+    Image|contains:
+      - '\AppData\Local\Microsoft\'
+      - '\AppData\Local\Packages\'
+  condition: selection_path and selection_role and not filter_signed and not filter_known_dirs
+falsepositives:
+  - Portable tools run from a Downloads folder
+  - Self-extracting installers that unpack into Temp
+  - Vendor agents that update themselves through a per-user installer
 level: medium
-notes: Correlate with proxy logs showing HTTPS to IP literals and no DNS lookup; DNS-only rules miss this path.
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
+  note: >
+    Signature and IntegrityLevel are only populated when Sysmon has signature
+    checking enabled; confirm they appear in the clean baseline before relying
+    on the filter.

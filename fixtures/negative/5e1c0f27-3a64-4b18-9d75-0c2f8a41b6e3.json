@@ -1,0 +1,23 @@
+{
+  "fixture_id": "NF-5e1c0f27",
+  "rule_id": "5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3",
+  "status": "designed",
+  "sample_ref": "benign",
+  "benign_lookalikes": [
+    "Authorised endpoint-agent upgrades that stop the service briefly",
+    "Lab baselines built with Defender disabled on purpose"
+  ],
+  "tuning_decision": "pending",
+  "must_not_match": {
+    "events": [
+      {
+        "_ts": 0,
+        "EventID": 999999,
+        "Image": "C:\\Windows\\explorer.exe",
+        "CommandLine": "benign-no-match",
+        "TargetObject": "C:\\Windows\\explorer.exe",
+        "Details": "benign-no-match"
+      }
+    ]
+  }
+}

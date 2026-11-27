@@ -1,0 +1,21 @@
+{
+  "fixture_id": "NF-0b6a2f19",
+  "rule_id": "0b6a2f19-8d34-4c72-9e51-3a7d5f0c2b84",
+  "status": "designed",
+  "sample_ref": "benign",
+  "benign_lookalikes": [
+    "CDN hostnames with long lowercase labels",
+    "Telemetry agents using generated subdomains"
+  ],
+  "tuning_decision": "pending",
+  "must_not_match": {
+    "events": [
+      {
+        "_ts": 0,
+        "EventID": 999999,
+        "QueryName": "zzz",
+        "Image": "C:\\Windows\\System32\\svchost.exe"
+      }
+    ]
+  }
+}

@@ -4,8 +4,7 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "polling dashboards changing refresh rate",
-    "backup agents"
+    "Anything on 443 - this rule is a candidate filter, not an alert"
   ],
   "tuning_decision": "pending",
   "must_not_match": {

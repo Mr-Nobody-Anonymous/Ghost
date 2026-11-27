@@ -13,8 +13,8 @@
     "events": [
       {
         "_ts": 0,
-        "query": "zzz",
-        "rcode": "benign-no-match"
+        "Image": "C:\\Windows\\explorer.exe",
+        "EventID": 1
       }
     ]
   }

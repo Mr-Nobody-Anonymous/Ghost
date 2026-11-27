@@ -4,13 +4,16 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "security products inspecting their own modules after hardware inventory"
+    "Endpoint agents that inventory hardware and then restart their own service",
+    "Driver installation workflows that briefly stop a security service"
   ],
   "tuning_decision": "pending",
   "must_not_match": {
     "events": [
       {
-        "_ts": 0
+        "_ts": 0,
+        "Image": "C:\\Windows\\explorer.exe",
+        "EventID": 1
       }
     ]
   }

@@ -19,11 +19,18 @@ except ImportError:
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 REQUIRED = {
-    "title", "id", "status", "description", "author", "date",
+    "title", "id", "status", "lifecycle", "description", "author", "date",
     "logsource", "falsepositives", "level", "references", "dedup_key",
     "sigma_spec_version", "dedup_window", "min_eval_interval", "min_os",
-    "sample_ref",
+    "sample_ref", "conversion",
 }
+
+# `status` is the Sigma spec field and is parsed by pySigma. Anything outside the
+# spec's own enum is rejected by pySigma before our conversion gate can run, so
+# the repo lifecycle (designed -> captured -> ...) lives in `lifecycle` instead.
+SIGMA_STATUS = {"stable", "test", "experimental", "deprecated", "unsupported"}
+LIFECYCLE = {"designed", "captured", "validated", "deployed", "stale", "deprecated"}
+BACKENDS = ("splunk", "elastic", "kusto")
 TACTIC_RE = re.compile(r"^attack\.(?!t\d)[a-z][a-z0-9-]+$")
 TECHNIQUE_RE = re.compile(r"^attack\.t\d{4}(\.\d{3})?$")
 UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
@@ -52,16 +59,37 @@ if yaml is not None:
 
 
 def load_pin():
+    """Load the pinned ATT&CK technique list and verify the bundle it claims.
+
+    A pin whose hash is a placeholder string is not a pin: nothing stops the
+    technique list drifting from the bundle it says it came from. The bundle is
+    kept outside the repo (it is 50+ MB); the hash is the identity, so
+    `tools/pin_attack_bundle.py` can verify or refresh it.
+    """
+    import hashlib
     p = ROOT / "attack" / "attack-bundle-pin.json"
     try:
         data = json.loads(p.read_text(encoding="utf-8"))
-        return (
-            set(t.upper() for t in data.get("techniques", [])),
-            set(data.get("tactics", [])),
-            data.get("attack_version"),
-        )
     except Exception:
-        return set(), None
+        return set(), None, None
+    version = data.get("attack_version")
+    if data.get("bundle_sha256"):
+        bundle = (ROOT / data.get("bundle_path", "")).resolve()
+        if not bundle.is_file():
+            print(f"WARN: ATT&CK bundle for pin {version} not present at "
+                  f"{data.get('bundle_path')!r}; technique IDs are checked against "
+                  f"the pinned list only", file=sys.stderr)
+        else:
+            digest = hashlib.sha256(bundle.read_bytes()).hexdigest()
+            if digest != data["bundle_sha256"]:
+                print(f"FAIL: ATT&CK bundle hash {digest} != pin {data['bundle_sha256']}",
+                      file=sys.stderr)
+                return set(), None, version
+    return (
+        set(t.upper() for t in data.get("techniques", [])),
+        set(data.get("tactics", [])),
+        version,
+    )
 
 
 def check(path, pinned, allowed_tactics, version):
@@ -84,8 +112,23 @@ def check(path, pinned, allowed_tactics, version):
     if missing:
         errors.append(f"missing keys: {', '.join(sorted(missing))}")
 
-    if doc.get("status") not in {"designed", "captured", "validated", "deployed", "stale", "deprecated"}:
-        errors.append("status must be designed/captured/validated/deployed/stale/deprecated")
+    if doc.get("status") not in SIGMA_STATUS:
+        errors.append(f"status must be a Sigma status: {', '.join(sorted(SIGMA_STATUS))} "
+                      "- the repo lifecycle belongs in `lifecycle`")
+    if doc.get("lifecycle") not in LIFECYCLE:
+        errors.append(f"lifecycle must be one of: {', '.join(sorted(LIFECYCLE))}")
+
+    conv = doc.get("conversion")
+    if not isinstance(conv, dict):
+        errors.append("conversion must be a mapping of backend -> supported|unsupported")
+    else:
+        for backend in BACKENDS:
+            value = conv.get(backend)
+            if value not in ("supported", "unsupported"):
+                errors.append(f"conversion.{backend} must be supported or unsupported")
+        unknown = set(conv) - set(BACKENDS) - {"note"}
+        if unknown:
+            errors.append(f"conversion has unknown backends: {', '.join(sorted(unknown))}")
     rid = str(doc.get("id", ""))
     if not UUID_RE.match(rid):
         errors.append("id must be a lowercase UUIDv4")

@@ -1,8 +1,14 @@
 title: WMI Event Subscription Triple Create
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03:host:user"
-status: designed
-description: Creation of all three WMI subscription objects under root\subscription in one process sequence.
+status: experimental
+lifecycle: designed
+description: >
+  All three WMI subscription objects - event filter, command-line consumer and
+  binding - created under root\subscription for the same user inside one short
+  window. A single object is common (SCCM, Intune, endpoint agents); the triple
+  is the persistence shape. Member rules each convert to every backend; the
+  temporal join converts only through the Splunk backend.
 author: ghost-detection-lab
 date: 2026-11-27
 sample_ref: PIN-0000
@@ -14,22 +20,27 @@ sysmon_min_version: 13
 tags: [attack.t1546.003]
 tactics: [attack.persistence]
 references:
-  - https://attack.mitre.org/techniques/T1546.003/
-  - inventory.md
+  - https://attack.mitre.org/techniques/T1546/003/
+  - https://learn.microsoft.com/windows/win32/wmisdk/creating-a-permanent-wmi-event-consumer
+  - docs/sequence-rules.md
 logsource:
   product: windows
-  service: sysmon
-detection:
-  selection_filter:
-    EventID: 19
-  selection_consumer:
-    EventID: 20
-  selection_binding:
-    EventID: 21
-  selection_cmdline:
-    EventID: 1
-    CommandLine|contains: ['__EventFilter', 'CommandLineEventConsumer', 'FilterToConsumerBinding']
-  condition: selection_filter or selection_consumer or selection_binding or selection_cmdline
-falsepositives: [SCCM/Intune, monitoring agents, security product self-healing]
+correlation:
+  type: temporal
+  rules:
+    - 3b7e1c48-9d02-4a6f-8e15-c740b2d93af1
+    - 7c4f9e02-5b83-4d61-a0f2-8e1d3c6b9a74
+    - 9e0d4b71-6c25-4f38-b7a9-2d5e8c1f0a63
+  timespan: 30s
+  group-by:
+    - Computer
+falsepositives:
+  - SCCM and Intune client remediation
+  - Monitoring agents that recreate subscriptions after an update
 level: high
+conversion:
+  splunk: supported
+  elastic: unsupported
+  kusto: unsupported
+  note: correlation rules are a Splunk-backend feature in pySigma 1.x
 fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03.json

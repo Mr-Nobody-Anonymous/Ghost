@@ -6,16 +6,18 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
       "EventID": 4663,
-      "ObjectName": "C:\\Users\\lab\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
-      "AccessMask": "0x1"
+      "Computer": "LAB-WS01",
+      "ObjectName": "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+      "AccessMask": "0x1",
+      "_ts": 0
     }
   ],
   "assert_fields": {
     "EventID": 4663,
-    "ObjectName": "C:\\Users\\lab\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+    "Computer": "LAB-WS01",
+    "ObjectName": "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
     "AccessMask": "0x1"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

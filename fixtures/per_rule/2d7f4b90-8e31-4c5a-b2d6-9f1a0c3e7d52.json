@@ -6,22 +6,18 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
+      "cs-header-X-Seq": "17",
+      "SourceAddress": true,
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 0
     }
   ],
   "assert_fields": {
-    "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-    "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-    "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-    "cs-uri-query": "id=abc&seq=3",
-    "cs-user-agent": "Mozilla/5.0",
-    "cs-content-type": "application/octet-stream"
+    "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
+    "cs-header-X-Seq": "17",
+    "SourceAddress": true,
+    "DestinationHostname": "cdn.example.net"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

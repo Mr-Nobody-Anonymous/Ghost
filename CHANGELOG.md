@@ -92,3 +92,97 @@ The implant implementation supplied with the request remains excluded. There is
 no `implant/` directory and no compiled sample in `samples/`. Every file here is
 detection content, inert telemetry generation, or analysis tooling. No EDR
 patching, credential access, persistence, or external C2 code is present.
+
+## 2026-11-27 (sixth expansion - defect audit)
+
+This pass was a correctness audit, not a feature pass. The gate was green for
+stages that could not fail and red for a reason that could never be fixed.
+
+### Conversion was impossible, and the reason given was wrong
+
+- `ci/convert_check.py` required `pysigma-backend-kql`, which does not exist on
+  PyPI (404). No machine could ever pass it. Dependencies now resolve, and the
+  gate measures every rule's declared `conversion:` support against real
+  pySigma output, failing on over- and under-claims. Result: splunk 37/37,
+  elastic 31/37, kusto 31/37.
+- Correlation rules declared `type: frequency` and `type: sequence`, neither of
+  which is a Sigma 2.1 correlation type; pySigma refused to load them while the
+  local evaluator "passed" them. Rewritten as `event_count` / `temporal`, and
+  the evaluator now implements the real semantics (group-by, timespan, order,
+  one match per member).
+- Five rules used the deprecated `selection | count() by X > N` pipe syntax.
+
+### Schema fault: `status` was not a Sigma field
+
+- Every rule carried `status: designed` or `deployed`, which pySigma rejects
+  with `SigmaStatusError` before conversion. `status` now holds a Sigma value and
+  the repo's own lifecycle moved to `lifecycle:`. This single fault blocked all
+  37 rules from ever reaching a backend.
+
+### Rules that could not fire on the telemetry they claimed
+
+- `self_delete.yml` selected Sysmon EventID 23 (FileDelete archive); FileDelete
+  is 26. Rewritten with `fieldref` so the image and the deleted file are compared.
+- Path literals were double-escaped (two real backslashes)
+  (`'\\\\autorun.inf'`) in `autorun_inf_writes.yml`, `credential_file_access.yml`
+  and `net_view_recon.yml` - a value that cannot occur in a Windows path.
+- `beacon_custom_headers.yml` required `cs-uri-stem|endswith: /poll` AND a query
+  string containing both `id=` and `seq=` under a conjunctive OR, so the
+  `/poll?id=&seq=` shape it was written for never matched.
+- `credential_file_access.yml` read `TargetFilename` from Sysmon 10, which is
+  ProcessAccess and has no such field.
+- `python_parent_child_shape.yml` matched `\pythonw.exe` and `\_MEI` as
+  substrings of a full `ParentImage` path.
+- `dropper_unsigned_temp_exec.yml` and `self_update_rewrite.yml` could not
+  distinguish "unsigned" or match a real install path; both now use the
+  `Signature` / `IntegrityLevel` fields and per-user install directories.
+- Correlations grouped on join keys their members never selected (`ProcessId`
+  across Security and Sysmon, `User` on a bare `EventID: 19` selection). Join
+  keys are now `Computer` / `ProcessGuid` / `Source`, and a test enforces that
+  every member can produce them.
+
+### Rules, telemetry, config
+
+- WMI triple correlation split into three standalone member rules.
+- Added `security_component_tamper.yml` and `dns_random_label_query.yml` as
+  correlation members, plus `nxdomain_long_label.yml` as a rule rather than a
+  shadow of its own correlation ID.
+- Sysmon config: removed the impossible `TargetImage: amsi.dll` ProcessAccess
+  selection, fixed the non-existent `C:\SysmonArchive\` archive path, stopped
+  claiming event 24 was enabled while enabling it, added the file/registry paths
+  the rules actually read, and corrected event 23 vs 26.
+- ATT&CK pin contained `T1533`, which is not a technique in ATT&CK 14.1 at all -
+  the "pinned" list was hand-written from the rules, so it validated itself.
+  Regenerated from the real STIX bundle (`tools/pin_attack_bundle.py`), hash
+  recorded, revoked/deprecated techniques excluded, `T1533` replaced with `T1005`.
+
+### Harness that could not fail
+
+- Negative fixtures were built by mutating the positive event, so they matched
+  the rule "for the right reason" and proved the opposite of a true negative.
+- Fixtures contained values no host emits (`C:\Users\lab\Software\...` for
+  registry keys, `id=\seq=` for query strings). Added
+  `detection-as-code/fieldtypes.py`.
+- `tools/generate_fixtures.py` emitted a non-existent fixture path convention;
+  `tools/generate_matrix.py` read the deleted `fixtures/malicious/`.
+- A test asserted every field of every OR-branch appears in one event, which
+  forced fixture values to be concatenations of every alternative.
+- Correlation fixtures now embed their member rules so they can be evaluated
+  alone.
+
+### New capability (only where it closes a named gap)
+
+- `tools/capture_kit.py` - per-rule procedure to turn a `designed` fixture into
+  a captured one.
+- `pipeline/field_contract.py` - fails the gate when a rule reads an
+  undocumented field, or a selection that cannot match (`TargetImage` = DLL on
+  Sysmon 10, EventID 23 as a delete).
+- `pipeline/lint_queries.py` - hunt queries are now checked.
+- `deploy/build_bundle.py` - emits real query text for rules that convert, and
+  refuses to build if conversion results are stale.
+- 9-stage gate; workflow installs packages that exist.
+
+### Still not done
+
+No blind capture, no benign-corpus run, no measured volume, no sample. Nothing
+in this changelog changes that: every fixture still says `designed`.

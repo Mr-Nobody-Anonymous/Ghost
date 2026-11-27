@@ -1,0 +1,20 @@
+{
+  "fixture_id": "NF-d81f4a63",
+  "rule_id": "d81f4a63-2c95-4b07-a3e8-6f10c5d92b47",
+  "status": "designed",
+  "sample_ref": "benign",
+  "benign_lookalikes": [
+    "Typos and stale bookmarks with long hostnames",
+    "Security scanners probing generated names"
+  ],
+  "tuning_decision": "pending",
+  "must_not_match": {
+    "events": [
+      {
+        "_ts": 0,
+        "rcode": "NOERROR",
+        "query": "zzz"
+      }
+    ]
+  }
+}

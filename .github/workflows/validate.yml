@@ -13,10 +13,37 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Install validation and conversion dependencies
-        run: python -m pip install --upgrade pip pyyaml yara-python sigma-cli sigma-backend-splunk sigma-backend-kql
-      - name: Run the full gate (same command a stranger runs locally)
+        # pysigma-backend-kql does not exist on PyPI (404) - the old gate asked
+        # for it, could never install, and failed for the wrong reason. The KQL
+        # and Defender backends live in pysigma-backend-kusto and
+        # pysigma-backend-microsoft365defender.
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyyaml yara-python \
+            pysigma pysigma-backend-splunk pysigma-backend-kusto \
+            pysigma-backend-elasticsearch
+
+      - name: Att&CK bundle (optional - verification only, never committed)
+        continue-on-error: true
+        run: python tools/pin_attack_bundle.py --version 14.1 --fetch --verify
+
+      - name: Run the full gate (the same command a stranger runs locally)
         run: bash ci/gate.sh
 
-  # The gate is intentionally allowed to fail: conversion of correlation rules
-  # is a known, recorded gap. See docs/maturity.md. Do not weaken this job.
+      - name: Keep the generated coverage and conversion reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-and-conversion
+          path: |
+            attack/matrix.md
+            attack/conversion.json
+            dist/detection-lab.tgz
+          if-no-files-found: warn
+
+  # The gate is meant to be green on the parts that are proven and to name the
+  # parts that are not. Do not weaken a stage to make this job pass; add the
+  # missing evidence instead. Current unproven areas are listed in
+  # docs/maturity.md (blind capture, benign corpus, volume measurement).

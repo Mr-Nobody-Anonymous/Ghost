@@ -1,7 +1,8 @@
 title: Screen-Sized BMP Written to Temp Directory
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a08
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a08:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: A BMP with a 54-byte header and dimensions matching the screen resolution created under %TEMP%.
 author: ghost-detection-lab
 date: 2026-11-27
@@ -27,5 +28,9 @@ detection:
   condition: selection
 falsepositives: [screenshot utilities, remote support tools, print spooler renders, game overlays]
 level: medium
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 notes: Refine by inspecting the first 54 bytes for BITMAPINFOHEADER and resolution equal to screen metrics.
 fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a08.json

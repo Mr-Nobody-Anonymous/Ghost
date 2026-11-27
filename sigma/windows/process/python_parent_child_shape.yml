@@ -1,8 +1,13 @@
 title: Python Interpreter Spawning Shell or Task Tools
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a07
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a07:host:user"
-status: designed
-description: pythonw.exe or a PyInstaller child spawning cmd.exe, powershell.exe, schtasks.exe, or net.exe.
+status: experimental
+lifecycle: designed
+description: >
+  pythonw.exe or a PyInstaller child spawning cmd.exe, powershell.exe,
+  schtasks.exe or net.exe. The parent is taken from Sysmon's ParentImage, which
+  records the full path, so the previous `\pythonw.exe` and `\_MEI` literals
+  could never match; both are now path predicates.
 author: ghost-detection-lab
 date: 2026-11-27
 sample_ref: PIN-0000
@@ -15,19 +20,38 @@ tags: [attack.t1059, attack.t1053.005]
 tactics: [attack.execution]
 references:
   - https://attack.mitre.org/techniques/T1059/
+  - https://attack.mitre.org/techniques/T1053/005/
   - inventory.md
 logsource:
   product: windows
   service: sysmon
 detection:
-  selection_parent:
+  selection:
     EventID: 1
-    ParentImage|endswith: ['\pythonw.exe', '\python.exe']
-    Image|endswith: ['\cmd.exe', '\powershell.exe', '\pwsh.exe', '\schtasks.exe', '\net.exe']
-  selection_mei:
-    EventID: 1
+    Image|endswith:
+      - '\cmd.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\schtasks.exe'
+      - '\net.exe'
+      - '\wmic.exe'
+  parent_python:
+    ParentImage|endswith:
+      - '\pythonw.exe'
+      - '\python.exe'
+  parent_mei:
     ParentImage|contains: '\_MEI'
-    Image|endswith: ['\cmd.exe', '\powershell.exe', '\pwsh.exe', '\schtasks.exe', '\net.exe']
-  condition: selection_parent or selection_mei
-falsepositives: [legitimate Python automation and admin tooling]
+  filter_dev:
+    ParentCommandLine|contains:
+      - '-m pip'
+      - '-m venv'
+  condition: selection and (parent_python or parent_mei) and not filter_dev
+falsepositives:
+  - Legitimate Python automation, Ansible and Salt agents
+  - Packaging and QA pipelines that drive task tools from Python
 level: medium
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
+  note: ParentCommandLine needs Sysmon 1 with command-line capture, which is default

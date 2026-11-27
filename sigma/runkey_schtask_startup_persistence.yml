@@ -1,7 +1,8 @@
 title: Run Key, Scheduled Task, or Startup Folder Persistence
 id: b6d4a2f8-1c07-4e93-9a55-7f0e2b8c6d41
 dedup_key: "rule:b6d4a2f8-1c07-4e93-9a55-7f0e2b8c6d41:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: >
   Covers the common persistence layers: registry Run key,schtasks /Create, and
   a script dropped into the user Startup folder. Correlate with a parent process
@@ -50,6 +51,10 @@ falsepositives:
   - Software installers and update mechanisms
   - IT deployment scripts
 level: medium
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 references:
   - https://attack.mitre.org/techniques/T1547/001/
   - https://attack.mitre.org/techniques/T1053/005/

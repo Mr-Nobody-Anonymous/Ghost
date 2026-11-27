@@ -1,0 +1,23 @@
+{
+  "fixture_id": "FX-5e1c0f27",
+  "rule_id": "5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3",
+  "attack_id": "T1562.001",
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
+    {
+      "EventID": 1,
+      "Computer": "LAB-WS01",
+      "Image": "C:\\Windows\\System32\\sc.exe",
+      "CommandLine": "sc.exe stop windefend",
+      "_ts": 0
+    }
+  ],
+  "assert_fields": {
+    "EventID": 1,
+    "Computer": "LAB-WS01",
+    "Image": "C:\\Windows\\System32\\sc.exe",
+    "CommandLine": "sc.exe stop windefend"
+  },
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
+}

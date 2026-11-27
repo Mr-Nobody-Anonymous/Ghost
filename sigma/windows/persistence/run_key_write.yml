@@ -1,7 +1,8 @@
 title: Run Key Write by Non-Installer Process
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a01
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a01:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: HKCU Run key write from a process that is not an installer or deployment tool.
 author: ghost-detection-lab
 date: 2026-11-27
@@ -28,4 +29,8 @@ detection:
   condition: selection and not filter_installer
 falsepositives: [software installers, IT deployment scripts]
 level: high
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a01.json

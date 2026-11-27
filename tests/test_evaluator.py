@@ -64,16 +64,44 @@ class EvaluatorTests(unittest.TestCase):
             with self.subTest(condition=cond):
                 self.assertEqual(evaluate.eval_condition(cond, results), expected)
 
-    def test_sequence_outside_window_does_not_match(self):
-        doc = next(d for d in RULES.values()
-                   if (d.get("correlation") or {}).get("type") == "sequence")
+    def test_temporal_sequence_outside_window_does_not_match(self):
+        corr = [d for d in RULES.values()
+                if (d.get("correlation") or {}).get("type") == "temporal"]
+        self.assertTrue(corr, "no temporal correlation rule to test")
+        doc = corr[0]
         events = evaluate.sequence_events(doc, RULES)
         self.assertTrue(evaluate.eval_rule(doc, events, RULES)[0])
         moved = copy.deepcopy(events)
         for ev in moved[1:]:
-            ev["_ts"] += 3600
+            ev["_ts"] = 3600
         ok, reason = evaluate.eval_rule(doc, moved, RULES)
         self.assertFalse(ok, f"out-of-window sequence matched: {reason}")
+
+    def test_temporal_sequence_requires_every_member(self):
+        doc = next(d for d in RULES.values()
+                   if (d.get("correlation") or {}).get("type") == "temporal")
+        events = evaluate.sequence_events(doc, RULES)
+        missing = events[:-1] or events
+        self.assertFalse(evaluate.eval_rule(doc, missing, RULES)[0],
+                         "a partial sequence must not satisfy a temporal rule")
+
+    def test_event_count_respects_group_by(self):
+        doc = next(d for d in RULES.values()
+                   if (d.get("correlation") or {}).get("type") == "event_count")
+        events = evaluate.sequence_events(doc, RULES)
+        group = (doc["correlation"].get("group-by") or [None])[0]
+        if group:
+            spread = [dict(ev, **{group: f"host-{i}"}) for i, ev in enumerate(events)]
+            ok, reason = evaluate.eval_rule(doc, spread, RULES)
+            self.assertFalse(ok, f"count split across {group} still matched: {reason}")
+
+    def test_correlation_join_key_present(self):
+        for doc in RULES.values():
+            if "correlation" not in doc:
+                continue
+            with self.subTest(rule=doc["id"]):
+                for key, missing in evaluate._join_values(doc, RULES).items():
+                    self.assertEqual(missing, [], f"group-by {key} absent from members {missing}")
 
     def test_wrong_field_value_fails_assertion(self):
         fx = json.loads(FIXTURES[0].read_text(encoding="utf-8"))

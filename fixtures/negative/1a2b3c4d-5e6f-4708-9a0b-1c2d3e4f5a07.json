@@ -4,7 +4,8 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "legitimate Python automation and admin tooling"
+    "Legitimate Python automation, Ansible and Salt agents",
+    "Packaging and QA pipelines that drive task tools from Python"
   ],
   "tuning_decision": "pending",
   "must_not_match": {
@@ -12,8 +13,9 @@
       {
         "_ts": 0,
         "EventID": 999999,
+        "Image": "C:\\Windows\\explorer.exe",
         "ParentImage": "benign-no-match",
-        "Image": "C:\\Windows\\explorer.exe"
+        "ParentCommandLine": "prefix--m pip-suffix"
       }
     ]
   }

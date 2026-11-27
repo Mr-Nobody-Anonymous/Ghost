@@ -6,16 +6,14 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
-      "EventID": 10,
+      "EventID": 8,
       "TargetImage": "C:\\Windows\\System32\\amsi.dll",
-      "GrantedAccess": "0x001F0FFF"
+      "_ts": 0
     }
   ],
   "assert_fields": {
-    "EventID": 10,
-    "TargetImage": "C:\\Windows\\System32\\amsi.dll",
-    "GrantedAccess": "0x001F0FFF"
+    "EventID": 8,
+    "TargetImage": "C:\\Windows\\System32\\amsi.dll"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

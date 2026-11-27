@@ -6,12 +6,12 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
-      "DestinationHostname": "C:\\Users\\lab\\AppData\\Local\\Temp\\api.ipify.org"
+      "DestinationHostname": "api.ipify.org",
+      "_ts": 0
     }
   ],
   "assert_fields": {
-    "DestinationHostname": "C:\\Users\\lab\\AppData\\Local\\Temp\\api.ipify.org"
+    "DestinationHostname": "api.ipify.org"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

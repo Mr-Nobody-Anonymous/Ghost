@@ -1,7 +1,8 @@
 title: autorun.inf Written Outside Trusted Install Paths
 id: 9b3f6a12-7c40-4e85-b2d1-5e8a0c4f7d63
 dedup_key: "rule:9b3f6a12-7c40-4e85-b2d1-5e8a0c4f7d63:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: >
   Detects creation of autorun.inf in user-writable or removable locations, a
   common USB spreading mechanism. Legitimate installers typically write it only
@@ -22,15 +23,19 @@ logsource:
 detection:
   selection:
     EventID: 11
-    TargetFilename|endswith: '\\autorun.inf'
+    TargetFilename|endswith: '\autorun.inf'
   filter_trusted:
     TargetFilename|contains:
-      - '\\Program Files\\'
-      - '\\Program Files (x86)\\'
-      - '\\Windows\\'
+      - '\Program Files\'
+      - '\Program Files (x86)\'
+      - '\Windows\'
   condition: selection and not filter_trusted
 falsepositives:
   - Legitimate setup media and enterprise imaging tools
 level: high
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 references:
   - https://attack.mitre.org/techniques/T1091/

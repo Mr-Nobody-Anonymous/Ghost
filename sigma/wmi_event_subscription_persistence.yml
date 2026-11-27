@@ -1,7 +1,8 @@
 title: WMI Event Subscription Persistence
 id: 3f92b8d1-6a04-4c77-b0e9-2d8157ac4f30
 dedup_key: "rule:3f92b8d1-6a04-4c77-b0e9-2d8157ac4f30:host:user"
-status: deployed
+status: experimental
+lifecycle: designed
 description: >
   Detects creation of a WMI event filter, command-line consumer, or their binding
   under root\subscription. This is a common no-file persistence mechanism and is
@@ -38,5 +39,9 @@ falsepositives:
   - Legitimate system management software (SCCM/Intune, monitoring agents)
   - Antimalware products using WMI for self-healing
 level: high
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 references:
   - https://attack.mitre.org/techniques/T1546/003/

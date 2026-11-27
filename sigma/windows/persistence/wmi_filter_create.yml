@@ -1,0 +1,36 @@
+title: WMI Event Filter Created Under root\subscription
+id: 3b7e1c48-9d02-4a6f-8e15-c740b2d93af1
+dedup_key: "rule:3b7e1c48-9d02-4a6f-8e15-c740b2d93af1:host:user"
+status: experimental
+lifecycle: designed
+description: >
+  Sysmon event 19 - a permanent WMI event filter was registered. Member rule of
+  the WMI triple sequence; low signal on its own because management tooling also
+  creates filters.
+author: ghost-detection-lab
+date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
+tags: [attack.t1546.003]
+tactics: [attack.persistence]
+references:
+  - https://attack.mitre.org/techniques/T1546/003/
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  selection:
+    EventID: 19
+    Computer|exists: true
+  condition: selection
+falsepositives:
+  - SCCM, Intune, monitoring agents
+level: low
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported

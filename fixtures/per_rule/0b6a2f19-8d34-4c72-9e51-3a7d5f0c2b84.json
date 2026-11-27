@@ -1,0 +1,21 @@
+{
+  "fixture_id": "FX-0b6a2f19",
+  "rule_id": "0b6a2f19-8d34-4c72-9e51-3a7d5f0c2b84",
+  "attack_id": "T1568.002",
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
+    {
+      "EventID": 22,
+      "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+      "QueryName": "kxvqmzwprtbnl.com",
+      "_ts": 0
+    }
+  ],
+  "assert_fields": {
+    "EventID": 22,
+    "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+    "QueryName": "kxvqmzwprtbnl.com"
+  },
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
+}

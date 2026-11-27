@@ -1,8 +1,14 @@
 title: Beacon Interval Shift After Configuration Change
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a14
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a14:src:dst"
-status: designed
-description: A host/destination pair changes its median inter-arrival period by more than 30 percent while keeping low variance, consistent with an in-memory sleep mutation.
+status: experimental
+lifecycle: designed
+description: >
+  A host/destination pair changes its median inter-arrival period by more than
+  30 percent while keeping low variance, consistent with an in-memory sleep
+  mutation. Sigma cannot express a variance comparison, so this is a member rule
+  that keeps the candidate flow set; the distribution test runs in the SIEM
+  search documented in docs/sequence-rules.md. It is not a standalone alert.
 author: ghost-detection-lab
 date: 2026-11-27
 sample_ref: PIN-0000
@@ -21,7 +27,16 @@ logsource:
 detection:
   selection:
     destination_port: 443
-  condition: selection | count() by SourceAddress, DestinationAddress > 20
-falsepositives: [polling dashboards changing refresh rate, backup agents]
+  filter_common_alt_ports:
+    destination_port: [80, 8080, 8443]
+  condition: selection and not filter_common_alt_ports
+falsepositives:
+  - Anything on 443 - this rule is a candidate filter, not an alert
 level: low
-notes: Requires distribution analysis at the collector; a fixed-threshold count rule cannot express the interval shift. Backend conversion likely unsupported.
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
+  note: >
+    Deliberately carries no threshold. Enable it only as the input to the
+    inter-arrival analytics job; alerting on it directly would flood.

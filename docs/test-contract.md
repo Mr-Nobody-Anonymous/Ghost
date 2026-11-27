@@ -35,3 +35,18 @@ bash ci/gate.sh
 With no pinned artifact and no captured fixtures, TP tests only prove internal
 consistency. `docs/maturity.md` records this honestly; do not report coverage
 from these tests alone.
+
+## What the harness actually enforces
+
+| Requirement above | Where it is enforced | State |
+|---|---|---|
+| 1. Field assertions | fixture `assert_fields`, asserted against the event that matched | **enforced**; assertions must appear on a matching event, not any OR-branch |
+| 2. State reset | lab procedure only | **not enforced** - nothing verifies the VM was restored |
+| 3. Independent capture | `tools/capture_kit.py` + `lifecycle` state machine | **not achieved** - every fixture is derived from its rule |
+| 4. Failure semantics | `ci/gate.sh` (9 stages) | **enforced**, including a negative test that the gate fails on a broken rule |
+| 5. NTP discipline | lab procedure only | **not enforced** |
+| 6. Timeout | evaluator rejects out-of-window sequences | **enforced** for sequences only |
+
+Requirement 3 is the important one and it is not met. Deriving a fixture from the
+rule makes it a consistency check, which is what the `designed` status means; it
+is not evidence of detection.
