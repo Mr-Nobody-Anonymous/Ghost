@@ -1,10 +1,16 @@
 title: Named Mutex Created by Unsigned Temp Process
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0d
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0d:host:mutex"
-status: experimental
+status: designed
 description: EDR-reported creation of a named mutex by a process launched from a user-writable path.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tags: [attack.t1547.001]
 tactics: [attack.persistence]
 references:

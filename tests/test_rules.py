@@ -15,7 +15,7 @@ import unittest
 try:
     import yaml
 except ImportError:
-    yaml = None
+    raise SystemExit("FAIL: PyYAML is required - validation must not fail open")
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RULES = sorted((ROOT / "sigma").rglob("*.yml"))
@@ -27,10 +27,15 @@ def load(f):
 
 class RuleTests(unittest.TestCase):
     def test_rules_exist(self):
-        self.assertGreater(len(RULES), 0)
+        self.assertGreaterEqual(len(RULES), 31, "rule corpus shrank")
 
     def test_unique_ids(self):
-        ids = [load(f).get("id") for f in RULES if load(f)]
+        ids = []
+        for f in RULES:
+            doc = load(f)
+            self.assertIsInstance(doc, dict, f"{f.name} did not parse")
+            self.assertIn("id", doc, f"{f.name} has no id")
+            ids.append(doc["id"])
         self.assertEqual(len(ids), len(set(ids)), "duplicate rule id")
 
     def test_schema_validator_passes(self):
@@ -71,7 +76,8 @@ class FixtureTests(unittest.TestCase):
             with self.subTest(rule=rid):
                 self.assertTrue(fx.exists(), f"missing positive fixture for {rid}")
                 data = json.loads(fx.read_text(encoding="utf-8"))
-                self.assertTrue(data["fields_rule_reads"], "no field assertions")
+                self.assertTrue(data["events"], "no concrete events")
+                self.assertTrue(data["assert_fields"], "no field assertions")
                 self.assertEqual(data["rule_id"], rid)
                 self.assertEqual(data["status"], "designed")
 
@@ -86,9 +92,11 @@ class FixtureTests(unittest.TestCase):
                 self.assertTrue(nf.exists(), f"missing negative fixture for {rid}")
                 data = json.loads(nf.read_text(encoding="utf-8"))
                 self.assertEqual(data["rule_id"], rid)
-                self.assertTrue(data["benign_lookalikes"] or data["expected_events"])
+                self.assertTrue(data["must_not_match"]["events"], "no concrete negative event")
+                self.assertTrue(data["benign_lookalikes"])
 
-    def test_field_assertions_match_rule_fields(self):
+    def test_field_assertions_are_real_fields(self):
+        """Assert real field names, not Sigma modifier tokens like `Image|endswith`."""
         for f in RULES:
             d = load(f)
             if not d:
@@ -96,16 +104,26 @@ class FixtureTests(unittest.TestCase):
             det = d.get("detection", {}) or {}
             selected = set()
             for name, body in det.items():
-                if name == "condition" or not isinstance(body, dict):
+                if name == "condition" or name.startswith("filter") or not isinstance(body, dict):
                     continue
-                selected.update(body.keys())
+                for k, v in body.items():
+                    if k == "condition":
+                        continue
+                    if "|exists" in k or (isinstance(v, dict) and v.get("exists") is False):
+                        continue  # absence is the assertion, not a field value
+                    selected.add(k.split("|", 1)[0])
             if not selected:
                 continue
             fx = ROOT / "fixtures" / "per_rule" / (d["id"] + ".json")
             data = json.loads(fx.read_text(encoding="utf-8"))
+            event_fields = set()
+            for ev in data["events"]:
+                event_fields.update(ev.keys())
             with self.subTest(rule=d["id"]):
-                self.assertTrue(selected.issubset(set(data["fields_rule_reads"])),
-                                f"fixture does not assert {selected - set(data['fields_rule_reads'])}")
+                missing = selected - event_fields - {"_ts"}
+                self.assertFalse(missing, f"event lacks fields {missing}")
+                for token in event_fields:
+                    self.assertNotIn("|", token, f"modifier token leaked into event: {token}")
 
 
 class ContractTests(unittest.TestCase):
@@ -140,6 +158,43 @@ class ContractTests(unittest.TestCase):
         # not silently treated as a pass.
 
 
+    def test_level_distribution(self):
+        counts = {}
+        for f in RULES:
+            d = load(f)
+            if d:
+                counts[d.get("level")] = counts.get(d.get("level"), 0) + 1
+        self.assertLessEqual(counts.get("high", 0), len(RULES) // 2,
+                             "too many high-severity rules - no triage priority")
+        self.assertGreaterEqual(len(counts), 2, "all rules have the same severity")
+
+    def test_sample_ref_resolves(self):
+        pins = (ROOT / "samples" / "PINS.md").read_text(encoding="utf-8")
+        for f in (ROOT / "fixtures" / "per_rule").glob("*.json"):
+            fx = json.loads(f.read_text(encoding="utf-8"))
+            ref = fx.get("sample_ref", "")
+            self.assertTrue(ref, f"{f.name}: no sample_ref")
+            self.assertIn(ref, pins, f"{f.name}: sample_ref {ref} not in PINS.md")
+            if fx.get("status") == "captured":
+                self.assertNotEqual(ref, "PIN-0000", "captured fixture cannot use schema placeholder")
+
+    def test_status_state_machine(self):
+        allowed = {"designed", "captured", "validated", "deployed", "stale", "deprecated"}
+        for f in (ROOT / "fixtures" / "per_rule").glob("*.json"):
+            fx = json.loads(f.read_text(encoding="utf-8"))
+            self.assertIn(fx.get("status"), allowed, f"{f.name}: bad status")
+        for f in RULES:
+            d = load(f)
+            if d:
+                self.assertIn(d.get("status"), allowed, f"{f.name}: bad rule status")
+
+    def test_min_eval_interval_present(self):
+        for f in RULES:
+            d = load(f)
+            if d:
+                self.assertTrue(d.get("min_eval_interval"), f"{f.name}: no min_eval_interval")
+                self.assertTrue(d.get("dedup_window"), f"{f.name}: no dedup_window")
+
+
 if __name__ == "__main__":
-    import sys
     unittest.main(verbosity=2)

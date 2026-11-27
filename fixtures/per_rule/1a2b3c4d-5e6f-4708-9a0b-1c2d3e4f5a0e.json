@@ -2,25 +2,118 @@
   "fixture_id": "FX-1a2b3c4d",
   "rule_id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0e",
   "attack_id": "T1568.002",
-  "telemetry_source": {
-    "product": "windows",
-    "service": "sysmon"
-  },
-  "expected_events": [
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
     {
-      "fields": {
-        "EventID": "<captured value>",
-        "QueryName|re": "<captured value>"
-      },
-      "occurs_within_seconds": 0
+      "_ts": 0,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 1,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 2,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 3,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 4,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 5,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 6,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 7,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 8,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 9,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 10,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 11,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 12,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 13,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 14,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 15,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 16,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 17,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 18,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 19,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
+    },
+    {
+      "_ts": 20,
+      "EventID": 22,
+      "QueryName": "abcdefghijklmnop.top"
     }
   ],
-  "fields_rule_reads": [
-    "EventID",
-    "QueryName|re"
-  ],
-  "status": "designed",
-  "captured_utc": "",
-  "sample_ref": "PIN-0000",
-  "note": "DESIGNED stub - replace with an independent blind capture."
+  "assert_fields": {
+    "EventID": 22,
+    "QueryName": "abcdefghijklmnop.top"
+  },
+  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
 }

@@ -51,3 +51,14 @@ immutable_path: ""                    # external, access-controlled store - NOT 
 ## Current pins
 
 None. `PIN-0000` above is a schema example, not a real sample.
+
+<!-- GENERATED:START -->
+## Generated references
+
+| Sample ref | Rules | Fixtures |
+|---|---|---|
+| PIN-0000 | 31 | 31 |
+
+Staleness rule: when a pin's hash changes, every rule and fixture
+listed above must be revalidated and their status set to `stale`.
+<!-- GENERATED:END -->

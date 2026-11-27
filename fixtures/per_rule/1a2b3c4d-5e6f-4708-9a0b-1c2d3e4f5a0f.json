@@ -2,23 +2,20 @@
   "fixture_id": "FX-1a2b3c4d",
   "rule_id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0f",
   "attack_id": "T1070.004",
-  "telemetry_source": {
-    "product": "windows",
-    "service": "sysmon"
-  },
-  "expected_events": [
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
     {
-      "fields": {
-        "EventID": "<captured value>"
-      },
-      "occurs_within_seconds": 0
+      "_ts": 0,
+      "EventID": 23
+    },
+    {
+      "_ts": 1,
+      "EventID": 23
     }
   ],
-  "fields_rule_reads": [
-    "EventID"
-  ],
-  "status": "designed",
-  "captured_utc": "",
-  "sample_ref": "PIN-0000",
-  "note": "DESIGNED stub - replace with an independent blind capture."
+  "assert_fields": {
+    "EventID": 23
+  },
+  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
 }

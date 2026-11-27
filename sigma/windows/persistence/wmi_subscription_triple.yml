@@ -1,10 +1,16 @@
 title: WMI Event Subscription Triple Create
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03:host:user"
-status: experimental
+status: designed
 description: Creation of all three WMI subscription objects under root\subscription in one process sequence.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tags: [attack.t1546.003]
 tactics: [attack.persistence]
 references:
@@ -26,4 +32,4 @@ detection:
   condition: selection_filter or selection_consumer or selection_binding or selection_cmdline
 falsepositives: [SCCM/Intune, monitoring agents, security product self-healing]
 level: high
-fixture_ref: fixtures/malicious/T1546.003.json
+fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03.json

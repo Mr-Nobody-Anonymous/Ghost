@@ -1,13 +1,19 @@
 title: Possible DGA - High Entropy Labels and NXDOMAIN Burst
 id: 5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84
 dedup_key: "rule:5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84:host:user"
-status: experimental
+status: designed
 description: >
   Correlates long, high-entropy DNS labels (14+ chars from a lowercase alphabet)
   with repeated NXDOMAIN responses from one host. Tune the threshold against your
   environment; CDNs and telemetry endpoints also produce long labels.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tactics: [attack.command-and-control]
 tags: [attack.t1568.002]
 logsource:

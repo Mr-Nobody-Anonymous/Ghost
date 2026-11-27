@@ -3,6 +3,17 @@
   "pin_date": "2026-11-27",
   "bundle_sha256": "PLACEHOLDER - replace with the sha256 of the pinned STIX bundle you actually use",
   "offline_note": "Hand-curated offline technique list for validation. Replace with a real ATT&CK STIX bundle hash when your environment provides one; validation still runs offline against the techniques array.",
+  "tactics": [
+    "attack.collection",
+    "attack.command-and-control",
+    "attack.credential-access",
+    "attack.defense-evasion",
+    "attack.discovery",
+    "attack.execution",
+    "attack.persistence",
+    "attack.privilege-escalation",
+    "attack.lateral-movement"
+  ],
   "techniques": [
     "T1027.002",
     "T1053.005",

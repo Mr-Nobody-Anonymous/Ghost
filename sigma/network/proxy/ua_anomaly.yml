@@ -1,10 +1,16 @@
 title: Generic Browser UA with No Accept-Language or Cookie Header
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a13
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a13:src:dst"
-status: experimental
+status: designed
 description: HTTP requests advertising Mozilla/5.0 but lacking the Accept-Language and Cookie headers a real browser sends.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tags: [attack.t1071.001]
 tactics: [attack.command-and-control]
 references:

@@ -1,12 +1,18 @@
 title: Internal Reconnaissance via net view and SecurityCenter2 Queries
 id: 6d0a4e87-3b19-4f52-a8c6-0d7e9b1f2a45
 dedup_key: "rule:6d0a4e87-3b19-4f52-a8c6-0d7e9b1f2a45:host:user"
-status: experimental
+status: designed
 description: >
   Detects commands used to enumerate SMB shares and installed AV products, both
   common early steps before lateral movement or evasion decisions.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tactics: [attack.discovery]
 tags: [attack.t1135, attack.t1592.002]
 logsource:

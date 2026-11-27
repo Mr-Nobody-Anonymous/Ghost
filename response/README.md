@@ -13,4 +13,4 @@ Each rule needs a triage step and severity before it can be promoted.
 | Packer YARA hits | low | Check signer and path; most will be benign packed tools |
 
 Add a severity and a triage step to any new rule before enabling it. See
-`analysis/triage.md` for preservation and evidence minimums.
+`analysis/iocs.md` and `analysis/report-template.md` for evidence minimums.

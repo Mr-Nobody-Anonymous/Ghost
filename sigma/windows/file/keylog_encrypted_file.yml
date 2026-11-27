@@ -1,10 +1,16 @@
 title: Encrypted Keylog Staging File Appended in Temp
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0a
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0a:host:user"
-status: experimental
+status: designed
 description: Repeated append writes to kl.enc or similarly named staging files under %TEMP%.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tags: [attack.t1056.001]
 tactics: [attack.collection]
 references:
@@ -21,4 +27,4 @@ detection:
   condition: selection
 falsepositives: [application cache files, encrypted local storage, backup staging]
 level: low
-fixture_ref: fixtures/malicious/T1056.001.json
+fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0a.json

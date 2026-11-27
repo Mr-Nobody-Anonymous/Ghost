@@ -1,10 +1,16 @@
 title: Security Product Enumeration via SecurityCenter2
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0c
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0c:host:user"
-status: experimental
+status: designed
 description: powershell -NoP -NonI -C querying AntiVirusProduct from root/SecurityCenter2.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tags: [attack.t1592.002]
 tactics: [attack.discovery]
 references:
@@ -21,4 +27,4 @@ detection:
   condition: selection
 falsepositives: [inventory agents, security product self-checks]
 level: medium
-fixture_ref: fixtures/malicious/T1592.002.json
+fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0c.json

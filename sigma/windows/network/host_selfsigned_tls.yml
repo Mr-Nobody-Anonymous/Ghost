@@ -1,10 +1,16 @@
 title: Process TLS Session to Self-Signed Certificate on 443
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a12
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a12:host:process"
-status: experimental
+status: designed
 description: EDR TLS callback reports a self-signed server certificate on 443 for a non-browser process; host-side twin of the Zeek x509 rule.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tags: [attack.t1071.001]
 tactics: [attack.command-and-control]
 references:

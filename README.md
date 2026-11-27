@@ -39,12 +39,13 @@ included or accepted. All emulation is loopback-only and inert.
 ## Quick start
 
 ```bash
-bash ci/gate.sh          # validate -> test -> ratchet -> convert -> matrix -> package
-python3 tools/generate_matrix.py
+bash ci/gate.sh          # validate -> tests -> evaluate -> ratchet -> convert -> matrix -> package
+python3 detection-as-code/evaluate.py     # TP/FP/sequence evaluation against concrete fixtures
 python3 -m unittest discover -s tests -p 'test_*.py'
+python3 tools/evtx_to_fixture.py --input captured.xml --rule-id <id> --output fixtures/per_rule/<id>.json
 ```
 
-The gate currently **fails at stage 4 (backend conversion)**: pySigma's Splunk
+The gate currently **fails at the backend-conversion stage**: pySigma's Splunk
 and KQL backends are not installed, so no rule is proven deployable. That is a
 real failure, not a glitch. See `docs/maturity.md` for the full honesty check.
 

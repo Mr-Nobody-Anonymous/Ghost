@@ -2,24 +2,206 @@
   "fixture_id": "FX-8f2d5c71",
   "rule_id": "8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52",
   "attack_id": "T1071.001",
-  "telemetry_source": {
-    "category": "proxy"
-  },
-  "expected_events": [
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
     {
-      "fields": {
-        "SourceAddress": "<captured value>",
-        "DestinationHostname": "<captured value>"
-      },
-      "occurs_within_seconds": 0
+      "_ts": 0,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 1,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 2,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 3,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 4,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 5,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 6,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 7,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 8,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 9,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 10,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 11,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 12,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 13,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 14,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 15,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 16,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 17,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 18,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 19,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
+    },
+    {
+      "_ts": 20,
+      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+      "cs-uri-query": "id=abc&seq=3",
+      "cs-user-agent": "Mozilla/5.0",
+      "cs-content-type": "application/octet-stream"
     }
   ],
-  "fields_rule_reads": [
-    "SourceAddress",
-    "DestinationHostname"
-  ],
-  "status": "designed",
-  "captured_utc": "",
-  "sample_ref": "PIN-0000",
-  "note": "DESIGNED stub - replace with an independent blind capture."
+  "assert_fields": {
+    "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+    "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+    "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
+    "cs-uri-query": "id=abc&seq=3",
+    "cs-user-agent": "Mozilla/5.0",
+    "cs-content-type": "application/octet-stream"
+  },
+  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
 }

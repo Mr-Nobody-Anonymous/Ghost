@@ -2,25 +2,118 @@
   "fixture_id": "FX-5c8e7a21",
   "rule_id": "5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84",
   "attack_id": "T1568.002",
-  "telemetry_source": {
-    "product": "zeek",
-    "service": "dns"
-  },
-  "expected_events": [
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
     {
-      "fields": {
-        "query|re": "<captured value>",
-        "rcode": "<captured value>"
-      },
-      "occurs_within_seconds": 0
+      "_ts": 0,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 1,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 2,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 3,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 4,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 5,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 6,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 7,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 8,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 9,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 10,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 11,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 12,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 13,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 14,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 15,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 16,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 17,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 18,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 19,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
+    },
+    {
+      "_ts": 20,
+      "query": "abcdefghijklmnop.top",
+      "rcode": "NXDOMAIN"
     }
   ],
-  "fields_rule_reads": [
-    "query|re",
-    "rcode"
-  ],
-  "status": "designed",
-  "captured_utc": "",
-  "sample_ref": "PIN-0000",
-  "note": "DESIGNED stub - replace with an independent blind capture."
+  "assert_fields": {
+    "query": "abcdefghijklmnop.top",
+    "rcode": "NXDOMAIN"
+  },
+  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
 }

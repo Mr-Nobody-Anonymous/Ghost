@@ -1,13 +1,21 @@
 {
   "fixture_id": "NF-6d0a4e87",
   "rule_id": "6d0a4e87-3b19-4f52-a8c6-0d7e9b1f2a45",
-  "software_class": "benign lookalike from rule falsepositives",
+  "status": "designed",
+  "sample_ref": "benign",
   "benign_lookalikes": [
     "Helpdesk scripts and asset inventory tooling",
     "Security product self-checks"
   ],
-  "why_it_should_not_alert": "tuning decision pending",
   "tuning_decision": "pending",
-  "expected_events": [],
-  "sample_ref": "benign"
+  "must_not_match": {
+    "events": [
+      {
+        "_ts": 0,
+        "EventID": 999999,
+        "Image": "C:\\Windows\\explorer.exe",
+        "CommandLine": "benign-no-match"
+      }
+    ]
+  }
 }

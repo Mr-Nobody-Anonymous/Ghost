@@ -1,13 +1,22 @@
 {
   "fixture_id": "NF-2d7f4b90",
   "rule_id": "2d7f4b90-8e31-4c5a-b2d6-9f1a0c3e7d52",
-  "software_class": "benign lookalike from rule falsepositives",
+  "status": "designed",
+  "sample_ref": "benign",
   "benign_lookalikes": [
     "Internal applications that use similarly named custom headers",
     "Misconfigured monitoring agents"
   ],
-  "why_it_should_not_alert": "tuning decision pending",
   "tuning_decision": "pending",
-  "expected_events": [],
-  "sample_ref": "benign"
+  "must_not_match": {
+    "events": [
+      {
+        "_ts": 0,
+        "cs-uri-stem": "C:\\Windows\\explorer.exe",
+        "cs-uri-query": "benign-no-match",
+        "cs-user-agent": "curl/8.0",
+        "cs-content-type": "benign-no-match"
+      }
+    ]
+  }
 }

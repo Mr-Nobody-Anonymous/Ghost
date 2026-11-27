@@ -1,7 +1,7 @@
 title: Beaconing - High Request Frequency with Regular Intervals
 id: 8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52
 dedup_key: "rule:8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52:host:user"
-status: experimental
+status: designed
 description: >
   Sigma correlation rule: many requests to the same destination from one client
   in a short window. Catches jittered long-poll beacons that evade simple
@@ -9,6 +9,12 @@ description: >
   sigma convert before deployment.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "60s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tactics: [attack.command-and-control]
 tags: [attack.t1071.001]
 logsource:

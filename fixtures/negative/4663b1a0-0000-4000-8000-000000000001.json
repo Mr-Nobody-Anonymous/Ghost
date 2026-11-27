@@ -1,14 +1,22 @@
 {
   "fixture_id": "NF-4663b1a0",
   "rule_id": "4663b1a0-0000-4000-8000-000000000001",
-  "software_class": "benign lookalike from rule falsepositives",
+  "status": "designed",
+  "sample_ref": "benign",
   "benign_lookalikes": [
     "hardware inventory agents",
     "licensing tools",
     "installers checking specs"
   ],
-  "why_it_should_not_alert": "tuning decision pending",
   "tuning_decision": "pending",
-  "expected_events": [],
-  "sample_ref": "benign"
+  "must_not_match": {
+    "events": [
+      {
+        "_ts": 0,
+        "EventID": 999999,
+        "ObjectName": "benign-no-match",
+        "AccessMask": "zzz"
+      }
+    ]
+  }
 }

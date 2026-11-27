@@ -33,7 +33,7 @@ and re-run the gate.
 
 ## Response to an alert
 
-See `analysis/triage.md`. Preserve original artifacts, hash everything, record
+See `analysis/iocs.md` and `analysis/report-template.md`. Preserve original artifacts, hash everything, record
 UTC timestamps, and distinguish observed from inferred behavior.
 
 ## Stop conditions

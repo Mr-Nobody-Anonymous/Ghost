@@ -2,29 +2,20 @@
   "fixture_id": "FX-e91d5c37",
   "rule_id": "e91d5c37-0b82-4a1f-a6d8-3c7e9f2b4a60",
   "attack_id": "T1027.002",
-  "telemetry_source": {
-    "product": "windows",
-    "service": "sysmon"
-  },
-  "expected_events": [
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
     {
-      "fields": {
-        "EventID": "<captured value>",
-        "Image|contains": "<captured value>",
-        "CommandLine|contains": "<captured value>",
-        "ParentImage|endswith": "<captured value>"
-      },
-      "occurs_within_seconds": 0
+      "_ts": 0,
+      "EventID": 1,
+      "Image": "C:\\Users\\lab\\\\_MEI",
+      "CommandLine": "C:\\Users\\lab\\\\_MEI"
     }
   ],
-  "fields_rule_reads": [
-    "EventID",
-    "Image|contains",
-    "CommandLine|contains",
-    "ParentImage|endswith"
-  ],
-  "status": "designed",
-  "captured_utc": "",
-  "sample_ref": "PIN-0000",
-  "note": "DESIGNED stub - replace with an independent blind capture."
+  "assert_fields": {
+    "EventID": 1,
+    "Image": "C:\\Users\\lab\\\\_MEI",
+    "CommandLine": "C:\\Users\\lab\\\\_MEI"
+  },
+  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
 }

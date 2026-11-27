@@ -21,6 +21,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 REQUIRED = {
     "title", "id", "status", "description", "author", "date",
     "logsource", "falsepositives", "level", "references", "dedup_key",
+    "sigma_spec_version", "dedup_window", "min_eval_interval", "min_os",
+    "sample_ref",
 }
 TACTIC_RE = re.compile(r"^attack\.(?!t\d)[a-z][a-z0-9-]+$")
 TECHNIQUE_RE = re.compile(r"^attack\.t\d{4}(\.\d{3})?$")
@@ -53,12 +55,16 @@ def load_pin():
     p = ROOT / "attack" / "attack-bundle-pin.json"
     try:
         data = json.loads(p.read_text(encoding="utf-8"))
-        return set(t.upper() for t in data.get("techniques", [])), data.get("attack_version")
+        return (
+            set(t.upper() for t in data.get("techniques", [])),
+            set(data.get("tactics", [])),
+            data.get("attack_version"),
+        )
     except Exception:
         return set(), None
 
 
-def check(path, pinned, version):
+def check(path, pinned, allowed_tactics, version):
     errors = []
     text = path.read_text(encoding="utf-8")
     if yaml is None:
@@ -78,6 +84,8 @@ def check(path, pinned, version):
     if missing:
         errors.append(f"missing keys: {', '.join(sorted(missing))}")
 
+    if doc.get("status") not in {"designed", "captured", "validated", "deployed", "stale", "deprecated"}:
+        errors.append("status must be designed/captured/validated/deployed/stale/deprecated")
     rid = str(doc.get("id", ""))
     if not UUID_RE.match(rid):
         errors.append("id must be a lowercase UUIDv4")
@@ -103,6 +111,8 @@ def check(path, pinned, version):
         for t in tactics:
             if not isinstance(t, str) or not TACTIC_RE.match(t):
                 errors.append(f"malformed tactic {t}")
+            elif allowed_tactics and t not in allowed_tactics:
+                errors.append(f"tactic {t} not in pinned allowlist")
         if not any(isinstance(t, str) and TECHNIQUE_RE.match(t) for t in tags):
             errors.append("no ATT&CK technique tag")
 
@@ -132,14 +142,14 @@ def main():
     if not files:
         print(f"no .yml files in {root}", file=sys.stderr)
         return 1
-    pinned, version = load_pin()
+    pinned, tactics, version = load_pin()
     if not pinned:
         print("WARN: no ATT&CK pin loaded; technique existence not checked", file=sys.stderr)
 
     seen_ids = {}
     failed = 0
     for f in files:
-        errs = check(f, pinned, version)
+        errs = check(f, pinned, tactics, version)
         text = f.read_text(encoding="utf-8")
         m = re.search(r"^id:\s*([0-9a-f-]{36})\s*$", text, re.M)
         if m:

@@ -1,10 +1,16 @@
 title: Anti-Analysis Triage Followed by AMSI or ETW Patch
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05:host:user"
-status: experimental
+status: designed
 description: Correlation of a CPU-info registry read with a process access to amsi.dll or ntdll.dll shortly after, from the same process.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "5s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tags: [attack.t1562.001, attack.t1497]
 tactics: [attack.defense-evasion]
 references:
@@ -12,7 +18,9 @@ references:
   - inventory.md
 logsource:
   product: windows
-  service: sysmon
+  # Mixed logsource: member 4663b1a0 is Security 4663, member 7a1c3e40 is
+  # EDR/Sysmon. Declaring a single service made the pair unsatisfiable.
+  services: [security, sysmon, edr]
 correlation:
   type: sequence
   rules:
@@ -24,4 +32,4 @@ correlation:
   ordered: true
 falsepositives: [security products inspecting their own modules after hardware inventory]
 level: high
-fixture_ref: fixtures/malicious/T1562.001-sequence.json
+fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05.json

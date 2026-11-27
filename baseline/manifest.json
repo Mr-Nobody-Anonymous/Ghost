@@ -1,5 +1,5 @@
 {
-  "sysmon_config_sha256": "9935765e29601d1bc39710cf9df2ad3ab91074b5d9b89cca4b0b58fc9c5662c3",
+  "sysmon_config_sha256": "44f8a19dae83011151e92e385dc08e2285e995266b3e23387e8f27063d0ee25f",
   "auditpol_doc_sha256": "b15183b7648ea923831ab693c952ed60f7c22b7d92c527df2e66cece43a3a9e4",
   "captured": false,
   "note": "hashes pin the repo copies; drift test fails when config changes without a re-baseline"

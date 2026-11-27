@@ -1,10 +1,16 @@
 title: Python Interpreter Spawning Shell or Task Tools
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a07
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a07:host:user"
-status: experimental
+status: designed
 description: pythonw.exe or a PyInstaller child spawning cmd.exe, powershell.exe, schtasks.exe, or net.exe.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tags: [attack.t1059, attack.t1053.005]
 tactics: [attack.execution]
 references:

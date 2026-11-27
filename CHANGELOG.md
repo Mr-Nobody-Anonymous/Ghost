@@ -64,6 +64,28 @@
 - Added `response/rules/`, `metrics/ceilings.json`, `baseline/manifest.json`,
   and updated `_schema.md` with ID namespace and deprecation policy.
 
+## 2026-11-27 (fifth expansion - evaluator and config correctness)
+
+- Added `detection-as-code/evaluate.py`: collection-wide loading, real Sigma
+  modifiers and condition grammar, sequence/frequency correlation, value
+  assertions, and per-rule failure output. All 31 rules match their positive
+  fixtures and stay silent on negative ones.
+- Rewrote fixture generation with concrete field values and `must_not_match`
+  negative events; collapsed `fixtures/malicious/` into `fixtures/per_rule/`.
+- Fixed five Sysmon config faults: System32 ProcessCreate exclusion, DNS
+  no-op include, empty archive directory, invalid AMSI `TargetImage` selection,
+  and unfiltered high-volume FileCreate; added `HashAlgorithms` and Sysmon 13+
+  pin. CPU-key access match changed from substring `0x1` to anchored regex.
+- Fixed correlation logsource mismatch (`services: [security, sysmon, edr]`).
+- Added 24 tests including evaluator semantics, out-of-window sequence, mutation
+  case, gate-component tests, level histogram, sample_ref resolution, and status
+  state machine. PyYAML absence is now a hard fail.
+- Rewrote `convert_check.py` to load the whole collection and require all
+  backends; wired the full gate into the CI workflow and fixed the tarball manifest.
+- Added `NOTICE`, Sigma spec version, `sample_ref`, dedup windows, min eval
+  intervals, OS/Sysmon minimums, generated PINS references, an evtx->fixture
+  parser, an emulation fidelity table, and removed the analysis/response overlap.
+
 ## Scope note
 
 The implant implementation supplied with the request remains excluded. There is

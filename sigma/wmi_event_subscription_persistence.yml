@@ -1,13 +1,19 @@
 title: WMI Event Subscription Persistence
 id: 3f92b8d1-6a04-4c77-b0e9-2d8157ac4f30
 dedup_key: "rule:3f92b8d1-6a04-4c77-b0e9-2d8157ac4f30:host:user"
-status: stable
+status: deployed
 description: >
   Detects creation of a WMI event filter, command-line consumer, or their binding
   under root\subscription. This is a common no-file persistence mechanism and is
   often missed by autoruns triage.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tactics: [attack.persistence, attack.privilege-escalation]
 tags: [attack.t1546.003]
 logsource:

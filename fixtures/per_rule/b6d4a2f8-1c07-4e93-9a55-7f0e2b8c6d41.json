@@ -2,35 +2,24 @@
   "fixture_id": "FX-b6d4a2f8",
   "rule_id": "b6d4a2f8-1c07-4e93-9a55-7f0e2b8c6d41",
   "attack_id": "T1547.001",
-  "telemetry_source": {
-    "product": "windows",
-    "service": "sysmon"
-  },
-  "expected_events": [
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
     {
-      "fields": {
-        "EventID": "<captured value>",
-        "TargetObject|contains": "<captured value>",
-        "Image|endswith": "<captured value>",
-        "CommandLine|contains": "<captured value>",
-        "TargetFilename|contains": "<captured value>",
-        "TargetFilename|endswith": "<captured value>",
-        "ParentImage|endswith": "<captured value>"
-      },
-      "occurs_within_seconds": 0
+      "_ts": 0,
+      "EventID": 12,
+      "TargetObject": "C:\\Users\\lab\\\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+      "Image": "C:\\Windows\\System32\\schtasks.exe",
+      "CommandLine": "prefix-/Create-suffix",
+      "TargetFilename": "C:\\Users\\lab\\Start Menu\\Programs\\Startup\\.cmd"
     }
   ],
-  "fields_rule_reads": [
-    "EventID",
-    "TargetObject|contains",
-    "Image|endswith",
-    "CommandLine|contains",
-    "TargetFilename|contains",
-    "TargetFilename|endswith",
-    "ParentImage|endswith"
-  ],
-  "status": "designed",
-  "captured_utc": "",
-  "sample_ref": "PIN-0000",
-  "note": "DESIGNED stub - replace with an independent blind capture."
+  "assert_fields": {
+    "EventID": 12,
+    "TargetObject": "C:\\Users\\lab\\\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+    "Image": "C:\\Windows\\System32\\schtasks.exe",
+    "CommandLine": "prefix-/Create-suffix",
+    "TargetFilename": "C:\\Users\\lab\\Start Menu\\Programs\\Startup\\.cmd"
+  },
+  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
 }

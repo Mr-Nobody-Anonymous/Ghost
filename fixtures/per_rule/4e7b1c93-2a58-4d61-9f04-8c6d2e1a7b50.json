@@ -2,29 +2,18 @@
   "fixture_id": "FX-4e7b1c93",
   "rule_id": "4e7b1c93-2a58-4d61-9f04-8c6d2e1a7b50",
   "attack_id": "T1555.003",
-  "telemetry_source": {
-    "product": "windows",
-    "service": "sysmon"
-  },
-  "expected_events": [
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
     {
-      "fields": {
-        "EventID": "<captured value>",
-        "TargetFilename|contains": "<captured value>",
-        "TargetFilename|endswith": "<captured value>",
-        "SourceImage|endswith": "<captured value>"
-      },
-      "occurs_within_seconds": 0
+      "_ts": 0,
+      "EventID": 10,
+      "TargetFilename": "C:\\Users\\lab\\\\\\Google\\\\Chrome\\\\User Data\\\\Local State"
     }
   ],
-  "fields_rule_reads": [
-    "EventID",
-    "TargetFilename|contains",
-    "TargetFilename|endswith",
-    "SourceImage|endswith"
-  ],
-  "status": "designed",
-  "captured_utc": "",
-  "sample_ref": "PIN-0000",
-  "note": "DESIGNED stub - replace with an independent blind capture."
+  "assert_fields": {
+    "EventID": 10,
+    "TargetFilename": "C:\\Users\\lab\\\\\\Google\\\\Chrome\\\\User Data\\\\Local State"
+  },
+  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
 }

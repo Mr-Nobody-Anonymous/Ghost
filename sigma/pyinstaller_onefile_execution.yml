@@ -1,13 +1,19 @@
 title: PyInstaller Onefile Staging Directory Execution
 id: e91d5c37-0b82-4a1f-a6d8-3c7e9f2b4a60
 dedup_key: "rule:e91d5c37-0b82-4a1f-a6d8-3c7e9f2b4a60:host:user"
-status: experimental
+status: designed
 description: >
   PyInstaller onefile binaries unpack to a temporary _MEIxxxxxx directory and
   execute the child from there. Detects process creation from that path, which is
   a strong indicator of a packaged Python payload regardless of its purpose.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tactics: [attack.defense-evasion]
 tags: [attack.t1027.002]
 logsource:

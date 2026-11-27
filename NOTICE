@@ -1,0 +1,20 @@
+NOTICE
+
+This project is licensed under the MIT License (see LICENSE).
+
+Third-party materials:
+
+- MITRE ATT&CK (R) — techniques and tactic names referenced in rule tags and
+  documentation are used under the ATT&CK terms of use, CC BY-SA 4.0.
+  See https://attack.mitre.org/terms-of-use/ . This project is not affiliated
+  with or endorsed by MITRE.
+
+- Sigma rule format — rules follow the Sigma specification version 2.1.0.
+  Correlation rule syntax is spec-version-specific; version is pinned per rule
+  in the `sigma_spec_version` field and validated by
+  `detection-as-code/validate_rules.py`. See https://sigmahq.io/ .
+
+- Sysmon configuration is adapted from common public guidance and is provided
+  as-is for lab use. Microsoft Sysmon is a Microsoft product.
+
+No implant, exploit, or operational malware code is included in this repository.

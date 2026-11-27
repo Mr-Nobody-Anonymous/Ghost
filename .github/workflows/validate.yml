@@ -1,4 +1,4 @@
-name: validate
+name: gate
 
 on:
   push:
@@ -6,22 +6,17 @@ on:
   pull_request:
 
 jobs:
-  rules:
+  gate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install validation dependencies
-        run: python -m pip install --upgrade pip pyyaml yara-python
-      - name: Validate rule schema and duplicate keys
-        run: python3 detection-as-code/validate_rules.py
-      - name: Run rule and contract tests
-        run: python3 -m unittest discover -s tests -p 'test_*.py'
-      - name: Generate coverage matrix
-        run: python3 tools/generate_matrix.py
+      - name: Install validation and conversion dependencies
+        run: python -m pip install --upgrade pip pyyaml yara-python sigma-cli sigma-backend-splunk sigma-backend-kql
+      - name: Run the full gate (same command a stranger runs locally)
+        run: bash ci/gate.sh
 
-  # Backend conversion is intentionally a separate, hard gate (ci/convert_check.py).
-  # It is not run here until pySigma Splunk/KQL backends are installed and the
-  # conversion risks on correlation rules have been resolved. See docs/maturity.md.
+  # The gate is intentionally allowed to fail: conversion of correlation rules
+  # is a known, recorded gap. See docs/maturity.md. Do not weaken this job.

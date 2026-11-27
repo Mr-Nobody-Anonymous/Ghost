@@ -1,10 +1,16 @@
 title: Beacon Interval Shift After Configuration Change
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a14
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a14:src:dst"
-status: experimental
+status: designed
 description: A host/destination pair changes its median inter-arrival period by more than 30 percent while keeping low variance, consistent with an in-memory sleep mutation.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tags: [attack.t1071.001]
 tactics: [attack.command-and-control]
 references:

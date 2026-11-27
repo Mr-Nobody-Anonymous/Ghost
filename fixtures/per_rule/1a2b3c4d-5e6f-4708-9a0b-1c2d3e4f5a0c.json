@@ -2,27 +2,20 @@
   "fixture_id": "FX-1a2b3c4d",
   "rule_id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0c",
   "attack_id": "T1592.002",
-  "telemetry_source": {
-    "product": "windows",
-    "service": "sysmon"
-  },
-  "expected_events": [
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
     {
-      "fields": {
-        "EventID": "<captured value>",
-        "Image|endswith": "<captured value>",
-        "CommandLine|contains": "<captured value>"
-      },
-      "occurs_within_seconds": 0
+      "_ts": 0,
+      "EventID": 1,
+      "Image": "C:\\Windows\\System32\\powershell.exe",
+      "CommandLine": "powershell.exe -NoP -NonI -C \"Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntiVirusProduct\""
     }
   ],
-  "fields_rule_reads": [
-    "EventID",
-    "Image|endswith",
-    "CommandLine|contains"
-  ],
-  "status": "designed",
-  "captured_utc": "",
-  "sample_ref": "PIN-0000",
-  "note": "DESIGNED stub - replace with an independent blind capture."
+  "assert_fields": {
+    "EventID": 1,
+    "Image": "C:\\Windows\\System32\\powershell.exe",
+    "CommandLine": "powershell.exe -NoP -NonI -C \"Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntiVirusProduct\""
+  },
+  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
 }

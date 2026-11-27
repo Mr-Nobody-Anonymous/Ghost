@@ -1,14 +1,21 @@
 {
   "fixture_id": "NF-1a2b3c4d",
   "rule_id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a06",
-  "software_class": "benign lookalike from rule falsepositives",
+  "status": "designed",
+  "sample_ref": "benign",
   "benign_lookalikes": [
     "portable tools",
     "self-extracting installers",
     "browser helpers"
   ],
-  "why_it_should_not_alert": "tuning decision pending",
   "tuning_decision": "pending",
-  "expected_events": [],
-  "sample_ref": "benign"
+  "must_not_match": {
+    "events": [
+      {
+        "_ts": 0,
+        "EventID": 999999,
+        "Image": "C:\\Windows\\System32\\msiexec.exe"
+      }
+    ]
+  }
 }

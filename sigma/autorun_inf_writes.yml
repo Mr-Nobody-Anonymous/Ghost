@@ -1,13 +1,19 @@
 title: autorun.inf Written Outside Trusted Install Paths
 id: 9b3f6a12-7c40-4e85-b2d1-5e8a0c4f7d63
 dedup_key: "rule:9b3f6a12-7c40-4e85-b2d1-5e8a0c4f7d63:host:user"
-status: experimental
+status: designed
 description: >
   Detects creation of autorun.inf in user-writable or removable locations, a
   common USB spreading mechanism. Legitimate installers typically write it only
   inside their own Program Files directory.
 author: ghost-detection-lab
 date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
 tactics: [attack.persistence, attack.lateral-movement]
 tags: [attack.t1091, attack.t1547.001]
 logsource:

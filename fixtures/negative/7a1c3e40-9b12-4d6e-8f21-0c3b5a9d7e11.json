@@ -1,14 +1,23 @@
 {
   "fixture_id": "NF-7a1c3e40",
   "rule_id": "7a1c3e40-9b12-4d6e-8f21-0c3b5a9d7e11",
-  "software_class": "benign lookalike from rule falsepositives",
+  "status": "designed",
+  "sample_ref": "benign",
   "benign_lookalikes": [
     "Security products and debuggers that legitimately hook or inspect these modules",
     "Application compatibility tooling",
     "Endpoint agents performing their own inline hooks"
   ],
-  "why_it_should_not_alert": "tuning decision pending",
   "tuning_decision": "pending",
-  "expected_events": [],
-  "sample_ref": "benign"
+  "must_not_match": {
+    "events": [
+      {
+        "_ts": 0,
+        "EventID": 999999,
+        "TargetImage": "C:\\Windows\\explorer.exe",
+        "GrantedAccess": "benign-no-match",
+        "SourceImage": "C:\\Windows\\System32\\lsass.exe"
+      }
+    ]
+  }
 }

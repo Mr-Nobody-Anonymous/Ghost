@@ -1,35 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Lab Sysmon config fragment. Enable the events the rules in this folder read.
-     Validate with: sysmon64.exe -c sysmon-config.xml -->
+<!-- Lab Sysmon config. Requires Sysmon 13+ (Event 22/23, archive directory).
+     Apply with: sysmon64.exe -c sysmon-config.xml
+     Hash is pinned in baseline/manifest.json. -->
 <Sysmon schemaversion="4.90">
-  <ConfigArchiveDirectory></ConfigArchiveDirectory>
+  <HashAlgorithms>sha256</HashAlgorithms>
+  <ConfigArchiveDirectory>C:\SysmonArchive\</ConfigArchiveDirectory>
   <EventFiltering>
-    <RuleGroup name="" groupRelation="or">
-      <ProcessCreate onmatch="exclude">
-        <Image condition="begin with">C:\Windows\System32\</Image>
+    <RuleGroup name="process-create" groupRelation="or">
+      <!-- Do NOT exclude System32: schtasks.exe, powershell.exe and cmd.exe
+           are exactly the processes the persistence/recon rules need. -->
+      <ProcessCreate onmatch="include">
+        <Image condition="end with">schtasks.exe</Image>
+        <Image condition="end with">powershell.exe</Image>
+        <Image condition="end with">pwsh.exe</Image>
+        <Image condition="end with">cmd.exe</Image>
+        <Image condition="end with">pythonw.exe</Image>
+        <Image condition="end with">python.exe</Image>
+        <Image condition="contains">\_MEI</Image>
+        <CommandLine condition="contains">SecurityCenter2</CommandLine>
+        <CommandLine condition="contains">AntiVirusProduct</CommandLine>
       </ProcessCreate>
       <FileCreate onmatch="include">
-        <TargetFilename condition="contains">_MEI</TargetFilename>
+        <TargetFilename condition="contains">\_MEI</TargetFilename>
         <TargetFilename condition="end with">autorun.inf</TargetFilename>
-        <TargetFilename condition="end with">.bmp</TargetFilename>
-        <TargetFilename condition="end with">.zip</TargetFilename>
-        <TargetFilename condition="end with">.db</TargetFilename>
+        <TargetFilename condition="end with">shot.bmp</TargetFilename>
+        <TargetFilename condition="end with">kl.enc</TargetFilename>
+        <TargetFilename condition="end with">svc_update.exe</TargetFilename>
+        <!-- Exclude known cache paths: .db/.zip/.bmp on a clean host are noise.
+             Narrow to the staging directory and wallet names. -->
+        <TargetFilename condition="contains">\AppData\Local\Temp\</TargetFilename>
+        <TargetFilename condition="contains">exodus.wallet</TargetFilename>
       </FileCreate>
-      <DnsQuery onmatch="include">
-        <QueryName condition="contains">.</QueryName>
-      </DnsQuery>
       <FileDelete onmatch="include">
-        <TargetFilename condition="endswith">.exe</TargetFilename>
+        <TargetFilename condition="end with">.exe</TargetFilename>
+        <TargetFilename condition="contains">\AppData\Local\Temp\</TargetFilename>
       </FileDelete>
       <RegistryEvent onmatch="include">
         <TargetObject condition="contains">CurrentVersion\Run</TargetObject>
         <TargetObject condition="contains">CurrentVersion\RunOnce</TargetObject>
       </RegistryEvent>
+      <!-- TargetImage is a PROCESS image, not a loaded module. AMSI/ETW patching
+           is in-process memmove and generates no ProcessAccess event. This
+           selection is retained only for the lsass.exe baseline; the AMSI rule
+           is explicitly marked as requiring EDR memory telemetry. -->
       <ProcessAccess onmatch="include">
-        <TargetImage condition="end with">amsi.dll</TargetImage>
-        <TargetImage condition="end with">ntdll.dll</TargetImage>
         <TargetImage condition="end with">lsass.exe</TargetImage>
       </ProcessAccess>
+      <DnsQuery onmatch="include">
+        <!-- An include on "contains ." would match every DNS query. Constrain
+             to the random-label DGA shape instead. -->
+        <QueryName condition="end with">.top</QueryName>
+        <QueryName condition="end with">.xyz</QueryName>
+        <QueryName condition="end with">.info</QueryName>
+      </DnsQuery>
       <WmiEventFilter onmatch="include">
         <EventType condition="is">WmiFilterEvent</EventType>
       </WmiEventFilter>
@@ -40,9 +63,10 @@
         <EventType condition="is">WmiConsumerToFilterEvent</EventType>
       </WmiEventConsumerToFilter>
       <ClipboardChange onmatch="include">
-        <!-- Event 24 is noisy: keep only non-shell processes -->
         <Image condition="exclude">explorer.exe</Image>
       </ClipboardChange>
+      <!-- Event 24 is high volume; enable only during a clipboard test window.
+           Disabled by default here; enable via the documented lab runbook. -->
     </RuleGroup>
   </EventFiltering>
 </Sysmon>

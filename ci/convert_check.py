@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Backend conversion gate.
 
-Proves each Sigma rule converts to the declared target backends. Without
-working backends this test FAILS - an unconverted rule is shelfware, not a
-passing rule.
+Loads the whole Sigma collection (not one file at a time) so correlation rules
+can resolve referenced IDs, and REQUIRES every declared backend to be present.
+A missing backend fails the gate rather than being silently skipped.
 """
 import argparse
 import pathlib
@@ -19,6 +19,7 @@ BACKENDS = {
     "splunk": "sigma.backends.splunk",
     "kql": "sigma.backends.kql",
 }
+CLASSES = {"splunk": "SplunkBackend", "kql": "KqlBackend"}
 
 
 def main():
@@ -30,42 +31,45 @@ def main():
         print("FAIL: pySigma is not installed - conversion cannot be proven")
         return 1
 
-    available = []
+    backends = []
     for name in args.backends:
         module = BACKENDS.get(name)
         if not module:
             print(f"FAIL: unknown backend {name}")
             return 1
         try:
-            mod = __import__(module, fromlist=["SplunkBackend", "KqlBackend"])
+            mod = __import__(module, fromlist=[CLASSES[name]])
         except ImportError:
-            print(f"FAIL: backend {name} not installed ({module})")
-            continue
-        available.append((name, mod))
+            print(f"FAIL: backend {name} not installed ({module}) - partial availability is not a pass")
+            return 1
+        cls = getattr(mod, CLASSES[name], None)
+        if cls is None:
+            print(f"FAIL: backend {name} class {CLASSES[name]} missing")
+            return 1
+        backends.append((name, cls))
 
-    if not available:
+    files = sorted((ROOT / "sigma").rglob("*.yml"))
+    combined = "\n---\n".join(f.read_text(encoding="utf-8") for f in files)
+    try:
+        collection = SigmaCollection.from_yaml(combined)
+    except Exception as exc:
+        print(f"FAIL: collection load error: {type(exc).__name__}: {exc}")
         return 1
 
-    rules = sorted((ROOT / "sigma").rglob("*.yml"))
     failed = 0
-    for f in rules:
-        for name, mod in available:
-            cls = getattr(mod, "SplunkBackend" if name == "splunk" else "KqlBackend", None)
-            if cls is None:
-                print(f"FAIL {f.name} [{name}]: backend class missing")
-                failed += 1
-                continue
+    total = 0
+    for name, cls in backends:
+        for rule in collection.rules:
+            total += 1
             try:
-                collection = SigmaCollection.from_yaml(f.read_text(encoding="utf-8"))
-                result = cls().convert(collection)
+                result = cls().convert(SigmaCollection(rules=[rule]))
                 if not result:
-                    print(f"FAIL {f.name} [{name}]: empty conversion")
+                    print(f"FAIL {getattr(rule, 'id', '?')} [{name}]: empty conversion")
                     failed += 1
             except Exception as exc:
-                print(f"FAIL {f.name} [{name}]: {type(exc).__name__}: {exc}")
+                print(f"FAIL {getattr(rule, 'id', '?')} [{name}]: {type(exc).__name__}: {exc}")
                 failed += 1
-
-    print(f"conversion: {len(rules) * len(available) - failed}/{len(rules) * len(available)} passed")
+    print(f"conversion: {total - failed}/{total} rule/backend combinations passed")
     return 1 if failed else 0
 
 
