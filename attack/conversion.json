@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-27T17:04:17.207164+00:00",
+  "generated_utc": "sha256:d87cb0ff0465297e",
   "rules": 37,
   "backends": [
     "splunk",

@@ -95,6 +95,32 @@ class RuleTests(unittest.TestCase):
             self.assertEqual(set(d.get("tactics", []) or []), expected,
                              f"{f.name}: tactics should be exactly {sorted(expected)}")
 
+    def test_deploy_bundle_refuses_stale_conversion(self):
+        """A bundle built from results that predate a rule edit ships an unproven query.
+
+        The first version of this check compared the stored conversion stamp with
+        itself, so it could never fail. Prove it fails on an edit.
+        """
+        conv = ROOT / "attack" / "conversion.json"
+        if not conv.is_file():
+            self.skipTest("no conversion results; run ci/convert_check.py")
+        target = ROOT / "sigma" / "beacon_custom_headers.yml"
+        original = target.read_bytes()
+        out = ROOT / "dist" / "stale-test.spl"
+        out.parent.mkdir(exist_ok=True)
+        try:
+            target.write_bytes(original + b"\n# touched after conversion\n")
+            r = subprocess.run(
+                [sys.executable, str(ROOT / "deploy" / "build_bundle.py"),
+                 "--backend", "splunk", "--out", str(out)],
+                capture_output=True, text=True)
+            self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+            self.assertIn("does not match the rules on disk", r.stdout)
+        finally:
+            target.write_bytes(original)
+        if out.exists():
+            out.unlink()
+
     def test_matrix_is_current(self):
         """attack/matrix.md is generated; a stale copy is a coverage claim nobody re-checked."""
         before = (ROOT / "attack" / "matrix.md").read_text()
@@ -102,8 +128,7 @@ class RuleTests(unittest.TestCase):
                            capture_output=True, text=True)
         self.assertEqual(r.returncode, 0, r.stderr)
         after = (ROOT / "attack" / "matrix.md").read_text()
-        strip = lambda s: [ln for ln in s.splitlines() if not ln.startswith("Generated ")]
-        self.assertEqual(strip(before), strip(after),
+        self.assertEqual(before, after,
                          "attack/matrix.md is stale - run tools/generate_matrix.py")
 
     def test_tactics_not_in_tags(self):

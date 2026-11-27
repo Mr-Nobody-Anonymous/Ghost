@@ -213,6 +213,18 @@ Added `docs/gap-register.md`: the prioritized list of what this repo lacks,
 with the P0 items (blind capture, clean baseline, benign corpus, volume) stated
 as costs rather than as wishes.
 
+### Conversion results are content-addressed, not clocked
+
+`attack/conversion.json` carried a wall-clock `generated_utc`, so every gate run
+dirtied the tree, and the staleness check in `deploy/build_bundle.py` compared
+mtimes against it - which a fresh checkout or a `git checkout` breaks silently.
+The stamp is now a sha256 over the rule files **and** their measured outcomes.
+
+The first attempt at this hashed only the stored result, which made the stamp
+agree with itself forever and could not detect an edited rule. A test now
+proves `build_bundle.py` exits 1 when a rule is changed after conversion; the
+self-referential version passed that test's inverse.
+
 ### Still not done
 
 No blind capture, no benign-corpus run, no measured volume, no sample. Nothing

@@ -1,6 +1,6 @@
 # Attack matrix (generated)
 
-Generated 2026-11-27T17:04:17.325025+00:00 from rule metadata. Do not edit by hand.
+Generated from rule metadata and attack/conversion.json. Do not edit by hand - run tools/generate_matrix.py.
 
 Rules: 37 | distinct techniques: 18 | tactics used: 12 of the pinned set (not counted as techniques)
 
@@ -77,7 +77,7 @@ A technique is covered only when telemetry, rule, compilation, TP fixture, and F
 
 ## Deployability (generated from ci/convert_check.py)
 
-Conversion run: 2026-11-27T17:04:17.207164+00:00. A rule is only deployable where the backend is `supported`.
+Conversion stamp: sha256:d87cb0ff0465297e. A rule is only deployable where the backend is `supported`.
 
 | Rule | splunk | elastic | kusto |
 |---|---|---|---|

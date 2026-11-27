@@ -39,11 +39,21 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 CONVERSION = ROOT / "attack" / "conversion.json"
 
 
-def rule_timestamps():
-    out = {}
-    for f in (ROOT / "sigma").rglob("*.yml"):
-        out[f.relative_to(ROOT).as_posix()] = f.stat().st_mtime
-    return out
+def conversion_stamp(results):
+    """Recompute ci/convert_check.py's content stamp, identically.
+
+    It must hash the rule *files* as well as the stored results: a stamp derived
+    from the results alone agrees with itself forever and cannot detect an edit.
+    """
+    import hashlib
+    digest = hashlib.sha256()
+    for path in sorted(results):
+        f = ROOT / path
+        digest.update(path.encode())
+        digest.update(hashlib.sha256(f.read_bytes()).hexdigest().encode()
+                      if f.is_file() else b"<missing>")
+        digest.update(json.dumps(results[path], sort_keys=True).encode())
+    return "sha256:" + digest.hexdigest()[:16]
 
 
 def main():
@@ -65,18 +75,18 @@ def main():
         print("FAIL: conversion results are empty")
         return 1
 
-    # stale results: a rule edited after the gate ran is not the rule that was proven
-    mtimes = rule_timestamps()
-    stale = [path for path in results if path in mtimes
-             and mtimes[path] > 0 and path not in rule_timestamps()]
-    from datetime import datetime, timezone
-    generated = datetime.fromisoformat(data["generated_utc"])
-    stale = [p for p, m in mtimes.items()
-             if p in results and datetime.fromtimestamp(m, timezone.utc) > generated]
-    if stale:
-        print("FAIL: conversion results are older than the rules:")
-        for p in stale:
-            print(f"  - {p}")
+    # Stale results: the stamp is a digest of the rules and their measured
+    # outcomes, so a mismatch means a rule changed after conversion - the bundle
+    # would ship a query nobody proved.
+    stamp = data.get("generated_utc", "")
+    if stamp.startswith("sha256:"):
+        if conversion_stamp(results) != stamp:
+            print("FAIL: attack/conversion.json does not match the rules on disk; "
+                  "re-run python3 ci/convert_check.py")
+            return 1
+    else:
+        print(f"FAIL: conversion.json has an unrecognised stamp {stamp!r}; "
+              "re-run ci/convert_check.py")
         return 1
 
     deployable, excluded = [], []
@@ -124,7 +134,7 @@ def main():
         member_cache[path] = ids
 
     lines = [
-        f"-- {args.backend} bundle - generated {data['generated_utc']}",
+        f"-- {args.backend} bundle - conversion {data['generated_utc']}",
         f"-- deployable: {len(deployable)}  excluded: {len(excluded)}",
         "-- Every query below was produced by pySigma from the cited rule.",
         "",

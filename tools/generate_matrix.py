@@ -77,7 +77,10 @@ def main():
     fixtures = {p.stem for p in (ROOT / "fixtures" / "per_rule").glob("*.json")}
     out = []
     out.append("# Attack matrix (generated)\n")
-    out.append(f"Generated {datetime.datetime.now(datetime.timezone.utc).isoformat()} from rule metadata. Do not edit by hand.\n")
+    # No wall clock: the header must be a function of the inputs, or every gate
+    # run rewrites this file and `git status` can never be clean.
+    out.append("Generated from rule metadata and attack/conversion.json. "
+               "Do not edit by hand - run tools/generate_matrix.py.\n")
     out.append(f"Rules: {len(rules)} | distinct techniques: {len(by_tech)} | tactics used: {len(tactic_tags)} of the pinned set (not counted as techniques)\n")
     out.append("| Technique | Rule | Source | Lifecycle | Level | Fixture | Pin | Flags |")
     out.append("|---|---|---|---|---|---|---|---|")
@@ -119,7 +122,7 @@ def main():
         conv = _json.loads(conv_path.read_text(encoding="utf-8"))
         results = conv.get("results", {})
         out.append("## Deployability (generated from ci/convert_check.py)\n")
-        out.append(f"Conversion run: {conv.get('generated_utc')}. "
+        out.append(f"Conversion stamp: {conv.get('generated_utc')}. "
                    f"A rule is only deployable where the backend is `supported`.\n")
         out.append("| Rule | splunk | elastic | kusto |")
         out.append("|---|---|---|---|")

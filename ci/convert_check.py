@@ -129,6 +129,26 @@ def claim_of(text):
     return claim, note
 
 
+def _content_stamp(results):
+    """A stable identity for this conversion result, not a clock reading.
+
+    Hashes the rule files *and* their measured outcomes. Hashing only the stored
+    result would make the stamp agree with itself no matter how the rules
+    changed - a check that cannot fail, which is the exact defect this repo keeps
+    finding. Hashing only the rules would make it change on a comment edit
+    without invalidating anything, so both go in.
+    """
+    import hashlib
+    digest = hashlib.sha256()
+    for path in sorted(results):
+        f = ROOT / path
+        digest.update(path.encode())
+        digest.update(hashlib.sha256(f.read_bytes()).hexdigest().encode()
+                      if f.is_file() else b"<missing>")
+        digest.update(json.dumps(results[path], sort_keys=True).encode())
+    return "sha256:" + digest.hexdigest()[:16]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--backends", nargs="+", default=list(BACKENDS),
@@ -187,7 +207,7 @@ def main():
         results[rel] = entry
 
     out = {
-        "generated_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "generated_utc": _content_stamp(results),
         "rules": len(files),
         "backends": list(backends),
         "results": results,
