@@ -78,6 +78,15 @@ These cannot be fixed with a query. They need a sensor decision.
 | G-15 | No `1 of` cross-source campaign rule | Sequence *across* techniques (triage → tamper → persist) is not modelled. |
 | G-16 | YARA rules have no corpus | `yara/ghost_implant_structural.yar` compiles, but nothing proves it matches a build or stays quiet on real software. |
 
+### P2b. Operational path
+
+| ID | Gap | Detail |
+|---|---|---|
+| G-27 | **No deployment procedure** | The repo could emit 38 queries and a manifest but said nothing about ingesting telemetry, mapping `EventCode`->`EventID`, or applying suppression. Now `docs/deployment.md` — written, never executed. |
+| G-28 | **Field-name mapping is vendor-specific and undocumented per platform** | Sigma `EventID` vs Splunk `EventCode` vs ECS `event.code`. A missing alias makes a rule evaluate against a null, silently. `docs/deployment.md` gives the Splunk `props.conf`; Elastic/Kusto equivalents are not written. |
+| G-29 | **No saved-search packaging** | The bundle is a query per rule plus JSON. Importing 38 saved searches with schedules and suppression is manual; nothing generates a `savedsearches.conf` or an API payload. |
+| G-30 | **No alert-quality feedback loop** | `docs/tuning-log.md` is empty and there is no link from an alert back to the rule's ceiling or triage step. |
+
 ### P3. Engineering hygiene
 
 | ID | Gap | Detail |

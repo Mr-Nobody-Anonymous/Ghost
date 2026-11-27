@@ -16,6 +16,7 @@ contains **detection content and inert lab tooling only**. It answers:
 | `samples/` | Sample pin **schema** — no binary stored |
 | `network/`, `docs/`, `analysis/` | Fingerprint detections, runbook/tuning/maturity, triage templates |
 | `docs/gap-register.md` | **Start here for what is missing**, ordered by cost |
+| `docs/deployment.md` | Host -> index -> scheduled search, with the silent failure modes |
 | `hunt-queries.md`, `lab-setup.md`, `inventory.md`, `os-matrix.md` | Hunting queries, lab build, behavior inventory, OS support |
 | `attack/` | Generated coverage matrix + per-rule conversion results (`conversion.json`) |
 
@@ -47,7 +48,8 @@ python3 detection-as-code/evaluate.py # TP/FP/sequence/frequency against fixture
 python3 -m unittest discover -s tests -p 'test_*.py'
 python3 tools/capture_kit.py --rule <id-prefix>   # how to capture this rule for real
 python3 tools/evtx_to_fixture.py --input captured.xml --rule-id <id> \
-  --output fixtures/per_rule/<id>.json
+  --sample-ref PIN-0001     # writes fixtures/captured/ and refuses if the rule
+                            # does not fire on the capture
 python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl
 ```
 

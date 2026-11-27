@@ -57,6 +57,13 @@ rule set is: a C2-artifact detector with persistence coverage, not a full
 lifecycle detector. That is a property of the implant being studied, and it is
 stated here rather than averaged away in a coverage percentage.
 
+## Deployment
+
+`docs/deployment.md` is the host-to-alert procedure: what to ingest, how to
+map field names so a rule does not evaluate against a null, how to apply the
+suppression the manifest carries, and how to verify the pipeline with
+`tools/verify_baseline.py` before trusting a quiet dashboard.
+
 ## Honest claim
 
 The repository proves that every rule parses, converts on a real backend,
