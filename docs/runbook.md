@@ -58,7 +58,7 @@ re-run the gate.
 The pin is generated from the real STIX bundle, not hand-written:
 
 ```bash
-python3 tools/pin_attack_bundle.py --version 14.1 --fetch
+python3 tools/pin_attack_bundle.py --version 20.1 --fetch
 python3 tools/pin_attack_bundle.py --verify
 ```
 

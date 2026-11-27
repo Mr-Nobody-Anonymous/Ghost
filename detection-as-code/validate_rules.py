@@ -85,6 +85,7 @@ def load_pin():
                 print(f"FAIL: ATT&CK bundle hash {digest} != pin {data['bundle_sha256']}",
                       file=sys.stderr)
                 return set(), None, version
+    globals()["TECHNIQUE_TACTICS"] = data.get("technique_tactics", {})
     return (
         set(t.upper() for t in data.get("techniques", [])),
         set(data.get("tactics", [])),
@@ -158,6 +159,24 @@ def check(path, pinned, allowed_tactics, version):
                 errors.append(f"tactic {t} not in pinned allowlist")
         if not any(isinstance(t, str) and TECHNIQUE_RE.match(t) for t in tags):
             errors.append("no ATT&CK technique tag")
+        # A tactics: list that has nothing to do with the technique is the kind of
+        # error no other check catches - the tag is valid, the tactic is valid, and
+        # the pair is wrong. ATT&CK v20 renamed Defense Evasion into Stealth and
+        # Defense Impairment, so every one of these was stale.
+        mapping = globals().get("TECHNIQUE_TACTICS") or {}
+        if mapping:
+            techs = [x.split(".", 1)[1].upper() for x in tags
+                     if isinstance(x, str) and TECHNIQUE_RE.match(x)]
+            expected = {f"attack.{ph}" for x in techs for ph in mapping.get(x, [])}
+            declared = {x for x in tactics if isinstance(x, str)}
+            if expected:
+                stray = sorted(declared - expected)
+                if stray:
+                    errors.append(f"tactic(s) {stray} not reached by the rule's "
+                                  f"technique(s) {techs}; pinned bundle says "
+                                  f"{sorted(expected)}")
+                if not declared:
+                    errors.append(f"tactics: missing; pinned bundle says {sorted(expected)}")
 
     det = doc.get("detection", {})
     if "detection" not in doc and "correlation" not in doc:

@@ -15,7 +15,11 @@ dedup_window: "5m"
 min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
-tactics: [attack.persistence, attack.lateral-movement]
+tactics:
+  - attack.initial-access
+  - attack.lateral-movement
+  - attack.persistence
+  - attack.privilege-escalation
 tags: [attack.t1091, attack.t1547.001]
 logsource:
   product: windows

@@ -15,7 +15,9 @@ dedup_window: "5m"
 min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
-tactics: [attack.persistence, attack.privilege-escalation]
+tactics:
+  - attack.persistence
+  - attack.privilege-escalation
 tags: [attack.t1546.003]
 logsource:
   product: windows

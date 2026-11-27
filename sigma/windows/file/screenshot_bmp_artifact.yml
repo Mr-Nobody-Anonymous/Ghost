@@ -13,7 +13,8 @@ min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
 tags: [attack.t1113]
-tactics: [attack.collection]
+tactics:
+  - attack.collection
 references:
   - https://attack.mitre.org/techniques/T1113/
   - inventory.md

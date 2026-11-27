@@ -18,7 +18,8 @@ min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 15
 tags: [attack.t1070.004]
-tactics: [attack.defense-evasion]
+tactics:
+  - attack.stealth
 references:
   - https://attack.mitre.org/techniques/T1070/004/
   - https://learn.microsoft.com/sysinternals/downloads/sysmon

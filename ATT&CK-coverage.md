@@ -5,8 +5,8 @@ the data source a detection needs; "Rule" points at the file in this folder.
 
 | Behavior | ATT&CK | Primary telemetry | Rule | Coverage |
 |---|---|---|---|---|
-| AMSI function patch (`AmsiScanBuffer`) | T1562.001 | EDR memory scan (Sysmon 10 **cannot** see loaded modules) | `sigma/amsi_etw_patch.yml` | **Gap for Sysmon** — needs EDR memory-write telemetry |
-| ETW function patch (`EtwEventWrite`) | T1562.001 | Same, with `ntdll.dll` as target | `sigma/amsi_etw_patch.yml` | Partial — ETW silencing can also blind the collector itself |
+| AMSI function patch (`AmsiScanBuffer`) | T1685 | EDR memory scan (Sysmon 10 **cannot** see loaded modules) | `sigma/amsi_etw_patch.yml` | **Gap for Sysmon** — needs EDR memory-write telemetry |
+| ETW function patch (`EtwEventWrite`) | T1685 | Same, with `ntdll.dll` as target | `sigma/amsi_etw_patch.yml` | Partial — ETW silencing can also blind the collector itself |
 | VM/sandbox triage (sleep skew, CPU/RAM/disk checks) | T1497.001 | Process behavior, timing anomalies, EDR self-protection | `sigma/windows/registry/cpu_info_read.yml` (CPU key read only) | **Partial** — tick skew and debugger checks have no telemetry |
 | Single-instance mutex | T1547 / T1190-adjacent | Object handles, EDR | `sigma/windows/process/mutex_single_instance.yml` | **Gap** — rule exists, no telemetry produces it |
 | Run-key persistence | T1547.001 | Sysmon 12/13/14, Security 4656/4663 on SAM | `sigma/runkey_schtask_startup_persistence.yml` | Good |

@@ -47,7 +47,8 @@
         "attack.t1546.003"
       ],
       "tactics": [
-        "attack.persistence"
+        "attack.persistence",
+        "attack.privilege-escalation"
       ],
       "references": [
         "https://attack.mitre.org/techniques/T1546/003/"
@@ -93,7 +94,7 @@
       ],
       "tactics": [
         "attack.persistence",
-        "attack.execution"
+        "attack.privilege-escalation"
       ],
       "references": [
         "https://attack.mitre.org/techniques/T1546/003/",
@@ -141,7 +142,8 @@
         "attack.t1546.003"
       ],
       "tactics": [
-        "attack.persistence"
+        "attack.persistence",
+        "attack.privilege-escalation"
       ],
       "references": [
         "https://attack.mitre.org/techniques/T1546/003/",

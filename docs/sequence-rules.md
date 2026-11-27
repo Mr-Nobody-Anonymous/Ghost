@@ -12,7 +12,7 @@ in the SIEM.
 
 ## 1. CPU enumeration -> security component tamper
 
-- **ATT&CK:** T1497 -> T1562.001
+- **ATT&CK:** T1497 -> T1685
 - **Type:** `temporal`
 - **Group by:** `Computer` (the only key Security 4663 and Sysmon share -
   4663's `ProcessId` is the auditing process, not the accessing one)

@@ -18,10 +18,11 @@ dedup_window: "5m"
 min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
-tags: [attack.t1562.001]
-tactics: [attack.defense-evasion]
+tags: [attack.t1685]
+tactics:
+  - attack.defense-impairment
 references:
-  - https://attack.mitre.org/techniques/T1562/001/
+  - https://attack.mitre.org/techniques/T1685/
   - https://learn.microsoft.com/defender-endpoint/troubleshoot-microsoft-defender-antivirus
 logsource:
   product: windows

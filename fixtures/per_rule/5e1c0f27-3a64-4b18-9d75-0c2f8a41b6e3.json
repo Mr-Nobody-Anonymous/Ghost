@@ -1,7 +1,7 @@
 {
   "fixture_id": "FX-5e1c0f27",
   "rule_id": "5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3",
-  "attack_id": "T1562.001",
+  "attack_id": "T1685",
   "status": "designed",
   "sample_ref": "PIN-0000",
   "events": [

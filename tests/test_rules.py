@@ -67,6 +67,45 @@ class RuleTests(unittest.TestCase):
                                "stale", "deprecated"},
                               f"{f.name}: lifecycle must use the repo vocabulary")
 
+    def test_tactics_match_the_pinned_technique_mapping(self):
+        """A rule's tactics: list must be reachable from its own technique.
+
+        ATT&CK v20 revoked T1562 and split Defense Evasion into Stealth and
+        Defense Impairment. Every rule tagged T1562.001 was citing a dead ID and
+        a tactic that no longer exists, and nothing caught it: each value was
+        individually valid. The pin now carries technique -> kill-chain phases,
+        generated from the bundle, so the pair is checkable offline.
+        """
+        pin = json.loads((ROOT / "attack" / "attack-bundle-pin.json").read_text())
+        mapping, techniques = pin.get("technique_tactics") or {}, set(pin.get("techniques", []))
+        self.assertTrue(mapping, "pin has no technique_tactics - regenerate it")
+        for f in RULES:
+            d = load(f)
+            if not d:
+                continue
+            tags = d.get("tags", []) or []
+            techs = [x.split(".", 1)[1].upper() for x in tags
+                     if str(x).lower().startswith("attack.t")]
+            for tech in techs:
+                self.assertIn(tech, techniques,
+                              f"{f.name}: {tech} is revoked or absent in the pinned bundle")
+            expected = {f"attack.{ph}" for tech in techs for ph in mapping.get(tech, [])}
+            stray = set(d.get("tactics", []) or []) - expected
+            self.assertFalse(stray, f"{f.name}: tactics {sorted(stray)} unreachable from {techs}")
+            self.assertEqual(set(d.get("tactics", []) or []), expected,
+                             f"{f.name}: tactics should be exactly {sorted(expected)}")
+
+    def test_matrix_is_current(self):
+        """attack/matrix.md is generated; a stale copy is a coverage claim nobody re-checked."""
+        before = (ROOT / "attack" / "matrix.md").read_text()
+        r = subprocess.run([sys.executable, str(ROOT / "tools" / "generate_matrix.py")],
+                           capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        after = (ROOT / "attack" / "matrix.md").read_text()
+        strip = lambda s: [ln for ln in s.splitlines() if not ln.startswith("Generated ")]
+        self.assertEqual(strip(before), strip(after),
+                         "attack/matrix.md is stale - run tools/generate_matrix.py")
+
     def test_tactics_not_in_tags(self):
         for f in RULES:
             d = load(f)
@@ -242,6 +281,49 @@ class ContractTests(unittest.TestCase):
                 continue
             self.assertIn(d["id"], ceilings, f"no volume ceiling for {d['id']}")
             self.assertGreater(ceilings[d["id"]]["events_per_day_ceiling"], 0)
+
+    def test_capture_never_claims_captured_without_a_match(self):
+        """A capture the rule does not fire on is a finding, not a fixture.
+
+        The old converter wrote status: captured unconditionally, so a mismatch
+        between rule and telemetry silently became "evidence".
+        """
+        xml = (ROOT / "tests" / "data" / "sample_capture.xml")
+        self.assertTrue(xml.is_file(), "missing synthetic capture fixture")
+        rule_id = "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05"  # WMI triple - cannot match a process create
+        out = ROOT / "dist" / "test-capture.json"
+        out.parent.mkdir(exist_ok=True)
+        r = subprocess.run(
+            [sys.executable, str(ROOT / "tools" / "evtx_to_fixture.py"),
+             "--input", str(xml), "--rule-id", rule_id, "--output", str(out)],
+            capture_output=True, text=True)
+        self.assertEqual(r.returncode, 2, r.stdout + r.stderr)
+        self.assertFalse(out.exists(), "a failed match must not write a fixture")
+
+    def test_capture_keeps_the_correlation_join_key(self):
+        xml = ROOT / "tests" / "data" / "sample_capture.xml"
+        out = ROOT / "dist" / "test-capture-ok.json"
+        out.parent.mkdir(exist_ok=True)
+        r = subprocess.run(
+            [sys.executable, str(ROOT / "tools" / "evtx_to_fixture.py"),
+             "--input", str(xml), "--rule-id", "5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3",
+             "--output", str(out), "--sample-ref", "PIN-0000"],
+            capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        fx = json.loads(out.read_text())
+        self.assertEqual(fx["status"], "captured")
+        self.assertEqual(fx["events"][0]["Computer"], "LAB-WS01",
+                         "Computer is a correlation join key and must survive capture")
+        self.assertEqual(fx["events"][0]["SubjectUserSid"], "<masked>")
+        out.unlink()
+
+    def test_baseline_verifier_reports_unmatched_rules(self):
+        r = subprocess.run(
+            [sys.executable, str(ROOT / "tools" / "verify_baseline.py"),
+             "--input", str(ROOT / "tests" / "data" / "sample_capture.xml")],
+            capture_output=True, text=True)
+        self.assertEqual(r.returncode, 1, "a 1-event baseline must not pass as complete")
+        self.assertIn("have their EventIDs and fields in this capture", r.stdout)
 
     def test_baseline_config_drift(self):
         manifest = json.loads((ROOT / "baseline" / "manifest.json").read_text(encoding="utf-8"))

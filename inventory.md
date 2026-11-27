@@ -11,9 +11,9 @@ claims; the Status column states which one holds.
 | Stage 1 | PyInstaller `_MEI` extraction directory | T1027.002 | `mei_extraction_dir.yml`, `pyinstaller_onefile_execution.yml` | rules convert; no capture |
 | Stage 1 | single-instance mutex create | T1547-adjacent | `mutex_single_instance.yml` | **telemetry gap**: no native Windows log; needs an EDR handle sensor |
 | Triage | CPU key read, debugger/tick/RAM checks | T1497 | `cpu_info_read.yml` + `patch_sequence.yml` | rule converts; needs a SACL on the CPU key. Tick skew and debugger checks have **no telemetry** |
-| Evasion | AMSI `AmsiScanBuffer` patch | T1562.001 | `amsi_etw_patch.yml`, `patch_sequence.yml` | **telemetry gap**: Sysmon 10 targets processes, not loaded modules. Needs EDR memory telemetry |
-| Evasion | ETW `EtwEventWrite` patch | T1562.001 | `amsi_etw_patch.yml` | same gap; ETW patching also blinds the collector |
-| Evasion | security component stopped / AMSI provider removed | T1562.001 | `security_component_tamper.yml` | rule converts on all backends; first member of the tamper sequence |
+| Evasion | AMSI `AmsiScanBuffer` patch | T1685 | `amsi_etw_patch.yml`, `patch_sequence.yml` | **telemetry gap**: Sysmon 10 targets processes, not loaded modules. Needs EDR memory telemetry |
+| Evasion | ETW `EtwEventWrite` patch | T1685 | `amsi_etw_patch.yml` | same gap; ETW patching also blinds the collector |
+| Evasion | security component stopped / AMSI provider removed | T1685 | `security_component_tamper.yml` | rule converts on all backends; first member of the tamper sequence |
 | Persistence | Run key | T1547.001 | `run_key_write.yml` | rule converts; no capture |
 | Persistence | `schtasks /Create /SC ONLOGON` | T1053.005 | `schtask_onlogon.yml` | rule converts; no capture |
 | Persistence | WMI filter + consumer + binding | T1546.003 | `wmi_subscription_triple.yml` + 3 member rules | sequence converts on Splunk only; no capture |

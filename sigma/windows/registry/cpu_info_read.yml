@@ -13,7 +13,9 @@ min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
 tags: [attack.t1497]
-tactics: [attack.discovery]
+tactics:
+  - attack.discovery
+  - attack.stealth
 references:
   - https://attack.mitre.org/techniques/T1497/
   - inventory.md

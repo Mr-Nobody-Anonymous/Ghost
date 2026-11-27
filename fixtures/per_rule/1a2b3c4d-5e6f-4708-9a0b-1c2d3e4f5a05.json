@@ -1,7 +1,7 @@
 {
   "fixture_id": "FX-1a2b3c4d",
   "rule_id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05",
-  "attack_id": "T1562.001",
+  "attack_id": "T1685",
   "status": "designed",
   "sample_ref": "PIN-0000",
   "events": [
@@ -47,7 +47,8 @@
         "attack.t1497"
       ],
       "tactics": [
-        "attack.discovery"
+        "attack.discovery",
+        "attack.stealth"
       ],
       "references": [
         "https://attack.mitre.org/techniques/T1497/",
@@ -95,13 +96,13 @@
       "min_os": "Windows 10 21H2",
       "sysmon_min_version": 13,
       "tags": [
-        "attack.t1562.001"
+        "attack.t1685"
       ],
       "tactics": [
-        "attack.defense-evasion"
+        "attack.defense-impairment"
       ],
       "references": [
-        "https://attack.mitre.org/techniques/T1562/001/",
+        "https://attack.mitre.org/techniques/T1685/",
         "https://learn.microsoft.com/defender-endpoint/troubleshoot-microsoft-defender-antivirus"
       ],
       "logsource": {

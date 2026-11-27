@@ -14,7 +14,9 @@ dedup_window: "5m"
 min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
-tactics: [attack.discovery]
+tactics:
+  - attack.discovery
+  - attack.reconnaissance
 tags: [attack.t1135, attack.t1592.002]
 logsource:
   product: windows

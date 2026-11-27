@@ -67,9 +67,9 @@ def main():
         rules.append(r)
 
     by_tech = {}
-    tactic_count = 0
+    tactic_tags = set()
     for r in rules:
-        tactic_count += len(r["tactics"])
+        tactic_tags.update(r["tactics"])
         for t in r["tags"]:
             if isinstance(t, str) and TECH_RE.match(t):
                 by_tech.setdefault(t.split(".", 1)[1].upper(), []).append(r)
@@ -78,7 +78,7 @@ def main():
     out = []
     out.append("# Attack matrix (generated)\n")
     out.append(f"Generated {datetime.datetime.now(datetime.timezone.utc).isoformat()} from rule metadata. Do not edit by hand.\n")
-    out.append(f"Rules: {len(rules)} | distinct techniques: {len(by_tech)} | tactic tags: {tactic_count} (not counted as techniques)\n")
+    out.append(f"Rules: {len(rules)} | distinct techniques: {len(by_tech)} | tactics used: {len(tactic_tags)} of the pinned set (not counted as techniques)\n")
     out.append("| Technique | Rule | Source | Lifecycle | Level | Fixture | Pin | Flags |")
     out.append("|---|---|---|---|---|---|---|---|")
     for tech in sorted(by_tech):
@@ -96,6 +96,22 @@ def main():
             )
     out.append("")
     out.append("A technique is covered only when telemetry, rule, compilation, TP fixture, and FP corpus all pass. See `docs/maturity.md`.\n")
+
+    pin_path = ROOT / "attack" / "attack-bundle-pin.json"
+    if pin_path.is_file():
+        import json as _json
+        pin = _json.loads(pin_path.read_text(encoding="utf-8"))
+        pinned_tactics = set(pin.get("tactics", []))
+        used = set(tactic_tags)
+        out.append(f"## Tactic coverage against ATT&CK {pin.get('attack_version')}\n")
+        out.append(f"{len(used)} of {len(pinned_tactics)} pinned tactics have at least one rule. "
+                   "A tactic with no rule is a blind spot, not a gap in the rule set's quality.\n")
+        out.append("| Tactic | Rules |")
+        out.append("|---|---|")
+        for tac in sorted(pinned_tactics):
+            n = sum(1 for r in rules if tac in r["tactics"])
+            out.append(f"| {tac.replace('attack.', '')} | {'**0**' if n == 0 else n} |")
+        out.append("")
 
     conv_path = ROOT / "attack" / "conversion.json"
     if conv_path.is_file():
@@ -122,7 +138,7 @@ def main():
     target = ROOT / "attack"
     target.mkdir(exist_ok=True)
     (target / "matrix.md").write_text("\n".join(out), encoding="utf-8")
-    print(f"wrote attack/matrix.md: {len(rules)} rules, {len(by_tech)} techniques, {tactic_count} tactics")
+    print(f"wrote attack/matrix.md: {len(rules)} rules, {len(by_tech)} techniques, {len(tactic_tags)} tactics")
     return 0
 
 

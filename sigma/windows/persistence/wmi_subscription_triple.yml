@@ -18,7 +18,9 @@ min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
 tags: [attack.t1546.003]
-tactics: [attack.persistence]
+tactics:
+  - attack.persistence
+  - attack.privilege-escalation
 references:
   - https://attack.mitre.org/techniques/T1546/003/
   - https://learn.microsoft.com/windows/win32/wmisdk/creating-a-permanent-wmi-event-consumer

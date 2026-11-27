@@ -45,6 +45,10 @@ SLUG = {
     "Command and Control": "command-and-control",
     "Exfiltration": "exfiltration",
     "Impact": "impact",
+    # ATT&CK v19/v20 tactic restructure. Defense Evasion was split; both new
+    # tactics must map or the pin build refuses to run.
+    "Stealth": "stealth",
+    "Defense Impairment": "defense-impairment",
 }
 
 
@@ -76,6 +80,19 @@ def fetch(version):
 
 def build(bundle_path, version):
     data = json.loads(pathlib.Path(bundle_path).read_bytes())
+    by_stix_id = {o["id"]: o for o in data["objects"] if "id" in o}
+    revoked_by = {}
+    for obj in data["objects"]:
+        if obj.get("type") == "relationship" and obj.get("relationship_type") == "revoked-by":
+            src, tgt = by_stix_id.get(obj["source_ref"]), by_stix_id.get(obj["target_ref"])
+            if not src or not tgt:
+                continue
+            sid = next((r["external_id"] for r in src.get("external_references", [])
+                        if r.get("source_name") == "mitre-attack"), None)
+            tid = next((r["external_id"] for r in tgt.get("external_references", [])
+                        if r.get("source_name") == "mitre-attack"), None)
+            if sid and tid:
+                revoked_by.setdefault(sid, []).append(tid)
     tactics = sorted({o["name"] for o in data["objects"] if o["type"] == "x-mitre-tactic"})
     techniques = []
     for obj in data["objects"]:
@@ -85,8 +102,19 @@ def build(bundle_path, version):
             continue
         for ref in obj.get("external_references", []):
             if ref.get("source_name") == "mitre-attack":
-                techniques.append(ref["external_id"])
+                techniques.append((ref["external_id"],
+                                   [p["phase_name"] for p in obj.get("kill_chain_phases", [])]))
     raw = pathlib.Path(bundle_path).read_bytes()
+    # Techniques this repo actually uses: surface upstream revocations instead of
+    # silently dropping them, because a dropped tag means a rule cites a dead ID.
+    in_use = set()
+    for rule in (ROOT / "sigma").rglob("*.yml"):
+        for line in rule.read_text(encoding="utf-8").splitlines():
+            low = line.strip().lower()
+            if low.startswith("- attack.t") or low.startswith("tags: [attack.t"):
+                for token in low.replace("[", " ").replace("]", " ").replace(",", " ").split():
+                    if token.startswith("attack.t"):
+                        in_use.add(token.split(".", 1)[1].upper())
     unknown = [t for t in tactics if t not in SLUG]
     if unknown:
         raise SystemExit(f"unknown tactic names, update SLUG: {unknown}")
@@ -104,8 +132,13 @@ def build(bundle_path, version):
             "Revoked and deprecated techniques are excluded.",
             "The bundle itself is not committed (40 MB); --fetch re-downloads it by tag.",
         ],
+        "revoked_in_use": {t: revoked_by.get(t, []) for t in sorted(in_use)
+                           if t not in {x for x, _ in techniques}},
         "tactics": ["attack." + SLUG[t] for t in tactics],
-        "techniques": sorted(set(techniques)),
+        "techniques": sorted({t for t, _ in techniques}),
+        # technique -> its kill-chain phases, so a rule's tactics: list can be
+        # checked against the pinned bundle instead of an editorial guess.
+        "technique_tactics": {t: sorted(set(ph)) for t, ph in techniques},
     }
 
 
@@ -136,6 +169,10 @@ def main():
     PIN.write_text(json.dumps(pin, indent=2) + "\n", encoding="utf-8")
     print(f"pinned ATT&CK {pin['attack_version']}: {len(pin['techniques'])} techniques, "
           f"{len(pin['tactics'])} tactics, sha256 {pin['bundle_sha256']}")
+    dropped = pin.get("revoked_techniques") or {}
+    if dropped:
+        print(f"note: {len(dropped)} in-use technique(s) revoked upstream: "
+              + ", ".join(f"{k}->{v}" for k, v in sorted(dropped.items())))
     return 0
 
 

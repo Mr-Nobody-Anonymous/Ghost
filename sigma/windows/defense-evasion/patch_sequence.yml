@@ -21,10 +21,13 @@ dedup_window: "5m"
 min_eval_interval: "5s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
-tags: [attack.t1562.001, attack.t1497]
-tactics: [attack.defense-evasion]
+tags: [attack.t1685, attack.t1497]
+tactics:
+  - attack.defense-impairment
+  - attack.discovery
+  - attack.stealth
 references:
-  - https://attack.mitre.org/techniques/T1562/001/
+  - https://attack.mitre.org/techniques/T1685/
   - https://attack.mitre.org/techniques/T1497/
   - inventory.md
   - docs/sequence-rules.md

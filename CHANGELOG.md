@@ -182,6 +182,37 @@ stages that could not fail and red for a reason that could never be fixed.
   refuses to build if conversion results are stale.
 - 9-stage gate; workflow installs packages that exist.
 
+### ATT&CK pin upgraded 14.1 -> 20.1
+
+- v20 **revoked `T1562`** and split Defense Evasion into `Stealth` and
+  `Defense Impairment`. Six rules cited `T1562.001`, a dead ID; every one of
+  their `tactics:` lists named a tactic that no longer exists.
+- Migrated `T1562.001` -> `T1685` and made `tactics:` **derived** from the
+  bundle rather than editorial: the pin now carries technique -> kill-chain
+  phases, `validate_rules.py` rejects an unreachable tactic, and a test asserts
+  the exact set.
+- The pin tool now reports techniques in use that upstream revoked instead of
+  silently dropping them, which is how `T1562.001` surfaced at all.
+
+### Capture path corrected
+
+`tools/evtx_to_fixture.py` wrote `status: captured` without ever checking that
+the rule fired, overwrote the generated fixture, and replaced `Computer` -
+the correlation join key - with a placeholder. Rewritten: it evaluates the
+capture first and refuses to write a "captured" fixture on a non-match
+(`--allow-no-match` records the honest status `unmatched`), writes to
+`fixtures/captured/`, masks identity fields only, and records the input and
+config hashes.
+
+Added `tools/verify_baseline.py`: gate 4 of the maturity model, which nothing
+could check before. Given a clean capture it reports per rule which EventIDs
+are absent and which fields the capture does not carry, and it fails rather
+than calling a one-event capture a baseline.
+
+Added `docs/gap-register.md`: the prioritized list of what this repo lacks,
+with the P0 items (blind capture, clean baseline, benign corpus, volume) stated
+as costs rather than as wishes.
+
 ### Still not done
 
 No blind capture, no benign-corpus run, no measured volume, no sample. Nothing

@@ -53,9 +53,9 @@ uncollected field appear.
 
 | Technique | Source | Event / provider | Field read | Status | Notes |
 |---|---|---|---|---|---|
-| AMSI patch T1562.001 | EDR memory telemetry | in-process memory write to `amsi.dll` | module name, writing process | partial | Sysmon has no loaded-module targeting; needs EDR |
-| ETW patch T1562.001 | EDR memory telemetry | in-process memory write to `ntdll.dll` | module name, writing process | partial | ETW patching may blind the collector itself |
-| Security component tamper T1562.001 | Sysmon + Security | 1, 12-14 | `Image`, `CommandLine`, `TargetObject`, `Details` | ready | sc/net stop, AMSI provider delete, Defender prefs |
+| AMSI patch T1685 | EDR memory telemetry | in-process memory write to `amsi.dll` | module name, writing process | partial | Sysmon has no loaded-module targeting; needs EDR |
+| ETW patch T1685 | EDR memory telemetry | in-process memory write to `ntdll.dll` | module name, writing process | partial | ETW patching may blind the collector itself |
+| Security component tamper T1685 | Sysmon + Security | 1, 12-14 | `Image`, `CommandLine`, `TargetObject`, `Details` | ready | sc/net stop, AMSI provider delete, Defender prefs |
 | WMI persistence T1546.003 | Sysmon | 19 / 20 / 21 | `EventType`, `Computer`, `Type` | ready | enabled in sysmon-config.xml |
 | Run key T1547.001 | Sysmon | 12 / 13 / 14 | `TargetObject` | ready | — |
 | Scheduled task T1053.005 | Sysmon + Security | 1 / 4698 | `Image`, `CommandLine` | ready | — |

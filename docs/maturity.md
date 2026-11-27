@@ -5,7 +5,7 @@ Per technique, ten checks. A behavior is **covered** only at ten.
 | # | Gate | Evidence | State |
 |---|---|---|---|
 | 1 | Telemetry present | `telemetry/data-sources.md` names source, event, and field; `pipeline/field_contract.py` passes | **passing** for documented fields; 7 behaviors have no source at all |
-| 2 | Rule exists | `attack/matrix.md` lists a rule with a pinned `attack.tXXXX` tag | **passing** - 37 rules, 18 techniques, pin generated from the ATT&CK 14.1 bundle |
+| 2 | Rule exists | `attack/matrix.md` lists a rule with a pinned `attack.tXXXX` tag | **passing** - 37 rules, 18 techniques, pin generated from the ATT&CK 20.1 bundle (706 techniques, 15 tactics) |
 | 3 | Rule compiles to the *deployed* backend | `ci/convert_check.py` compares each rule's declared support to real pySigma output | **passing but partial** - splunk 37/37, elastic 31/37, kusto 31/37 |
 | 4 | Telemetry proven to emit | clean baseline capture contains the required event ID and fields | **missing** - no golden capture exists |
 | 5 | TP fixture captured blind | `fixtures/per_rule/<id>.json` status `captured`, written without reading the rule | **missing** - all 37 are `designed` |
@@ -27,7 +27,7 @@ Per technique, ten checks. A behavior is **covered** only at ten.
 | Concrete fixtures (positive + negative) | have, 37 each, status `designed`, generated and verified against the rule |
 | Fixture realism | field-type model (`detection-as-code/fieldtypes.py`) - registry keys, paths, URIs, command lines |
 | Rule evaluator | modifiers incl. `fieldref` and `|all`, condition grammar, correlation semantics |
-| Per-rule TP/FP tests | have (35 tests) |
+| Per-rule TP/FP tests | have (40 tests), including a check that the generated matrix is current |
 | Blind capture | **none** - `tools/capture_kit.py` prints the procedure; nobody has run it |
 | Golden clean baseline / benign corpus | **missing** - no FP proof in reality |
 | Volume measurement | ceilings defined, `measured: false` for all 37 |
@@ -47,6 +47,15 @@ The evaluator's `frequency` handling was also fictional - `frequency` is not a
 Sigma 2.1 correlation type, so those rules never loaded in pySigma while the
 local evaluator happily "passed" them. They are now `event_count`, and the
 evaluator implements the real semantics.
+
+## Where the coverage is thin
+
+`attack/matrix.md` ends with a per-tactic rule count against the pinned bundle.
+Three tactics have **zero** rules: exfiltration, impact, resource development.
+Command and Control has 11 of the 37 rules and Collection 3, which says what this
+rule set is: a C2-artifact detector with persistence coverage, not a full
+lifecycle detector. That is a property of the implant being studied, and it is
+stated here rather than averaged away in a coverage percentage.
 
 ## Honest claim
 

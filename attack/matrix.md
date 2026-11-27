@@ -1,8 +1,8 @@
 # Attack matrix (generated)
 
-Generated 2026-11-27T15:55:21.536864+00:00 from rule metadata. Do not edit by hand.
+Generated 2026-11-27T17:04:17.325025+00:00 from rule metadata. Do not edit by hand.
 
-Rules: 37 | distinct techniques: 18 | tactic tags: 40 (not counted as techniques)
+Rules: 37 | distinct techniques: 18 | tactics used: 12 of the pinned set (not counted as techniques)
 
 | Technique | Rule | Source | Lifecycle | Level | Fixture | Pin | Flags |
 |---|---|---|---|---|---|---|---|
@@ -40,9 +40,6 @@ Rules: 37 | distinct techniques: 18 | tactic tags: 40 (not counted as techniques
 | T1547.001 | [Named Mutex Created by Unsigned Temp Process](sigma/windows/process/mutex_single_instance.yml) | host | experimental | low | MISSING | PIN-0000 | - |
 | T1555.003 | [Access to Browser Credential Stores and Wallet Vaults](sigma/credential_file_access.yml) | host | experimental | medium | MISSING | PIN-0000 | - |
 | T1555.003 | [SQLite Database Copied to Random Temp Filename](sigma/windows/file/sqlite_temp_copy.yml) | host | experimental | medium | fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a09.json | PIN-0000 | - |
-| T1562.001 | [AMSI or ETW Function Patch (Process Access to ntdll/amsi)](sigma/amsi_etw_patch.yml) | host | experimental | high | MISSING | PIN-0000 | - |
-| T1562.001 | [CPU Information Enumeration Followed by Security Tool Tampering](sigma/windows/defense-evasion/patch_sequence.yml) | host | experimental | medium | fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05.json | PIN-0000 | conversion-risk |
-| T1562.001 | [Security Component Stopped or Unregistered by Command Line](sigma/windows/defense-evasion/security_component_tamper.yml) | host | experimental | high | MISSING | PIN-0000 | - |
 | T1568.002 | [Possible DGA - High Entropy Labels and NXDOMAIN Burst](sigma/dga_high_entropy_dns.yml) | host | experimental | medium | MISSING | PIN-0000 | conversion-risk |
 | T1568.002 | [NXDOMAIN Response for a Long High-Entropy Label](sigma/network/dns/nxdomain_long_label.yml) | network | experimental | low | MISSING | PIN-0000 | single-sourced |
 | T1568.002 | [Host Process Resolving Many Random Labels](sigma/windows/process/dns_query_burst_host.yml) | host | experimental | medium | MISSING | PIN-0000 | conversion-risk |
@@ -50,12 +47,37 @@ Rules: 37 | distinct techniques: 18 | tactic tags: 40 (not counted as techniques
 | T1592.002 | [Internal Reconnaissance via net view and SecurityCenter2 Queries](sigma/net_view_recon.yml) | host | experimental | medium | MISSING | PIN-0000 | - |
 | T1592.002 | [Public IP Discovery Service Egress from Unexpected Process](sigma/windows/network/ipify_egress.yml) | network | experimental | medium | MISSING | PIN-0000 | single-sourced |
 | T1592.002 | [Security Product Enumeration via SecurityCenter2](sigma/windows/process/wmi_recon_command.yml) | host | experimental | medium | fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0c.json | PIN-0000 | - |
+| T1685 | [AMSI or ETW Function Patch (Process Access to ntdll/amsi)](sigma/amsi_etw_patch.yml) | host | experimental | high | MISSING | PIN-0000 | - |
+| T1685 | [CPU Information Enumeration Followed by Security Tool Tampering](sigma/windows/defense-evasion/patch_sequence.yml) | host | experimental | medium | fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05.json | PIN-0000 | conversion-risk |
+| T1685 | [Security Component Stopped or Unregistered by Command Line](sigma/windows/defense-evasion/security_component_tamper.yml) | host | experimental | high | MISSING | PIN-0000 | - |
 
 A technique is covered only when telemetry, rule, compilation, TP fixture, and FP corpus all pass. See `docs/maturity.md`.
 
+## Tactic coverage against ATT&CK 20.1
+
+12 of 15 pinned tactics have at least one rule. A tactic with no rule is a blind spot, not a gap in the rule set's quality.
+
+| Tactic | Rules |
+|---|---|
+| collection | 3 |
+| command-and-control | 11 |
+| credential-access | 3 |
+| defense-impairment | 3 |
+| discovery | 3 |
+| execution | 3 |
+| exfiltration | **0** |
+| impact | **0** |
+| initial-access | 1 |
+| lateral-movement | 1 |
+| persistence | 12 |
+| privilege-escalation | 12 |
+| reconnaissance | 3 |
+| resource-development | **0** |
+| stealth | 6 |
+
 ## Deployability (generated from ci/convert_check.py)
 
-Conversion run: 2026-11-27T15:55:21.395233+00:00. A rule is only deployable where the backend is `supported`.
+Conversion run: 2026-11-27T17:04:17.207164+00:00. A rule is only deployable where the backend is `supported`.
 
 | Rule | splunk | elastic | kusto |
 |---|---|---|---|

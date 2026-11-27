@@ -18,7 +18,9 @@ min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
 tags: [attack.t1105, attack.t1027.002]
-tactics: [attack.execution]
+tactics:
+  - attack.command-and-control
+  - attack.stealth
 references:
   - https://attack.mitre.org/techniques/T1105/
   - https://attack.mitre.org/techniques/T1027/002/

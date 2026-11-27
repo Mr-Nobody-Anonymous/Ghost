@@ -15,7 +15,8 @@ dedup_window: "5m"
 min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
-tactics: [attack.defense-evasion]
+tactics:
+  - attack.stealth
 tags: [attack.t1027.002]
 logsource:
   product: windows

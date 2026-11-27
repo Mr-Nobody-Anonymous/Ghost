@@ -17,7 +17,10 @@ min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
 tags: [attack.t1059, attack.t1053.005]
-tactics: [attack.execution]
+tactics:
+  - attack.execution
+  - attack.persistence
+  - attack.privilege-escalation
 references:
   - https://attack.mitre.org/techniques/T1059/
   - https://attack.mitre.org/techniques/T1053/005/
