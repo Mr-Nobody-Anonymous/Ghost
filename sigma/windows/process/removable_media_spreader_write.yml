@@ -1,0 +1,63 @@
+title: Removable-Media Spreader Writes Executable and autorun.inf
+id: 3570d46e-6cdb-4c0b-8886-972ce382f63a
+dedup_key: "rule:3570d46e-6cdb-4c0b-8886-972ce382f63a:host:target"
+status: experimental
+lifecycle: designed
+description: >
+  A process creates an executable or `autorun.inf` on a drive letter that is not
+  `C:`. This is the USB-spreading shape: the implant's spreader drops
+  `svc_update.exe` and an `autorun.inf`, then relies on Windows' legacy
+  AutoRun behaviour.
+
+  Windows 10 build 1703+ ignores AutoRun for non-optical removable media, so the
+  `autorun.inf` half is largely historical; the executable-write half is what
+  still matters. The underlying behaviour - a process writing an executable to a
+  removable volume - has no dedicated Sysmon event, and this rule cannot tell a
+  legitimate installer or backup tool from a spreader, which is why it is low
+  level and paired with `autorun_inf_writes.yml`.
+author: ghost-detection-lab
+date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "15m"
+min_eval_interval: "30s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 11
+tags: [attack.t1091, attack.t1105]
+tactics:
+  - attack.command-and-control
+  - attack.initial-access
+  - attack.lateral-movement
+references:
+  - https://attack.mitre.org/techniques/T1091/
+  - https://learn.microsoft.com/windows/win32/shell/autoplay-reg
+  - inventory.md
+logsource:
+  product: windows
+  service: sysmon
+detection:
+  sel_exec_on_volume:
+    EventID: 11
+    TargetFilename|re: '(?i)^[D-Z]:\\(?:[^\\]+\\)*[^\\]+\.(?:exe|scr|pif|bat|cmd|vbs|js)$'
+  sel_autorun:
+    EventID: 11
+    TargetFilename|re: '(?i)^[D-Z]:\\autorun\.inf$'
+  filter_windows_temp:
+    TargetFilename|startswith:
+      - 'C:\'
+      - '\\?\Volume{'
+  condition: (sel_exec_on_volume or sel_autorun) and not filter_windows_temp
+falsepositives:
+  - Legitimate installers and portable-app deployments to a USB stick
+  - Backup and sync tools writing executables to an attached volume
+  - Optical media authoring
+level: low
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
+notes: >
+  Drive letters D-Z exclude the system volume but also exclude legitimate second
+  internal disks; if the fleet has those, replace the letter test with a check of
+  the drive type (DRIVE_REMOVABLE) in the SIEM, which Sigma cannot express.
+fixture_ref: fixtures/per_rule/3570d46e-6cdb-4c0b-8886-972ce382f63a.json

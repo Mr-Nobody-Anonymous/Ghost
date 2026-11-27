@@ -7,15 +7,15 @@
   "events": [
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 0
     }
   ],
   "assert_fields": {
     "rcode": "NXDOMAIN",
-    "Source": true,
-    "query": "kxvqmzwprtbnlcd.top"
+    "Source": "192.0.2.10",
+    "query": "aaaaaaaaaaaaaa.com"
   },
   "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

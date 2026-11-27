@@ -40,6 +40,13 @@ def benign_value(field, modifier, value):
     if modifier == "contains":
         return "benign-no-match"
     if modifier == "re":
+        # A value that fails the pattern but is still the right *type* of thing.
+        # "zzz" for a filename told the reader nothing; "C:\Windows\explorer.exe"
+        # for a path and "www.example.com" for a DNS query read like telemetry.
+        if field in ("TargetFilename", "Image", "ParentImage", "ObjectName"):
+            return "C:\\Windows\\System32\\svchost.exe"
+        if field in ("QueryName", "query"):
+            return "www.example.com"
         return "zzz"
     if modifier == "exists":
         return None
@@ -55,6 +62,10 @@ def benign_value(field, modifier, value):
         return "curl/8.0"
     if field == "rcode":
         return "NOERROR"
+    if field == "Source":
+        return "192.0.2.10"
+    if field in ("Image", "TargetFilename", "ParentImage"):
+        return "C:\\Program Files\\Contoso\\contoso.exe"
     return "benign-no-match"
 
 

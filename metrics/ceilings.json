@@ -109,6 +109,11 @@
     "measured": false,
     "note": "no deployment telemetry yet"
   },
+  "3570d46e-6cdb-4c0b-8886-972ce382f63a": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "drive-letter writes are common on multi-volume hosts; tune before promoting"
+  },
   "3b7e1c48-9d02-4a6f-8e15-c740b2d93af1": {
     "events_per_day_ceiling": 50,
     "measured": false,

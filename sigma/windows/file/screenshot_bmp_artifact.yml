@@ -3,7 +3,12 @@ id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a08
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a08:host:user"
 status: experimental
 lifecycle: designed
-description: A BMP with a 54-byte header and dimensions matching the screen resolution created under %TEMP%.
+description: >
+  A `.bmp` written under a user Temp directory. Sysmon 11 exposes only the file
+  create, not its contents, so this cannot verify the BITMAPINFOHEADER or that
+  the dimensions match the screen; it is a filename/shape signal and is rated
+  medium for that reason. Use the YARA `BMP` module or an EDR file-read sensor for
+  the stronger claim.
 author: ghost-detection-lab
 date: 2026-11-27
 sample_ref: PIN-0000
@@ -33,5 +38,5 @@ conversion:
   splunk: supported
   elastic: supported
   kusto: supported
-notes: Refine by inspecting the first 54 bytes for BITMAPINFOHEADER and resolution equal to screen metrics.
+notes: Sysmon 11 does not carry file contents. The 54-byte-BITMAPINFOHEADER and screen-dimension checks require a file collection step (see analysis/iocs.md) and are not part of this rule. A generic Temp .bmp is common (clipboard tools, print spooler); tune against the benign corpus before promoting.
 fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a08.json

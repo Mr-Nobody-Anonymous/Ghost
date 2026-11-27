@@ -23,8 +23,8 @@ the SIEM.
 ## Which backends each rule converts to
 
 `attack/matrix.md` ends with a per-rule, per-backend table generated from the
-conversion run. The honest totals today: splunk 37/37, elastic 31/37,
-kusto 31/37.
+conversion run. The honest totals today: splunk 38/38, elastic 32/38,
+kusto 32/38.
 
 ## Rollout
 

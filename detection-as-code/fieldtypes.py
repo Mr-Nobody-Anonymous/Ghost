@@ -158,8 +158,128 @@ def render_commandline(items):
     return "C:\\Windows\\System32\\cmd.exe " + bits[0]
 
 
+# A regex in a selection is not a value; the generator used to ignore the `re`
+# modifier and fall through to the path renderer, producing
+# `C:\Users\lab\artifact.bin` for a rule that only matches `[D-Z]:\...`. The
+# fixture then failed the rule, which is the harness catching its own gap - but a
+# rule using `|re` is common enough that the generator has to render one.
+# A value that proves presence for each field a rule guards with `|exists`.
+_PRESENT = {
+    "Source": "192.0.2.10", "DestinationHostname": "cdn.example.net",
+    "DestinationAddress": "203.0.113.40", "Computer": "LAB-WS01",
+    "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
+    "User": "LAB\\labuser", "Image": "C:\\Users\\lab\\AppData\\Local\\Temp\\ghost.exe",
+    "ParentImage": "C:\\Users\\lab\\AppData\\Local\\Programs\\Python\\pythonw.exe",
+    "CommandLine": "ghost.exe --run", "TargetFilename": "C:\\Users\\lab\\AppData\\Local\\Temp\\artifact.bin",
+    "TargetObject": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\Ghost",
+    "Name": "GhostFilter", "QueryName": "kxvqmzwprtbnlcd.top",
+    "DestinationIp": "203.0.113.40", "host": "203.0.113.40",
+    "cs-uri-stem": "/poll", "cs-uri-query": "id=9f3c1a7e&seq=17",
+}
+
+
+def _present_value(field):
+    if field in _PRESENT:
+        return _PRESENT[field]
+    if field in PATH_FIELDS:
+        return "C:\\Users\\lab\\AppData\\Local\\Temp\\artifact.bin"
+    return f"{field.lower()}-value"
+
+
+def render_regex(pattern):
+    """Render a concrete string that the pattern actually matches.
+
+    Deliberately not a regex engine. It expands the constructs these rules use
+    (`(?i)`, anchors, classes, groups, `+*?`, alternation) and then *verifies*
+    the result with `re.search` before returning it. If no expansion matches, it
+    tries a small pool of realistic candidates and, failing that, raises - the
+    one thing it must never do is hand the fixture a value the rule cannot match,
+    which is what happened when `|re` was ignored entirely.
+    """
+    pat = str(pattern)
+    try:
+        rx = re.compile(pat)
+    except re.error as exc:                      # pragma: no cover - defensive
+        raise ValueError(f"unrenderable regex {pat!r}: {exc}")
+
+    def expand(s):
+        s = re.sub(r"^\(\?[aiLmsux]+\)", "", s).strip("^$")
+        out, i = [], 0
+        # {n,m} quantifiers over a preceding class/group: emit n copies of the
+        # last rendered unit. `[a-z]{14,}` is the DGA rule's whole point, and
+        # without this the renderer raised instead of producing a value.
+        s = re.sub(r"\{,(\d+)\}", r"{1,\1}", s)
+        while i < len(s):
+            c = s[i]
+            if c == "{":
+                j = s.find("}", i)
+                if j > i:
+                    spec = s[i + 1:j]
+                    lo = int(spec.split(",")[0]) if spec.split(",")[0].isdigit() else 1
+                    if lo < 1:
+                        lo = 1
+                    while lo > 1 and out:
+                        out.append(out[-1])
+                        lo -= 1
+                    i = j + 1
+                    continue
+            if c == "\\" and i + 1 < len(s):
+                nxt = s[i + 1]
+                out.append({"d": "1", "w": "a", "s": " "}.get(nxt, nxt))
+                i += 2
+            elif c == "[":
+                j = s.find("]", i + 1)
+                if j < 0:
+                    break
+                body = s[i + 1:j].lstrip("^")
+                m = re.search(r"([A-Za-z0-9])-([A-Za-z0-9])", body)
+                literal = re.search(r"([A-Za-z0-9])", body)
+                out.append(m.group(1) if m else (literal.group(1) if literal else "a"))
+                i = j + 1
+            elif s.startswith("(?:", i):
+                i += 3
+            elif c == "(":
+                i += 1
+            elif c in ")*?":
+                i += 1
+            elif c == "|":
+                break
+            elif c == "+":
+                if out:
+                    out.append(out[-1])
+                i += 1
+            elif c == "}":
+                i += 1
+            else:
+                out.append(c)
+                i += 1
+        return "".join(out)
+
+    candidates = [expand(pat), "D:\\transfer\\svc_update.exe", "D:\\autorun.inf",
+                  "E:\\backup\\tool.exe", "C:\\Windows\\System32\\svchost.exe",
+                  "2026-11-27T10:00:00Z", "abc123", "1"]
+    for cand in candidates:
+        if cand and rx.search(cand):
+            return cand
+    raise ValueError(f"cannot render a value matching {pat!r}; add a candidate "
+                     f"to fieldtypes.render_regex or change the rule to use "
+                     f"contains/endswith instead of re")
+
+
 def render(field, items, mods):
     """items: [(mods, value)] for the chosen branch. Returns a concrete value."""
+    flat = {m for mod in mods for m in (mod if isinstance(mod, list) else [mod])}
+    if "re" in flat:
+        return render_regex(_exact(items)[0] if _exact(items) else items[0][1])
+    if "exists" in flat:
+        # `Source|exists: true` means "the field is present", not "its value is
+        # the boolean true". The generator emitted `Source: true`, which no host
+        # produces and which made the DGA fixture read like nonsense.
+        if len(flat) == 1 or _exact(items) in ([], [True], [False]):
+            return _present_value(field)
+        if [it for it in items if "exists" not in (it[0] if isinstance(it[0], list) else [it[0]])]:
+            items = [it for it in items
+                     if "exists" not in (it[0] if isinstance(it[0], list) else [it[0]])]
     if field == "EventID":
         value = _exact(items)[0] if _exact(items) else (items[0][1])
         return int(value) if str(value).isdigit() else 1

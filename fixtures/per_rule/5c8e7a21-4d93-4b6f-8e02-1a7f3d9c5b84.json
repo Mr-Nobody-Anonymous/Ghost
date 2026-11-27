@@ -7,135 +7,135 @@
   "events": [
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 0
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 1
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 2
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 3
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 4
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 5
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 6
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 7
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 8
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 9
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 10
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 11
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 12
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 13
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 14
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 15
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 16
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 17
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 18
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 19
     },
     {
       "rcode": "NXDOMAIN",
-      "Source": true,
-      "query": "kxvqmzwprtbnlcd.top",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
       "_ts": 20
     }
   ],
   "assert_fields": {
     "rcode": "NXDOMAIN",
-    "Source": true,
-    "query": "kxvqmzwprtbnlcd.top"
+    "Source": "192.0.2.10",
+    "query": "aaaaaaaaaaaaaa.com"
   },
   "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture.",
   "members": {

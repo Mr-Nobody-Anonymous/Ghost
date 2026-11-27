@@ -8,14 +8,14 @@
     {
       "EventID": 22,
       "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
-      "QueryName": "kxvqmzwprtbnl.com",
+      "QueryName": "aaaaaaaaaaaaa.com",
       "_ts": 0
     }
   ],
   "assert_fields": {
     "EventID": 22,
     "ProcessGuid": "{8b1c9a10-5f2e-6a31-0b7d-1c2d3e4f5a60}",
-    "QueryName": "kxvqmzwprtbnl.com"
+    "QueryName": "aaaaaaaaaaaaa.com"
   },
   "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

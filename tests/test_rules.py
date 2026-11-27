@@ -170,6 +170,27 @@ class RuleTests(unittest.TestCase):
             for t in d.get("tags", []) or []:
                 self.assertRegex(str(t), r"^attack\.t\d{4}", f"{f.name}: {t} in tags")
 
+    def test_regex_selections_are_anchored(self):
+        """An unanchored path regex matches any substring and is almost always a bug.
+
+        `TargetFilename|re: 'exe$'` matches everything; `^[D-Z]:\\...$` is a
+        deliberate volume test. Requiring an anchor makes the intent explicit.
+        """
+        for f in RULES:
+            doc = load(f)
+            if not doc:
+                continue
+            for name, body in (doc.get("detection") or {}).items():
+                if not isinstance(body, dict):
+                    continue
+                for key, value in body.items():
+                    if "|re" not in key:
+                        continue
+                    for pattern in (value if isinstance(value, list) else [value]):
+                        self.assertRegex(
+                            str(pattern), r"^(\^\(\?i\)|\^\(\?i:|\^|^\(\?i\))",
+                            f"{f.name}: {key} pattern {pattern!r} is not anchored with ^")
+
     def test_no_double_escaped_paths(self):
         """`'\\\\autorun.inf'` is a YAML literal yielding a real backslash; two
         real backslashes never occur in a Windows path, so it is always a bug."""
@@ -180,9 +201,20 @@ class RuleTests(unittest.TestCase):
             while stack:
                 node = stack.pop()
                 if isinstance(node, dict):
-                    stack.extend(node.values())
+                    stack.extend((k, v) for k, v in node.items())
                 elif isinstance(node, list):
                     stack.extend(node)
+                elif isinstance(node, tuple):
+                    key, node = node
+                    if isinstance(node, str):
+                        # A `|re` value is a regex: there, `\\` is how you match
+                        # one literal backslash in a Windows path, so two
+                        # backslashes are correct and required. Outside a regex
+                        # they are always a bug.
+                        if "|re" in str(key) or str(key).endswith("|re"):
+                            continue
+                        if "\\\\" in node:
+                            offenders.append(f"{f.name}: {node!r}")
                 elif isinstance(node, str) and "\\\\" in node:
                     offenders.append(f"{f.name}: {node!r}")
         self.assertEqual(offenders, [], "double-escaped path literal(s) found")
@@ -220,6 +252,35 @@ class RuleTests(unittest.TestCase):
             for backend in ("splunk", "elastic", "kusto"):
                 self.assertIn(conv.get(backend), ("supported", "unsupported"),
                               f"{f.name}: conversion.{backend} invalid")
+
+    def test_yara_matching_logic(self):
+        """Compiling is not matching. Assert the intended shapes fire and that
+        partial indicators stay quiet - the rule previously required two of three
+        unrelated strings, so the canonical AMSI patch (patch bytes + the symbol
+        it overwrites) did not match at all."""
+        try:
+            import yara
+        except ImportError:
+            self.skipTest("yara-python not installed")
+        r = yara.compile(filepath=str(ROOT / "yara" / "ghost_implant_structural.yar"))
+        pe = b"MZ" + b"\x00" * 100
+        must_hit = {
+            "AMSI patch bytes + symbol": pe + b"AmsiScanBuffer" + bytes.fromhex("B857 0007 80C3"),
+            "ETW patch bytes + symbol": pe + b"EtwEventWrite" + bytes.fromhex("33C0C3"),
+            "header pair + _MEI": pe + b"X-Id" + b"X-Seq" + b"_MEI",
+            "spreader filenames": pe + b"svc_update.exe" + b"autorun.inf",
+            "DGA seed + PSK + amsi": pe + b"DGA_SEED" + b"PSK" + b"AmsiScanBuffer",
+        }
+        must_miss = {
+            "one evasion symbol alone": pe + b"AmsiScanBuffer",
+            "one C2 header alone": pe + b"X-Id",
+            "non-PE carrying everything": b"NOTPE" + b"AmsiScanBuffer" + b"EtwEventWrite"
+                                          + bytes.fromhex("33C0C3"),
+        }
+        for name, data in must_hit.items():
+            self.assertTrue(r.match(data=data), f"YARA missed: {name}")
+        for name, data in must_miss.items():
+            self.assertFalse(r.match(data=data), f"YARA false positive: {name}")
 
     def test_yara_compiles(self):
         try:
@@ -293,6 +354,24 @@ class FixtureTests(unittest.TestCase):
                 missing = set(data["assert_fields"]) - present
                 self.assertFalse(missing, f"assert_fields not on matching event: {missing}")
 
+    def test_fixture_values_are_not_constraint_literals(self):
+        """A fixture is telemetry, not a copy of the rule's constraint values.
+
+        `Source|exists: true` was rendered as `Source: true` because the field
+        renderer never handled the `exists` modifier and fell through to the
+        literal. No host emits a boolean for a DNS origin.
+        """
+        for f in sorted((ROOT / "fixtures" / "per_rule").glob("*.json")):
+            doc = json.loads(f.read_text())
+            for ev in doc.get("events") or []:
+                for field, value in ev.items():
+                    if field.startswith("_") or field == "CertificateSelfSigned":
+                        continue
+                    self.assertNotIsInstance(
+                        value, bool,
+                        f"{f.name}: {field} is the boolean {value} - a constraint "
+                        f"literal leaked into the fixture")
+
     def test_fixture_paths_and_path_like_values(self):
         """No fixture may contain a value no Windows host could emit."""
         for f in (ROOT / "fixtures" / "per_rule").glob("*.json"):
@@ -306,7 +385,8 @@ class FixtureTests(unittest.TestCase):
                                          f"{f.name}: registry key rendered as a path: {value}")
                     if key in ("Image", "TargetFilename", "ParentImage") and value:
                         self.assertTrue(
-                            str(value).startswith(("C:\\", "\\\\")) or "_MEI" in str(value),
+                            (len(str(value)) > 2 and str(value)[1] == ":" and str(value)[2] == "\\")
+                            or str(value).startswith("\\\\") or "_MEI" in str(value),
                             f"{f.name}: {key}={value!r} is not a Windows path")
                         self.assertNotRegex(str(value).lower(), r"\.(bmp|db|enc|zip)/",
                                             f"{f.name}: extension used as a directory")

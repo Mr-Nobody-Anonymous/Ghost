@@ -1,6 +1,6 @@
 {
-  "generated_utc": "sha256:d87cb0ff0465297e",
-  "rules": 37,
+  "generated_utc": "sha256:ac2ca6b5d81b4e36",
+  "rules": 38,
   "backends": [
     "splunk",
     "elastic",
@@ -537,6 +537,21 @@
         "declared": "supported"
       },
       "note": "ParentCommandLine needs Sysmon 1 with command-line capture, which is default",
+      "correlation": false
+    },
+    "sigma/windows/process/removable_media_spreader_write.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
       "correlation": false
     },
     "sigma/windows/process/wmi_recon_command.yml": {

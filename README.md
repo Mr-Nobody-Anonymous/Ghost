@@ -8,7 +8,7 @@ contains **detection content and inert lab tooling only**. It answers:
 
 | Path | Purpose |
 |---|---|
-| `sigma/` | 37 Sigma rules (32 single-event + 5 correlations) + schema + Suricata header rules |
+| `sigma/` | 38 Sigma rules (33 single-event + 5 correlations) + schema + Suricata header rules |
 | `yara/` | Structural rules: packers, stage fingerprints, config artifacts |
 | `telemetry/` | Data-source map, Sysmon config, audit policy + SACLs, ETW provider list |
 | `fixtures/` | Generated positive/negative fixture per rule (37 pairs); benign FP corpus spec |
@@ -51,7 +51,7 @@ python3 tools/evtx_to_fixture.py --input captured.xml --rule-id <id> \
 python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl
 ```
 
-The gate passes today: 37/37 rules convert to Splunk, 31/37 to Elastic and Kusto
+The gate passes today: 38/38 rules convert to Splunk, 32/38 to Elastic and Kusto
 (five correlations and one `fieldref` rule are Splunk-only in pySigma), every
 rule matches its generated fixture and stays silent on its negative fixture.
 

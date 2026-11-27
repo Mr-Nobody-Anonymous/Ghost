@@ -14,7 +14,7 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | # | Gap | Why it was worse than "missing" | Now |
 |---|---|---|---|
 | 1 | **No rule could reach a backend** | Every rule carried `status: designed`, which pySigma rejects with `SigmaStatusError` *before* conversion. Conversion was never going to work, on any machine. | `status` is the Sigma field; the repo lifecycle moved to `lifecycle:` |
-| 2 | **The conversion gate could never pass** | It required `pysigma-backend-kql`, **404 on PyPI**. The gate was red for a reason nobody could fix, which trained everyone to ignore it. | Requires packages that exist; measures each rule's *declared* support and fails on over- and under-claiming: splunk 37/37, elastic 31/37, kusto 31/37 |
+| 2 | **The conversion gate could never pass** | It required `pysigma-backend-kql`, **404 on PyPI**. The gate was red for a reason nobody could fix, which trained everyone to ignore it. | Requires packages that exist; measures each rule's *declared* support and fails on over- and under-claiming: splunk 38/38, elastic 32/38, kusto 32/38 |
 | 3 | **Correlations were not Sigma** | `type: frequency` and `type: sequence` are not Sigma 2.1 correlation types. pySigma refused to load the files while the local evaluator "passed" them — two harnesses, neither agreeing with reality. | `event_count` / `temporal`; evaluator implements the real semantics |
 | 4 | **The ATT&CK pin validated itself** | It contained `T1533`, which is not a technique in ATT&CK at all, because the "pinned" list had been written from the rules. | Generated from the real STIX bundle by `tools/pin_attack_bundle.py`, hash-recorded, revocations surfaced |
 | 5 | **The pin was 6 releases stale** | Pinned to 14.1 while 20.1 was current. v20 **revoked `T1562`** and split Defense Evasion into `Stealth` and `Defense Impairment`, so six rules cited a dead ID and a dead tactic. | Upgraded to **20.1** (706 techniques, 15 tactics). `T1562.001` → `T1685`. Tactic lists are now **derived** from the bundle and a test fails on any pair the bundle does not support |
@@ -22,7 +22,7 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | 7 | **Fixtures held values no host emits** | Registry keys under `C:\Users\...\Software\`, URIs as file paths, `.bmp` as a directory name. | `detection-as-code/fieldtypes.py` field-type model; test-enforced |
 | 8 | **Rules that could not fire on the telemetry they claimed** | Sysmon `23` for a delete (it is 26), `TargetImage` = a DLL on Sysmon 10, double-escaped path literals, a URI rule requiring a path *and* a query. | All fixed, with a field-contract check that rejects these shapes by name |
 | 9 | **The Sysmon config enabled nothing useful** | Archive path did not exist; the ProcessAccess selection could never match; it claimed EID 24 was off while enabling it. | Rewritten, XML-parsed, hash-pinned in `baseline/manifest.json` |
-| 10 | **No deployable artifact** | 37 rules and nothing a SIEM could ingest. | `deploy/build_bundle.py` emits real pySigma query text + manifest, refuses stale conversion results |
+| 10 | **No deployable artifact** | 38 rules and nothing a SIEM could ingest. | `deploy/build_bundle.py` emits real pySigma query text + manifest, refuses stale conversion results |
 | 11 | **Silent skips** | A missing dependency made stages "pass". | 10-stage gate; an absent dependency is a failure |
 | 12 | **The staleness check could not fail** | `deploy/build_bundle.py` compared a wall clock, then a stamp derived only from the stored results. Both agreed with themselves. | Stamp is sha256 over the rule files *and* the outcomes; a test edits a rule and asserts the build exits 1 |
 | 13 | **The gate rewrote the tree** | Wall clock in `conversion.json` and in the matrix header made `git status` dirty after every run, which hides real changes. | Two consecutive gate runs leave the tree clean |
@@ -35,7 +35,7 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 
 | ID | Gap | What closing it costs | Where |
 |---|---|---|---|
-| G-01 | **No blind capture.** Every one of the 37 fixtures is `designed`: derived from its rule, so it proves consistency, not detection. | One lab VM, one Sysmon install, one run of `tools/capture_kit.py` per rule. Hours, not weeks. | `docs/maturity.md` gate 5 |
+| G-01 | **No blind capture.** Every one of the 38 fixtures is `designed`: derived from its rule, so it proves consistency, not detection. | One lab VM, one Sysmon install, one run of `tools/capture_kit.py` per rule. Hours, not weeks. | `docs/maturity.md` gate 5 |
 | G-02 | **No golden clean baseline.** Nobody has shown that the required EventIDs and fields even appear on an idle host, so a rule could be silently unmatched forever. | 24 h of a clean VM with the pinned config. This is the cheapest P0 and it unblocks G-01. | gate 4 |
 | G-03 | **No benign corpus run.** Precision is unknown. A rule that fires on every Chrome update is worse than no rule. | One business day per software class in `fixtures/benign/`. | gate 7 |
 | G-04 | **No volume measurement.** Every `metrics/ceilings.json` entry says `measured: false`. The ceilings are editorial budgets. | Needs G-02 + G-03. | gate 10 |
@@ -52,7 +52,7 @@ These cannot be fixed with a query. They need a sensor decision.
 | G-08 | File **reads** (DPAPI, `Local State`, SQLite copy) | Sysmon logs create/write, not read. SACL `4663` on the specific paths. | SACL + `auditpol`, already documented for the CPU key |
 | G-09 | Single-instance mutex | Handle telemetry is EDR-only. | EDR, or skip — very low signal |
 | G-10 | USB insertion, to pair with `autorun.inf` writes | Sysmon has no device-arrival event here. | Windows `DriverFrameworks-UserMode` 2003/2102, or EDR device control |
-| G-11 | Custom HTTP header retention | The C2 rules read `cs-header-X-Id`; most proxies drop unknown headers. **Unproven, not unknown-but-fine.** | Test one request through the actual proxy before trusting 4 of 37 rules |
+| G-11 | Custom HTTP header retention | The C2 rules read `cs-header-X-Id`; most proxies drop unknown headers. **Unproven, not unknown-but-fine.** | Test one request through the actual proxy before trusting 4 of 38 rules |
 
 ### P2. Analytic depth
 

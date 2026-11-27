@@ -2,7 +2,7 @@
 
 Generated from rule metadata and attack/conversion.json. Do not edit by hand - run tools/generate_matrix.py.
 
-Rules: 37 | distinct techniques: 18 | tactics used: 12 of the pinned set (not counted as techniques)
+Rules: 38 | distinct techniques: 18 | tactics used: 12 of the pinned set (not counted as techniques)
 
 | Technique | Rule | Source | Lifecycle | Level | Fixture | Pin | Flags |
 |---|---|---|---|---|---|---|---|
@@ -22,8 +22,10 @@ Rules: 37 | distinct techniques: 18 | tactics used: 12 of the pinned set (not co
 | T1071.001 | [Generic Browser UA with No Accept-Language or Cookie Header](sigma/network/proxy/ua_anomaly.yml) | network | experimental | medium | MISSING | PIN-0000 | single-sourced |
 | T1071.001 | [Process TLS Session to Self-Signed Certificate on 443](sigma/windows/network/host_selfsigned_tls.yml) | host | experimental | medium | MISSING | PIN-0000 | - |
 | T1091 | [autorun.inf Written Outside Trusted Install Paths](sigma/autorun_inf_writes.yml) | host | experimental | high | MISSING | PIN-0000 | - |
+| T1091 | [Removable-Media Spreader Writes Executable and autorun.inf](sigma/windows/process/removable_media_spreader_write.yml) | host | experimental | low | fixtures/per_rule/3570d46e-6cdb-4c0b-8886-972ce382f63a.json | PIN-0000 | - |
 | T1105 | [Executable Overwritten in a User-Writable Install Directory](sigma/windows/file/self_update_rewrite.yml) | host | experimental | medium | MISSING | PIN-0000 | - |
 | T1105 | [Executable Launched from User-Writable Path with No Signer](sigma/windows/process/dropper_unsigned_temp_exec.yml) | host | experimental | medium | MISSING | PIN-0000 | - |
+| T1105 | [Removable-Media Spreader Writes Executable and autorun.inf](sigma/windows/process/removable_media_spreader_write.yml) | host | experimental | low | fixtures/per_rule/3570d46e-6cdb-4c0b-8886-972ce382f63a.json | PIN-0000 | - |
 | T1113 | [Screen-Sized BMP Written to Temp Directory](sigma/windows/file/screenshot_bmp_artifact.yml) | host | experimental | medium | fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a08.json | PIN-0000 | - |
 | T1135 | [Internal Reconnaissance via net view and SecurityCenter2 Queries](sigma/net_view_recon.yml) | host | experimental | medium | MISSING | PIN-0000 | - |
 | T1497 | [CPU Information Enumeration Followed by Security Tool Tampering](sigma/windows/defense-evasion/patch_sequence.yml) | host | experimental | medium | fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05.json | PIN-0000 | conversion-risk |
@@ -60,15 +62,15 @@ A technique is covered only when telemetry, rule, compilation, TP fixture, and F
 | Tactic | Rules |
 |---|---|
 | collection | 3 |
-| command-and-control | 11 |
+| command-and-control | 12 |
 | credential-access | 3 |
 | defense-impairment | 3 |
 | discovery | 3 |
 | execution | 3 |
 | exfiltration | **0** |
 | impact | **0** |
-| initial-access | 1 |
-| lateral-movement | 1 |
+| initial-access | 2 |
+| lateral-movement | 2 |
 | persistence | 12 |
 | privilege-escalation | 12 |
 | reconnaissance | 3 |
@@ -77,7 +79,7 @@ A technique is covered only when telemetry, rule, compilation, TP fixture, and F
 
 ## Deployability (generated from ci/convert_check.py)
 
-Conversion stamp: sha256:d87cb0ff0465297e. A rule is only deployable where the backend is `supported`.
+Conversion stamp: sha256:ac2ca6b5d81b4e36. A rule is only deployable where the backend is `supported`.
 
 | Rule | splunk | elastic | kusto |
 |---|---|---|---|
@@ -115,8 +117,9 @@ Conversion stamp: sha256:d87cb0ff0465297e. A rule is only deployable where the b
 | [sigma/windows/process/dropper_unsigned_temp_exec.yml](sigma/windows/process/dropper_unsigned_temp_exec.yml) | yes | yes | yes |
 | [sigma/windows/process/mutex_single_instance.yml](sigma/windows/process/mutex_single_instance.yml) | yes | yes | yes |
 | [sigma/windows/process/python_parent_child_shape.yml](sigma/windows/process/python_parent_child_shape.yml) | yes | yes | yes |
+| [sigma/windows/process/removable_media_spreader_write.yml](sigma/windows/process/removable_media_spreader_write.yml) | yes | yes | yes |
 | [sigma/windows/process/wmi_recon_command.yml](sigma/windows/process/wmi_recon_command.yml) | yes | yes | yes |
 | [sigma/windows/registry/cpu_info_read.yml](sigma/windows/registry/cpu_info_read.yml) | yes | yes | yes |
 | [sigma/wmi_event_subscription_persistence.yml](sigma/wmi_event_subscription_persistence.yml) | yes | yes | yes |
 
-Totals: splunk 37/37, elastic 31/37, kusto 31/37
+Totals: splunk 38/38, elastic 32/38, kusto 32/38

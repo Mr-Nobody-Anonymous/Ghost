@@ -6,157 +6,157 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 0
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 1
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 2
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 3
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 4
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 5
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 6
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 7
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 8
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 9
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 10
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 11
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 12
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 13
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 14
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 15
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 16
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 17
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 18
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 19
     },
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 20
     }
   ],
   "assert_fields": {
-    "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-    "cs-header-X-Seq": "17",
-    "SourceAddress": true,
+    "cs-header-X-Id": "cs-header-x-id-value",
+    "cs-header-X-Seq": "cs-header-x-seq-value",
+    "SourceAddress": "sourceaddress-value",
     "DestinationHostname": "cdn.example.net"
   },
   "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture.",

@@ -6,17 +6,17 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-      "cs-header-X-Seq": "17",
-      "SourceAddress": true,
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
       "DestinationHostname": "cdn.example.net",
       "_ts": 0
     }
   ],
   "assert_fields": {
-    "cs-header-X-Id": "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3",
-    "cs-header-X-Seq": "17",
-    "SourceAddress": true,
+    "cs-header-X-Id": "cs-header-x-id-value",
+    "cs-header-X-Seq": "cs-header-x-seq-value",
+    "SourceAddress": "sourceaddress-value",
     "DestinationHostname": "cdn.example.net"
   },
   "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."

@@ -2,6 +2,9 @@
  * Structural detection for a Python/PyInstaller-style implant.
  * These strings are detection indicators only - they do not implement any
  * behavior. Tune condition thresholds against a clean baseline before use.
+ *
+ * Matching logic is exercised by tests/test_rules.py::YaraTests, which asserts
+ * both that each intended shape fires and that partial indicators do not.
  */
 rule Ghost_Implant_Structural
 {
@@ -9,8 +12,9 @@ rule Ghost_Implant_Structural
         description = "PyInstaller-packaged Python implant with evasion, DGA and custom-header C2 indicators"
         author = "ghost-detection-lab"
         date = "2026-11-27"
-        attack = "T1562.001, T1568.002, T1071.001, T1027.002"
+        attack = "T1685, T1568.002, T1071.001, T1027.002"
         severity = "high"
+        note = "T1685 replaced T1562.001 when ATT&CK v20 revoked it"
 
     strings:
         $amsi_fn   = "AmsiScanBuffer" ascii wide
@@ -30,7 +34,10 @@ rule Ghost_Implant_Structural
         uint16(0) == 0x5A4D and
         filesize < 10MB and
         (
-            (any of ($patch1, $patch2) and 2 of ($amsi_fn, $etw_fn, $vp)) or
+            // the patch and the name of what it patches, in the same file
+            (any of ($patch1, $patch2) and 1 of ($amsi_fn, $etw_fn, $vp)) or
+            // evasion pair only: two of the three patch targets named together
+            (2 of ($amsi_fn, $etw_fn, $vp)) or
             (all of ($xid, $xseq) and $mei) or
             ($svc and $autorun) or
             ($dga and $psk and any of ($amsi_fn, $etw_fn))

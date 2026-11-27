@@ -103,7 +103,7 @@ stages that could not fail and red for a reason that could never be fixed.
 - `ci/convert_check.py` required `pysigma-backend-kql`, which does not exist on
   PyPI (404). No machine could ever pass it. Dependencies now resolve, and the
   gate measures every rule's declared `conversion:` support against real
-  pySigma output, failing on over- and under-claims. Result: splunk 37/37,
+  pySigma output, failing on over- and under-claims. Result: splunk 38/38,
   elastic 31/37, kusto 31/37.
 - Correlation rules declared `type: frequency` and `type: sequence`, neither of
   which is a Sigma 2.1 correlation type; pySigma refused to load them while the
@@ -117,7 +117,7 @@ stages that could not fail and red for a reason that could never be fixed.
 - Every rule carried `status: designed` or `deployed`, which pySigma rejects
   with `SigmaStatusError` before conversion. `status` now holds a Sigma value and
   the repo's own lifecycle moved to `lifecycle:`. This single fault blocked all
-  37 rules from ever reaching a backend.
+  38 rules from ever reaching a backend.
 
 ### Rules that could not fire on the telemetry they claimed
 
@@ -224,6 +224,29 @@ The first attempt at this hashed only the stored result, which made the stamp
 agree with itself forever and could not detect an edited rule. A test now
 proves `build_bundle.py` exits 1 when a rule is changed after conversion; the
 self-referential version passed that test's inverse.
+
+### Regex selections, exists guards, and a missing detector
+
+- `fieldtypes.render` ignored the `|re` modifier entirely and fell through to
+  the path renderer, so a rule matching `^[D-Z]:\...` was handed
+  `C:\Users\lab\artifact.bin` and could never match. It now expands the
+  pattern and *verifies the result with re.search*, raising rather than
+  emitting a value the rule cannot match.
+- `Source|exists: true` rendered as `Source: true` - the constraint literal, not
+  telemetry. `exists` now produces a field-appropriate present value, and a test
+  rejects any boolean leaking into a fixture.
+- `analysis/iocs.md` listed `svc_update.exe` and no rule detected it. Added
+  `removable_media_spreader_write.yml` (T1091/T1105): executable or autorun.inf
+  written to a non-system volume, with the AutoRun deprecation stated rather
+  than assumed.
+- `screenshot_bmp_artifact.yml` claimed a 54-byte BITMAPINFOHEADER and
+  screen-resolution dimensions; Sysmon 11 carries no file contents. The
+  description now says that and points at the YARA BMP module for the stronger
+  claim.
+- YARA: the canonical AMSI patch (patch bytes + the symbol overwritten) did not
+  match, because the condition demanded two of three unrelated strings. Fixed,
+  meta tag moved off the revoked T1562.001, and a test now asserts five intended
+  shapes fire and three partial indicators do not.
 
 ### Still not done
 
