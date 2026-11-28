@@ -559,7 +559,8 @@ class ContractTests(unittest.TestCase):
         r = subprocess.run(
             [sys.executable, str(ROOT / "tools" / "evtx_to_fixture.py"),
              "--input", str(xml), "--rule-id", "5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3",
-             "--output", str(out), "--sample-ref", "PIN-0000"],
+             "--output", str(out), "--sample-ref", "PIN-0000",
+             "--host-build", "10.0.22631.4169"],
             capture_output=True, text=True)
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         fx = json.loads(out.read_text())
@@ -567,7 +568,41 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(fx["events"][0]["Computer"], "LAB-WS01",
                          "Computer is a correlation join key and must survive capture")
         self.assertEqual(fx["events"][0]["SubjectUserSid"], "<masked>")
+        # G-21: a capture is evidence about one machine, so it records which
+        # one. Without this a fixture cannot be re-run or argued with.
+        env = fx["capture_source"]["environment"]
+        self.assertEqual(env["expected_build"], "10.0.22631")
+        self.assertEqual(env["reported_build"], "10.0.22631.4169")
+        self.assertTrue(env.get("matches_lab_image"))
+        self.assertRegex(env["manifest_sha256"], r"^[0-9a-f]{64}$")
         out.unlink()
+
+    def test_capture_from_an_unrecorded_build_is_not_a_fixture(self):
+        """G-21. An event with no environment is one event on one unknown
+        machine. It is evidence, but it is not a fixture that can be re-run."""
+        xml = ROOT / "tests" / "data" / "sample_capture.xml"
+        out = ROOT / "dist" / "test-capture-nobuild.json"
+        out.parent.mkdir(exist_ok=True)
+        r = subprocess.run(
+            [sys.executable, str(ROOT / "tools" / "evtx_to_fixture.py"),
+             "--input", str(xml), "--rule-id", "5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3",
+             "--output", str(out), "--sample-ref", "PIN-0000"],
+            capture_output=True, text=True)
+        self.assertEqual(r.returncode, 2, r.stdout + r.stderr)
+        self.assertIn("does not say which Windows build", r.stderr)
+        self.assertFalse(out.exists())
+
+    def test_capture_from_a_different_build_is_rejected(self):
+        xml = ROOT / "tests" / "data" / "sample_capture.xml"
+        out = ROOT / "dist" / "test-capture-wrongbuild.json"
+        out.parent.mkdir(exist_ok=True)
+        r = subprocess.run(
+            [sys.executable, str(ROOT / "tools" / "evtx_to_fixture.py"),
+             "--input", str(xml), "--rule-id", "5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3",
+             "--output", str(out), "--host-build", "10.0.19045.4291"],
+            capture_output=True, text=True)
+        self.assertEqual(r.returncode, 2, r.stdout + r.stderr)
+        self.assertIn("10.0.19045.4291", r.stderr)
 
     def test_baseline_verifier_reports_unmatched_rules(self):
         r = subprocess.run(

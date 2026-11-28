@@ -376,6 +376,17 @@ check, so this entry is written after the fact from the commit log; the
   upstream tree and still cited after the cache moved. `--strict` turns
   "unhashed" into a failure for anyone who does have the caches.
 
+- **Tie a capture to the machine it came from** (`G-21`). A captured fixture is
+  evidence about one host: this build, this Sysmon version, this audit policy.
+  `telemetry/lab-image.json` now declares the intended host and
+  `tools/evtx_to_fixture.py` records which of those values the capture could
+  report. A capture with no stated build, or from a different one, is refused
+  rather than filed as a fixture. `docs/runbook.md` also told the operator to
+  write captures over `fixtures/per_rule/`, which destroys the record of what
+  the rule was meant to match - the tool had already fixed that and the runbook
+  never followed. **The gap stays partly open:** no VM image was built from the
+  manifest, so captures are now attestable but still not reproducible.
+
 ## Versioning
 
 `tools/release.py` derives the version from the date and the existing tags

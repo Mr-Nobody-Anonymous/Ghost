@@ -92,6 +92,35 @@ def _sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
 
 
+def _environment(lab, host_build):
+    """Record which lab-image values this capture can be tied to.
+
+    Returns (environment, problem). A problem is not a hard failure for a
+    `candidate` capture - a partial capture is still useful evidence - but it
+    does mean the file must not claim `captured`.
+    """
+    expected = lab["os"]["build"]
+    env = {
+        "manifest_version": lab["manifest_version"],
+        "expected_build": expected,
+        "reported_build": host_build or "",
+        "sysmon_version_expected": lab["sysmon"]["version"],
+        "timezone_expected": lab["clock"]["timezone"],
+        "manifest_sha256": _sha(ROOT / "telemetry" / "lab-image.json"),
+    }
+    if not host_build:
+        return env, ("the capture does not say which Windows build it came "
+                     "from; telemetry/lab-image.json says the expected build "
+                     f"is {expected}")
+    # Compare the three-component build, not a prefix: `startswith("10.0")` is
+    # true of every Windows 10/11 build, so the check would never fire.
+    if ".".join(host_build.split(".")[:3]) != ".".join(expected.split(".")[:3]):
+        return env, (f"the capture came from build {host_build}, the lab image "
+                     f"is {expected}")
+    env["matches_lab_image"] = True
+    return env, None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--input", required=True)
@@ -100,6 +129,9 @@ def main():
     ap.add_argument("--allow-no-match", action="store_true",
                     help="record the capture even though the rule did not fire - "
                          "this writes status 'unmatched', never 'captured'")
+    ap.add_argument("--host-build", default="",
+                    help="`cmd /c ver` output or the OS build string the capture "
+                         "came from, e.g. 10.0.22631")
     ap.add_argument("--sample-ref", default="",
                     help="PIN-xxxx from samples/PINS.md; required for 'captured'")
     args = ap.parse_args()
@@ -131,6 +163,16 @@ def main():
         ROOT / "fixtures" / "captured" / f"{args.rule_id}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
 
+    lab = json.loads((ROOT / "telemetry" / "lab-image.json").read_text(
+        encoding="utf-8"))
+    environment, env_problem = _environment(lab, args.host_build)
+    if status == "captured" and env_problem and not args.allow_no_match:
+        # A capture that cannot name its environment is evidence of one event on
+        # one unrecorded machine. Say so instead of filing it as a fixture.
+        print(f"FAIL {env_problem}\n"
+              f"     Pass --host-build, or use --allow-no-match to file this as "
+              f"a capture that is not a fixture.", file=sys.stderr)
+        return 2
     fixture = {
         "fixture_id": "FX-" + args.rule_id[:8],
         "rule_id": args.rule_id,
@@ -144,6 +186,7 @@ def main():
             "input_sha256": _sha(pathlib.Path(args.input)),
             "sysmon_config_sha256": _sha(ROOT / "telemetry" / "sysmon-config.xml"),
             "match_result": reason,
+            "environment": environment,
         },
         "events": events,
         "assert_fields": {k: v for k, v in events[0].items()

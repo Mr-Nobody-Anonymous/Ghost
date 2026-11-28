@@ -22,20 +22,34 @@ The fixtures in `fixtures/per_rule/` are generated, not captured. To move one to
 1. `python3 tools/capture_kit.py --rule <id-prefix>` - prints exactly which
    event IDs to collect, which fields the rule reads, and which inert emulator
    command produces the behaviour.
-2. Stand up a disposable lab VM on an Internal network; snapshot first.
+2. Stand up a disposable lab VM on an Internal network; snapshot first. Match
+   `telemetry/lab-image.json` - Windows build, Sysmon version, audit policy,
+   UTC clock. A capture from a different build is refused, and rightly: the
+   fields a rule reads change between builds and the fixture would be evidence
+   about a machine nobody can reproduce.
 3. Apply `telemetry/sysmon-config.xml` and the policy in `telemetry/auditpol.md`.
 4. Run the inert fixture for the technique. No real credentials, no real C2.
 5. Capture the events and convert them:
 
    ```bash
    wevtutil qe Microsoft-Windows-Sysmon/Operational /f:xml /e:true > capture.xml
+   cmd /c ver          # note the build; the converter wants it
    python3 tools/evtx_to_fixture.py --input capture.xml \
-     --rule-id <id> --output fixtures/per_rule/<id>.json
+     --rule-id <id> --host-build 10.0.22631.4169
    ```
+
+   Output goes to `fixtures/captured/<id>.json` by default. Never write over
+   `fixtures/per_rule/` - that file is the record of what the rule is *meant*
+   to match, and overwriting it destroys the only evidence the rule was ever
+   checked against.
 
 6. Compare the captured event with what the rule asserts. Mark the rule
    `lifecycle: captured` and give the fixture a real `sample_ref` from
    `samples/PINS.md` only if the event actually matched.
+
+The converter exits 2 and writes nothing when the rule does not fire on the
+capture, or when the capture cannot say which build it came from. Both are
+findings about the environment or the rule, not files to file away.
 
 A fixture status of `captured` with `sample_ref: PIN-0000` fails the test suite.
 
