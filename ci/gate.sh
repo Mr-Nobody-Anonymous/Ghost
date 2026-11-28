@@ -9,36 +9,40 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-echo "[1/10] structural validation (schema, Sigma status, ATT&CK pin, conversion claims)"
+echo "[0/11] environment matches requirements.txt (pinned pySigma + backends)"
+python3 ci/check_env.py
+
+echo "[1/11] structural validation (schema, Sigma status, ATT&CK pin, conversion claims)"
 python3 detection-as-code/validate_rules.py
 
-echo "[2/10] rule and contract tests"
+echo "[2/11] rule and contract tests"
 python3 -m unittest discover -s tests -p 'test_*.py'
 
-echo "[3/10] rule evaluation against concrete fixtures (TP/FP/sequence/frequency)"
+echo "[3/11] rule evaluation against concrete fixtures (TP/FP/sequence/frequency)"
 python3 detection-as-code/evaluate.py
 
-echo "[4/10] fixtures match their rules (stale fixture = failing test)"
+echo "[4/11] fixtures match their rules (stale fixture = failing test)"
 python3 tools/generate_fixtures.py --check
 
-echo "[5/10] emulation descriptors verify: every rule matches its expected event"
+echo "[5/11] emulation: descriptors verify, and the beacon emulator feeds its rules"
 python3 emulation/emit_expected_events.py >/dev/null
+python3 emulation/verify_emulation.py --dry-run
 python3 tools/generate_fixtures.py --check
 
-echo "[6/10] telemetry field contract (every field a rule reads is documented)"
+echo "[6/11] telemetry field contract (every field a rule reads is documented)"
 python3 pipeline/field_contract.py --strict
 
-echo "[7/10] query + Suricata lint (hunt queries, signatures, SIDs, ATT&CK metadata)"
+echo "[7/11] query + Suricata lint (hunt queries, signatures, SIDs, ATT&CK metadata)"
 python3 pipeline/lint_queries.py
 python3 pipeline/lint_suricata.py
 
-echo "[8/10] PENDING ratchet"
+echo "[8/11] PENDING ratchet"
 python3 ci/pending_ratchet.py main
 
-echo "[9/10] backend conversion: every rule's declared support is measured"
+echo "[9/11] backend conversion: every rule's declared support is measured"
 python3 ci/convert_check.py --backends splunk elastic kusto --quiet
 
-echo "[10/10] coverage + deployable bundle + package"
+echo "[10/11] coverage + deployable bundle + package"
 python3 tools/generate_matrix.py
 python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl
 mkdir -p dist

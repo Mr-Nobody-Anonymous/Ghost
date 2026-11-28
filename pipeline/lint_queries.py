@@ -124,6 +124,11 @@ def main():
                 print(f"FAIL {doc.name} block {i}: index= combined with a boolean - unbounded search")
             if re.search(r"event\s+(dns|ssl|http|conn)_", block):
                 continue  # Zeek script: parameters are script variables, not log fields
+            if re.search(r"^\s*on\s+\w+\.log\s+record", block, re.M) or \
+                    "Pseudocode" in block:
+                # Prose pseudocode: the identifiers are English, not fields.
+                # Checking them as field names produced 'not private' -> 'private'.
+                continue
             code = "\n".join(ln for ln in block.splitlines()
                              if not COMMENT_RE.match(ln))
             for name in FIELD_RE.findall(code):

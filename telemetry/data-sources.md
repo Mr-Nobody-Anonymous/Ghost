@@ -35,6 +35,8 @@ uncollected field appear.
 | `AccessMask` | Security 4663 | `0x1` = read |
 | `SourceAddress` | proxy / netflow | client address |
 | `DestinationHostname` | proxy | hostname from the request line or CONNECT |
+| `certificate.subject` / `certificate.issuer` | Zeek `x509.log` | equal values on a public 443 = self-signed |
+| `id.resp_p` / `id.resp_h` | Zeek conn/dns/ssl/x509 logs | Zeek's service port and responder address |
 | `DestinationPort` | EDR TLS callback | 443 in this repo |
 | `destination_port` | netflow | field name as exported by the flow collector |
 | `Process` | proxy (where the export joins socket owner) | not always available |

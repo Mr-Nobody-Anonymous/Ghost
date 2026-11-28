@@ -14,16 +14,13 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install validation and conversion dependencies
-        # pysigma-backend-kql does not exist on PyPI (404) - the old gate asked
-        # for it, could never install, and failed for the wrong reason. The KQL
-        # and Defender backends live in pysigma-backend-kusto and
-        # pysigma-backend-microsoft365defender.
+      - name: Install pinned dependencies
+        # Pinned in requirements.txt. Unpinned installs made the conversion
+        # results - which the gate compares against generated query text -
+        # reproducible only on the day they were measured.
         run: |
           python -m pip install --upgrade pip
-          python -m pip install pyyaml yara-python \
-            pysigma pysigma-backend-splunk pysigma-backend-kusto \
-            pysigma-backend-elasticsearch
+          python -m pip install -r requirements.txt
 
       - name: Att&CK bundle (optional - verification only, never committed)
         continue-on-error: true

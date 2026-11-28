@@ -1,0 +1,22 @@
+# Frozen dependency set for the validation gate and conversion checks.
+#
+# Why this file exists: the gate had no dependency pinning at all. CI ran
+# `pip install pysigma pysigma-backend-splunk ...` unpinned, so a backend
+# release could change generated query text - and the gate compares generated
+# query text against attack/conversion.json. An unpinned dependency means the
+# "measured" conversion result is only reproducible on the day it was measured.
+#
+# These are the versions the current conversion results were produced with.
+# Bumping any of them invalidates attack/conversion.json and attack/matrix.md;
+# re-run `python3 ci/convert_check.py` and commit the new results with the bump.
+#
+# pySigma 1.5.1 / splunk 2.1.0: correlation rules convert on Splunk only, which
+# is what the per-rule `conversion:` blocks declare. A backend upgrade can
+# change that, which is exactly why it must be an explicit event.
+
+pySigma==1.5.1
+pysigma-backend-splunk==2.1.0
+pysigma-backend-elasticsearch==2.1.1
+pysigma-backend-kusto==1.0.1
+PyYAML==6.0.4
+yara-python==4.5.4
