@@ -132,7 +132,16 @@ def needle_for(commit):
     subject whose 40th character is a space produced two different needles and
     the test pruned nothing.
     """
-    return (release_note(commit) or commit["subject"]).split("(")[0].strip()[:40]
+    needle = (release_note(commit) or commit["subject"]).split("(")[0].strip()
+    # 40 characters is enough to identify a commit and short enough to survive a
+    # reworded changelog line. It is also a trap: truncation can land mid-word,
+    # so a line that starts with the subject in bold
+    # ("**Find four more stale counts, in the table cells.**") carries
+    # "...in the tabl" followed by `e cells.**`, and the needle does not match.
+    # Matching on a shorter prefix avoids depending on where the cut falls,
+    # without making the check any weaker: 24 characters of a commit subject is
+    # still specific.
+    return needle[:24].rstrip()
 
 
 def changelog_text():

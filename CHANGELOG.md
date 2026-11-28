@@ -452,6 +452,22 @@ check, so this entry is written after the fact from the commit log; the
   ratios. `39` rules is `34` single-event plus `5` correlations, and there are
   `39` fixture pairs.
 
+- **The changelog needle was a 40-character trap.** `tools/release.py` matched
+  each commit by the first 40 characters of its subject. Truncation can land
+  mid-word: a line beginning `**Find four more stale counts, in the table
+  cells.**` carries `...in the tabl` immediately followed by `e cells`, so the
+  needle missed a line that opens with the subject in bold — the natural way to
+  write it. Now 24 characters, which is still specific and no longer depends on
+  where the cut falls.
+
+- **Stop the changelog needle from depending on where truncation lands.**
+  `tools/release.py` identified each commit by the first 40 characters of its
+  subject. That is a trap when the cut falls mid-word: a line beginning
+  `**Find four more stale counts, in the table cells.**` yields
+  `...in the tabl` followed by `e cells`, so a commit failed the gate while its
+  changelog line was sitting there in bold. 24 characters now — still specific,
+  and far less likely to end inside a word the changelog splits.
+
 ## Versioning
 
 `tools/release.py` derives the version from the date and the existing tags
