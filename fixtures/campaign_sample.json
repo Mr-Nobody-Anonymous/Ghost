@@ -1,0 +1,534 @@
+{
+ "description": "Synthetic events for analytics/campaign.py. Three hosts: LAB-WS01 fires recon+persist+egress (campaign), LAB-WS02 fires persist+dns (two, not a campaign), LAB-WS03 fires egress only.",
+ "events": [
+  {
+   "EventID": 4663,
+   "Computer": "LAB-WS01",
+   "ObjectName": "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+   "AccessMask": "0x1",
+   "_ts": 0
+  },
+  {
+   "EventID": 1,
+   "Computer": "LAB-WS01",
+   "Image": "C:\\Windows\\System32\\sc.exe",
+   "CommandLine": "sc.exe stop windefend",
+   "_ts": 3
+  },
+  {
+   "EventID": 19,
+   "Computer": "LAB-WS01",
+   "_ts": 0
+  },
+  {
+   "EventID": 20,
+   "Computer": "LAB-WS01",
+   "Type": "CommandLineEventConsumer",
+   "_ts": 3
+  },
+  {
+   "EventID": 21,
+   "Computer": "LAB-WS01",
+   "_ts": 6
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 0,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 1,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 2,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 3,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 4,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 5,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 6,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 7,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 8,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 9,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 10,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 11,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 12,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 13,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 14,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 15,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 16,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 17,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 18,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 19,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 20,
+   "Computer": "LAB-WS01"
+  },
+  {
+   "EventID": 19,
+   "Computer": "LAB-WS02",
+   "_ts": 0
+  },
+  {
+   "EventID": 20,
+   "Computer": "LAB-WS02",
+   "Type": "CommandLineEventConsumer",
+   "_ts": 3
+  },
+  {
+   "EventID": 21,
+   "Computer": "LAB-WS02",
+   "_ts": 6
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 0,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 1,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 2,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 3,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 4,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 5,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 6,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 7,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 8,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 9,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 10,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 11,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 12,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 13,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 14,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 15,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 16,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 17,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 18,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 19,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "rcode": "NXDOMAIN",
+   "Source": "192.0.2.10",
+   "query": "aaaaaaaaaaaaaa.com",
+   "_ts": 20,
+   "Computer": "LAB-WS02"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 0,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 1,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 2,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 3,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 4,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 5,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 6,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 7,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 8,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 9,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 10,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 11,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 12,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 13,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 14,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 15,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 16,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 17,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 18,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 19,
+   "Computer": "LAB-WS03"
+  },
+  {
+   "cs-header-X-Id": "cs-header-x-id-value",
+   "cs-header-X-Seq": "cs-header-x-seq-value",
+   "SourceAddress": "sourceaddress-value",
+   "DestinationHostname": "cdn.example.net",
+   "_ts": 20,
+   "Computer": "LAB-WS03"
+  }
+ ]
+}

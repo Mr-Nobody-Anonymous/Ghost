@@ -6,7 +6,7 @@
     "layer": "4.5"
   },
   "domain": "enterprise-attack",
-  "description": "Generated 2026-11-28 from 38 Sigma rules. Score is evidence, not rule count: 1 = designed, 2 = captured, 3 = validated. No rule has a captured fixture, so every score here is 1.",
+  "description": "Generated 2026-11-28 from 39 Sigma rules. Score is evidence, not rule count: 1 = designed, 2 = captured, 3 = validated. No rule has a captured fixture, so every score here is 1.",
   "filters": {
     "platforms": [
       "Windows"
@@ -161,12 +161,12 @@
       "techniqueID": "T1071.001",
       "score": 1,
       "color": "",
-      "comment": "Beacon with Custom X-Id / X-Seq Headers (high, designed); Beaconing - High Request Frequency with Regular Intervals (medium, designed); Beacon Interval Shift After Configuration Change (low, designed); Generic Browser UA with No Accept-Language or Cookie Header (medium, designed); Process TLS Session to Self-Signed Certificate on 443 (medium, designed)",
+      "comment": "Beacon with Custom X-Id / X-Seq Headers (high, designed); Beaconing - High Request Frequency with Regular Intervals (medium, designed); Implant Campaign - Recon, Tamper, Persist, and Egress in One Window (high, designed); Beacon Interval Shift After Configuration Change (low, designed); Generic Browser UA with No Accept-Language or Cookie Header (medium, designed); Process TLS Session to Self-Signed Certificate on 443 (medium, designed)",
       "enabled": true,
       "metadata": [
         {
           "name": "rules",
-          "value": "sigma/beacon_custom_headers.yml, sigma/beaconing_frequency.yml, sigma/network/netflow/beacon_interval_shift.yml, sigma/network/proxy/ua_anomaly.yml, sigma/windows/network/host_selfsigned_tls.yml"
+          "value": "sigma/beacon_custom_headers.yml, sigma/beaconing_frequency.yml, sigma/campaign_implant_sequence.yml, sigma/network/netflow/beacon_interval_shift.yml, sigma/network/proxy/ua_anomaly.yml, sigma/windows/network/host_selfsigned_tls.yml"
         }
       ],
       "links": [
@@ -177,6 +177,10 @@
         {
           "label": "Beaconing - High Request Frequency with Regular Intervals",
           "url": "sigma/beaconing_frequency.yml"
+        },
+        {
+          "label": "Implant Campaign - Recon, Tamper, Persist, and Egress in One Window",
+          "url": "sigma/campaign_implant_sequence.yml"
         },
         {
           "label": "Beacon Interval Shift After Configuration Change",
@@ -289,15 +293,19 @@
       "techniqueID": "T1497",
       "score": 1,
       "color": "",
-      "comment": "CPU Information Enumeration Followed by Security Tool Tampering (medium, designed); ProcessorNameString Registry Read via Object Access Audit (low, designed)",
+      "comment": "Implant Campaign - Recon, Tamper, Persist, and Egress in One Window (high, designed); CPU Information Enumeration Followed by Security Tool Tampering (medium, designed); ProcessorNameString Registry Read via Object Access Audit (low, designed)",
       "enabled": true,
       "metadata": [
         {
           "name": "rules",
-          "value": "sigma/windows/defense-evasion/patch_sequence.yml, sigma/windows/registry/cpu_info_read.yml"
+          "value": "sigma/campaign_implant_sequence.yml, sigma/windows/defense-evasion/patch_sequence.yml, sigma/windows/registry/cpu_info_read.yml"
         }
       ],
       "links": [
+        {
+          "label": "Implant Campaign - Recon, Tamper, Persist, and Egress in One Window",
+          "url": "sigma/campaign_implant_sequence.yml"
+        },
         {
           "label": "CPU Information Enumeration Followed by Security Tool Tampering",
           "url": "sigma/windows/defense-evasion/patch_sequence.yml"
@@ -313,15 +321,19 @@
       "techniqueID": "T1546.003",
       "score": 1,
       "color": "",
-      "comment": "WMI Filter-to-Consumer Binding Created Under root\\subscription (medium, designed); WMI Command-Line Event Consumer Created Under root\\subscription (medium, designed); WMI Event Filter Created Under root\\subscription (low, designed); WMI Event Subscription Triple Create (high, designed); WMI Event Subscription Persistence (high, designed)",
+      "comment": "Implant Campaign - Recon, Tamper, Persist, and Egress in One Window (high, designed); WMI Filter-to-Consumer Binding Created Under root\\subscription (medium, designed); WMI Command-Line Event Consumer Created Under root\\subscription (medium, designed); WMI Event Filter Created Under root\\subscription (low, designed); WMI Event Subscription Triple Create (high, designed); WMI Event Subscription Persistence (high, designed)",
       "enabled": true,
       "metadata": [
         {
           "name": "rules",
-          "value": "sigma/windows/persistence/wmi_binding_create.yml, sigma/windows/persistence/wmi_consumer_create.yml, sigma/windows/persistence/wmi_filter_create.yml, sigma/windows/persistence/wmi_subscription_triple.yml, sigma/wmi_event_subscription_persistence.yml"
+          "value": "sigma/campaign_implant_sequence.yml, sigma/windows/persistence/wmi_binding_create.yml, sigma/windows/persistence/wmi_consumer_create.yml, sigma/windows/persistence/wmi_filter_create.yml, sigma/windows/persistence/wmi_subscription_triple.yml, sigma/wmi_event_subscription_persistence.yml"
         }
       ],
       "links": [
+        {
+          "label": "Implant Campaign - Recon, Tamper, Persist, and Egress in One Window",
+          "url": "sigma/campaign_implant_sequence.yml"
+        },
         {
           "label": "WMI Filter-to-Consumer Binding Created Under root\\subscription",
           "url": "sigma/windows/persistence/wmi_binding_create.yml"
@@ -469,18 +481,22 @@
       "techniqueID": "T1685",
       "score": 1,
       "color": "",
-      "comment": "AMSI or ETW Function Patch (Process Access to ntdll/amsi) (high, designed); CPU Information Enumeration Followed by Security Tool Tampering (medium, designed); Security Component Stopped or Unregistered by Command Line (high, designed)",
+      "comment": "AMSI or ETW Function Patch (Process Access to ntdll/amsi) (high, designed); Implant Campaign - Recon, Tamper, Persist, and Egress in One Window (high, designed); CPU Information Enumeration Followed by Security Tool Tampering (medium, designed); Security Component Stopped or Unregistered by Command Line (high, designed)",
       "enabled": true,
       "metadata": [
         {
           "name": "rules",
-          "value": "sigma/amsi_etw_patch.yml, sigma/windows/defense-evasion/patch_sequence.yml, sigma/windows/defense-evasion/security_component_tamper.yml"
+          "value": "sigma/amsi_etw_patch.yml, sigma/campaign_implant_sequence.yml, sigma/windows/defense-evasion/patch_sequence.yml, sigma/windows/defense-evasion/security_component_tamper.yml"
         }
       ],
       "links": [
         {
           "label": "AMSI or ETW Function Patch (Process Access to ntdll/amsi)",
           "url": "sigma/amsi_etw_patch.yml"
+        },
+        {
+          "label": "Implant Campaign - Recon, Tamper, Persist, and Egress in One Window",
+          "url": "sigma/campaign_implant_sequence.yml"
         },
         {
           "label": "CPU Information Enumeration Followed by Security Tool Tampering",

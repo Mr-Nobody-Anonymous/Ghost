@@ -163,9 +163,28 @@ def negative_event(doc, positive):
     return neg
 
 
+def campaign_events(doc, rules):
+    """A campaign fixture is the union of its members' own verified sequences.
+
+    The plain path produced a single `{"_ts": 0}` event with no fields, which
+    evaluates to `no match` and would have shipped as a passing test of nothing.
+    The fixture has to contain what the campaign actually consumes: whatever each
+    member chain fires on.
+    """
+    events = []
+    for label, rid in (doc.get("campaign") or {}).get("of", {}).items():
+        member = rules.get(rid)
+        if member is None:
+            continue
+        events.extend(evaluate.sequence_events(member, rules))
+    return events
+
+
 def build(rid, doc, rules):
     det = doc.get("detection", {}) or {}
-    if "correlation" in doc:
+    if "campaign" in doc:
+        events = campaign_events(doc, rules)
+    elif "correlation" in doc:
         events = evaluate.sequence_events(doc, rules)
     else:
         condition = det.get("condition", "")
@@ -200,6 +219,17 @@ def build(rid, doc, rules):
             m: json.loads(json.dumps(rules[m], default=str))
             for m in doc["correlation"]["rules"] if m in rules
         }
+    if "campaign" in doc:
+        campaigned = list((doc.get("campaign") or {}).get("of", {}).values())
+        pos["members"] = {
+            m: json.loads(json.dumps(rules[m], default=str))
+            for m in campaigned if m in rules
+        }
+        pos["campaign"] = dict(doc["campaign"])
+        pos["note"] += (" This fixture is the union of its members' verified "
+                        "sequences; analytics/campaign.py evaluates it, not "
+                        "detection-as-code/evaluate.py, which has no campaign "
+                        "operator.")
     neg = {
         "fixture_id": "NF-" + rid[:8],
         "rule_id": rid,

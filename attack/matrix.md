@@ -2,7 +2,7 @@
 
 Generated from rule metadata and attack/conversion.json. Do not edit by hand - run tools/generate_matrix.py.
 
-Rules: 38 | distinct techniques: 18 | tactics used: 12 of the pinned set (not counted as techniques)
+Rules: 39 | distinct techniques: 18 | tactics used: 12 of the pinned set (not counted as techniques)
 
 | Technique | Rule | Source | Lifecycle | Level | Fixture | Pin | Flags |
 |---|---|---|---|---|---|---|---|
@@ -18,6 +18,7 @@ Rules: 38 | distinct techniques: 18 | tactics used: 12 of the pinned set (not co
 | T1070.004 | [Self-Deleting Executable](sigma/windows/file/self_delete.yml) | host | experimental | high | MISSING | PIN-0000 | - |
 | T1071.001 | [Beacon with Custom X-Id / X-Seq Headers](sigma/beacon_custom_headers.yml) | network | experimental | high | MISSING | PIN-0000 | single-sourced |
 | T1071.001 | [Beaconing - High Request Frequency with Regular Intervals](sigma/beaconing_frequency.yml) | network | experimental | medium | MISSING | PIN-0000 | single-sourced, conversion-risk |
+| T1071.001 | [Implant Campaign - Recon, Tamper, Persist, and Egress in One Window](sigma/campaign_implant_sequence.yml) | host | experimental | high | fixtures/per_rule/7f3c9a21-4b68-4e07-9d15-2c8a6f0e4b93.json | PIN-0000 | - |
 | T1071.001 | [Beacon Interval Shift After Configuration Change](sigma/network/netflow/beacon_interval_shift.yml) | host | experimental | low | MISSING | PIN-0000 | - |
 | T1071.001 | [Generic Browser UA with No Accept-Language or Cookie Header](sigma/network/proxy/ua_anomaly.yml) | network | experimental | medium | MISSING | PIN-0000 | single-sourced |
 | T1071.001 | [Process TLS Session to Self-Signed Certificate on 443](sigma/windows/network/host_selfsigned_tls.yml) | host | experimental | medium | MISSING | PIN-0000 | - |
@@ -28,8 +29,10 @@ Rules: 38 | distinct techniques: 18 | tactics used: 12 of the pinned set (not co
 | T1105 | [Removable-Media Spreader Writes Executable and autorun.inf](sigma/windows/process/removable_media_spreader_write.yml) | host | experimental | low | fixtures/per_rule/3570d46e-6cdb-4c0b-8886-972ce382f63a.json | PIN-0000 | - |
 | T1113 | [Screen-Sized BMP Written to Temp Directory](sigma/windows/file/screenshot_bmp_artifact.yml) | host | experimental | medium | fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a08.json | PIN-0000 | - |
 | T1135 | [Internal Reconnaissance via net view and SecurityCenter2 Queries](sigma/net_view_recon.yml) | host | experimental | medium | MISSING | PIN-0000 | - |
+| T1497 | [Implant Campaign - Recon, Tamper, Persist, and Egress in One Window](sigma/campaign_implant_sequence.yml) | host | experimental | high | fixtures/per_rule/7f3c9a21-4b68-4e07-9d15-2c8a6f0e4b93.json | PIN-0000 | - |
 | T1497 | [CPU Information Enumeration Followed by Security Tool Tampering](sigma/windows/defense-evasion/patch_sequence.yml) | host | experimental | medium | fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05.json | PIN-0000 | conversion-risk |
 | T1497 | [ProcessorNameString Registry Read via Object Access Audit](sigma/windows/registry/cpu_info_read.yml) | host | experimental | low | fixtures/per_rule/4663b1a0-0000-4000-8000-000000000001.json | PIN-0000 | - |
+| T1546.003 | [Implant Campaign - Recon, Tamper, Persist, and Egress in One Window](sigma/campaign_implant_sequence.yml) | host | experimental | high | fixtures/per_rule/7f3c9a21-4b68-4e07-9d15-2c8a6f0e4b93.json | PIN-0000 | - |
 | T1546.003 | [WMI Filter-to-Consumer Binding Created Under root\subscription](sigma/windows/persistence/wmi_binding_create.yml) | host | experimental | medium | MISSING | PIN-0000 | - |
 | T1546.003 | [WMI Command-Line Event Consumer Created Under root\subscription](sigma/windows/persistence/wmi_consumer_create.yml) | host | experimental | medium | MISSING | PIN-0000 | - |
 | T1546.003 | [WMI Event Filter Created Under root\subscription](sigma/windows/persistence/wmi_filter_create.yml) | host | experimental | low | MISSING | PIN-0000 | - |
@@ -50,6 +53,7 @@ Rules: 38 | distinct techniques: 18 | tactics used: 12 of the pinned set (not co
 | T1592.002 | [Public IP Discovery Service Egress from Unexpected Process](sigma/windows/network/ipify_egress.yml) | network | experimental | medium | MISSING | PIN-0000 | single-sourced |
 | T1592.002 | [Security Product Enumeration via SecurityCenter2](sigma/windows/process/wmi_recon_command.yml) | host | experimental | medium | fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0c.json | PIN-0000 | - |
 | T1685 | [AMSI or ETW Function Patch (Process Access to ntdll/amsi)](sigma/amsi_etw_patch.yml) | host | experimental | high | MISSING | PIN-0000 | - |
+| T1685 | [Implant Campaign - Recon, Tamper, Persist, and Egress in One Window](sigma/campaign_implant_sequence.yml) | host | experimental | high | fixtures/per_rule/7f3c9a21-4b68-4e07-9d15-2c8a6f0e4b93.json | PIN-0000 | - |
 | T1685 | [CPU Information Enumeration Followed by Security Tool Tampering](sigma/windows/defense-evasion/patch_sequence.yml) | host | experimental | medium | fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05.json | PIN-0000 | conversion-risk |
 | T1685 | [Security Component Stopped or Unregistered by Command Line](sigma/windows/defense-evasion/security_component_tamper.yml) | host | experimental | high | MISSING | PIN-0000 | - |
 
@@ -62,24 +66,24 @@ A technique is covered only when telemetry, rule, compilation, TP fixture, and F
 | Tactic | Rules |
 |---|---|
 | collection | 3 |
-| command-and-control | 12 |
+| command-and-control | 13 |
 | credential-access | 3 |
-| defense-impairment | 3 |
-| discovery | 3 |
+| defense-impairment | 4 |
+| discovery | 4 |
 | execution | 3 |
 | exfiltration | **0** |
 | impact | **0** |
 | initial-access | 2 |
 | lateral-movement | 2 |
-| persistence | 12 |
-| privilege-escalation | 12 |
+| persistence | 13 |
+| privilege-escalation | 13 |
 | reconnaissance | 3 |
 | resource-development | **0** |
-| stealth | 6 |
+| stealth | 7 |
 
 ## Deployability (generated from ci/convert_check.py)
 
-Conversion stamp: sha256:81769166669d8a69. A rule is only deployable where the backend is `supported`.
+Conversion stamp: sha256:c6cd0017ab7c7519. A rule is only deployable where the backend is `supported`.
 
 | Rule | splunk | elastic | kusto |
 |---|---|---|---|
@@ -87,6 +91,7 @@ Conversion stamp: sha256:81769166669d8a69. A rule is only deployable where the b
 | [sigma/autorun_inf_writes.yml](sigma/autorun_inf_writes.yml) | yes | yes | yes |
 | [sigma/beacon_custom_headers.yml](sigma/beacon_custom_headers.yml) | yes | yes | yes |
 | [sigma/beaconing_frequency.yml](sigma/beaconing_frequency.yml) | yes | **no** | **no** |
+| [sigma/campaign_implant_sequence.yml](sigma/campaign_implant_sequence.yml) | **no** | **no** | **no** |
 | [sigma/credential_file_access.yml](sigma/credential_file_access.yml) | yes | yes | yes |
 | [sigma/dga_high_entropy_dns.yml](sigma/dga_high_entropy_dns.yml) | yes | **no** | **no** |
 | [sigma/net_view_recon.yml](sigma/net_view_recon.yml) | yes | yes | yes |
@@ -122,4 +127,4 @@ Conversion stamp: sha256:81769166669d8a69. A rule is only deployable where the b
 | [sigma/windows/registry/cpu_info_read.yml](sigma/windows/registry/cpu_info_read.yml) | yes | yes | yes |
 | [sigma/wmi_event_subscription_persistence.yml](sigma/wmi_event_subscription_persistence.yml) | yes | yes | yes |
 
-Totals: splunk 38/38, elastic 32/38, kusto 32/38
+Totals: splunk 38/39, elastic 32/39, kusto 32/39

@@ -159,6 +159,11 @@
     "measured": false,
     "note": "low-signal single-object rule; keep the noise budget tight"
   },
+  "7f3c9a21-4b68-4e07-9d15-2c8a6f0e4b93": {
+    "events_per_day_ceiling": 20,
+    "measured": false,
+    "note": "campaign output; one host firing three chains in an hour is rare by construction"
+  },
   "8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52": {
     "events_per_day_ceiling": 100,
     "measured": false,

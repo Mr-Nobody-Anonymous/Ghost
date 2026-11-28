@@ -15,6 +15,7 @@ behave the day somebody promotes a rule.
 import csv
 import importlib.util
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -39,9 +40,17 @@ class TuningLogTest(unittest.TestCase):
         cls.index = cls.tool.rule_index()
 
     def test_every_declared_rule_is_known(self):
-        """The index the tool builds must see all 38 rules, or ids would be
-        rejected for the wrong reason."""
-        self.assertEqual(len(self.index), 38)
+        """The index must see every rule in the tree.
+
+        Asserted against a fresh count rather than the literal 38: a hardcoded
+        number turns "a rule was added" into a test failure for the wrong
+        reason, which is how a suite starts lying about what it checks.
+        """
+        on_disk = sum(1 for p in (ROOT / "sigma").rglob("*.yml")
+                      if re.search(r"^id:\s*\S+", p.read_text(encoding="utf-8"),
+                                   re.M))
+        self.assertEqual(len(self.index), on_disk)
+        self.assertGreaterEqual(len(self.index), 38)
 
     def test_real_tree_is_consistent(self):
         r = subprocess.run([sys.executable, str(TOOL), "--check"],

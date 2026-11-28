@@ -1,0 +1,80 @@
+title: Implant Campaign - Recon, Tamper, Persist, and Egress in One Window
+id: 7f3c9a21-4b68-4e07-9d15-2c8a6f0e4b93
+dedup_key: "rule:7f3c9a21-4b68-4e07-9d15-2c8a6f0e4b93:host"
+status: experimental
+lifecycle: designed
+description: >
+  A cross-source campaign correlation. The five existing correlations each prove
+  one ordering inside one data source; none of them says "this host did recon,
+  then tampering, then persistence, then talked to the internet inside one
+  hour". That shape is what separates an implant that got somewhere from a
+  tool that ran once, and no single-event rule can express it.
+
+  The rule is deliberately built out of four *chains*, each of which is itself a
+  sequence or threshold, and a condition that requires at least three of the
+  four to have fired. Requiring all four would be a rule that only fires on a
+  complete, textbook intrusion; requiring three keeps it honest about the fact
+  that an operator who skips a stage is still an intrusion.
+
+  This is a `1 of` across correlation members rather than a `temporal` across
+  single events because the members have different natural join keys (a Python
+  child process, a WMI subscription triple, an L2-encrypted beacon). Forcing
+  them onto one shared field would be the `ProcessId`-in-a-4663-rule defect
+  this repository already fixed once. Grouping is therefore by `Computer`,
+  which every member carries.
+author: ghost-detection-lab
+date: 2026-11-27
+sample_ref: PIN-0000
+min_os: "Windows 10 21H2"
+sigma_spec_version: "2.1.0"
+dedup_window: "1h"
+min_eval_interval: "60s"
+tags: [attack.t1497, attack.t1685, attack.t1546.003, attack.t1071.001]
+tactics:
+  - attack.command-and-control
+  - attack.defense-impairment
+  - attack.discovery
+  - attack.persistence
+  - attack.privilege-escalation
+  - attack.stealth
+references:
+  - https://attack.mitre.org/techniques/T1497/
+  - https://attack.mitre.org/techniques/T1685/
+  - https://attack.mitre.org/techniques/T1546/003/
+  - inventory.md
+  - docs/sequence-rules.md
+logsource:
+  product: windows
+  service: sysmon
+# The campaign itself is evaluated by analytics/campaign.py (see `campaign:`).
+# The four chains it consumes are named by their ids in `campaign.of`.
+falsepositives:
+  - A hardening script that reads the CPU key, stops a service, creates a WMI subscription, and beacons to a vendor endpoint inside an hour
+  - Red-team exercises against the staging environment
+  - An SCCM client doing inventory, remediation, subscription repair, and telemetry
+level: high
+notes: >
+  The `condition` for a campaign is expressed in `campaign` below rather than as
+  a Sigma correlation clause, because Sigma 2.1 has no "at least N of these
+  correlations fired" operator. `analytics/campaign.py` evaluates it, and the
+  gate runs it. Pretending Sigma could express this would produce a rule that
+  silently means "all four", which is a different and much weaker detector.
+campaign:
+  require_at_least: 3
+  window: 1h
+  group_by: Computer
+  of:
+    recon: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05    # CPU read -> security tamper
+    persist: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03  # WMI subscription triple
+    egress: 8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52   # beacon frequency
+    dns: 5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84      # DGA burst
+conversion:
+  splunk: unsupported
+  elastic: unsupported
+  kusto: unsupported
+  note: >
+    No pySigma backend converts a correlation whose members are themselves
+    correlations. The four members deploy as their own correlations on Splunk and
+    as generated joins on Elastic and Kusto (deploy/joins/); the campaign layer is
+    analytics/campaign.py, which is the only implementation and says so.
+fixture_ref: fixtures/per_rule/7f3c9a21-4b68-4e07-9d15-2c8a6f0e4b93.json

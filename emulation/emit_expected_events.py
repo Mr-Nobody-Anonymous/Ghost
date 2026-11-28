@@ -45,6 +45,14 @@ def build(rules, only=None):
             "logsource": doc.get("logsource", {}),
             "correlation": bool(doc.get("correlation")),
         }
+        if doc.get("campaign"):
+            # A campaign is a verdict over chains, not an event. Its members are
+            # emitted under their own descriptors; analytics/campaign.py is what
+            # checks the verdict.
+            entry["expected"] = {"campaign_members": doc["campaign"].get("of")}
+            entry["verified"] = "n/a - campaign; see analytics/campaign.py"
+            out.append(entry)
+            continue
         if doc.get("correlation"):
             entry["expected"] = {"members": doc["correlation"].get("rules", []),
                                  "type": doc["correlation"].get("type"),
@@ -88,7 +96,7 @@ def main():
         print(f"{'ATT&CK':10} {'verified':8} {'rule'}")
         for r in rows:
             mark = ("yes" if r["verified"] is True else
-                    "n/a" if r["verified"] == "n/a - correlation; see fixtures/per_rule"
+                    "n/a" if isinstance(r["verified"], str) and r["verified"].startswith("n/a")
                     else "NO")
             print(f"{r['attack']:10} {mark:8} {r['title'][:58]}")
         print(f"\n{len(rows)} rules, {len(bad)} without a matching expected event")

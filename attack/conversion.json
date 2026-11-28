@@ -1,6 +1,6 @@
 {
-  "generated_utc": "sha256:81769166669d8a69",
-  "rules": 38,
+  "generated_utc": "sha256:c6cd0017ab7c7519",
+  "rules": 39,
   "backends": [
     "splunk",
     "elastic",
@@ -69,6 +69,25 @@
       },
       "note": "correlation rules convert only through the Splunk backend",
       "correlation": true
+    },
+    "sigma/campaign_implant_sequence.yml": {
+      "splunk": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "load error: SigmaDetectionError: Sigma rule must have a detection definitions"
+      },
+      "elastic": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "load error: SigmaDetectionError: Sigma rule must have a detection definitions"
+      },
+      "kusto": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "load error: SigmaDetectionError: Sigma rule must have a detection definitions"
+      },
+      "note": ">",
+      "correlation": false
     },
     "sigma/credential_file_access.yml": {
       "splunk": {

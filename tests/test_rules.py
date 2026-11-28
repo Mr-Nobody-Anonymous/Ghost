@@ -453,8 +453,13 @@ class FixtureTests(unittest.TestCase):
         for f in (ROOT / "fixtures" / "per_rule").glob("*.json"):
             data = json.loads(f.read_text(encoding="utf-8"))
             doc = collection[data["rule_id"]]
-            matched = evaluate.eval_rule(doc, data["events"], collection)
             with self.subTest(rule=data["rule_id"]):
+                if "campaign" in doc:
+                    # A campaign produces no matched *event* - it is a verdict
+                    # over chains. analytics/campaign.py asserts that verdict
+                    # against the same fixture; there is nothing to check here.
+                    continue
+                matched = evaluate.eval_rule(doc, data["events"], collection)
                 self.assertTrue(matched[0], matched[1])
                 if "correlation" in doc:
                     continue

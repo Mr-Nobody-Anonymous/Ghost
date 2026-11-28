@@ -38,7 +38,10 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | 23 | **The gate rewrote the tree** | Wall clock in `conversion.json` and in the matrix header made `git status` dirty after every run, which hides real changes. | Two consecutive gate runs leave the tree clean |
 | 24 | **No Python correctness lint** | 4,500 lines; a lint run found two late-binding closure bugs (B023) in the test helper and a `--verbose` flag that did nothing. | `pyproject.toml` selects correctness rules only (F, B, E9, UP, PERF); gate stage 2 |
 | 25 | **No alert-quality feedback loop** | `docs/tuning-log.md` was an empty table with no machine link from an alert to the rule, its ceiling, or its lifecycle. | `tuning/observations.csv` + `tools/tuning_log.py`: `--render` regenerates the doc, `--apply-ceilings` promotes a measured events/day, and `tuned` without a `keep` observation fails the gate |
-| 26 | **No saved-search packaging** | Importing 38 searches with schedules and suppression was manual. | `deploy/build_savedsearches.py` emits `dist/savedsearches.conf`: 33 searches, all disabled, 5m schedule floor, suppression from each rule's own `dedup_key`, unique id-suffix tags |
+| 26 | **Five correlations were dead ends on Elastic and Kusto** | `ci/convert_check.py` recorded `unsupported` and the docs said "build the join in the SIEM". A user on Elastic got five `unsupported` lines and a Markdown spec. | `deploy/build_joins.py` emits EQL `sequence`, ES|QL thresholds and Kusto joins from the rules; a gate stage keeps them current |
+| 27 | **The stage0 -> stage1 join was documented, not built** | `docs/sequence-rules.md` entry 3 said "not implemented". Two rules deployed and nothing connected them. | `analytics/stage_join.py`: shared-parent join on `ParentProcessGuid`, signature/window/skew checked, one chain and four near-misses in a fixture |
+| 28 | **No cross-source campaign rule** | Every correlation proved one ordering inside one source; nothing said "recon then tamper then persist then egress on one host". | `sigma/campaign_implant_sequence.yml` + `analytics/campaign.py`: 3-of-4 chains, with a 2-of-4 host in the fixture that must not fire |
+| 29 | **No saved-search packaging** | Importing 38 searches with schedules and suppression was manual. | `deploy/build_savedsearches.py` emits `dist/savedsearches.conf`: 33 searches, all disabled, 5m schedule floor, suppression from each rule's own `dedup_key`, unique id-suffix tags |
 
 ---
 
@@ -81,9 +84,9 @@ These cannot be fixed with a query. They need a sensor decision.
 | ID | Gap | Detail |
 |---|---|---|
 | G-12 | Beacon jitter is not detected | `beacon_interval_shift.yml` is a filter, not a detector. Needs inter-arrival mean/variance per host-destination pair. A fixed `count >= N in T` misses a 45 s beacon with 0.35 jitter. **Closed - `analytics/beacon_jitter.py` (median + CV per pair, rule's domain filter applied, selftest in gate) + 10 tests, including one that asserts a regular backup *is* statistically a beacon so the limitation cannot be forgotten.** |
-| G-13 | The stage0 → stage1 join is not implemented | A process-tree join is not expressible in Sigma; it has to be built in the SIEM. Documented, not built. |
-| G-14 | Five correlations are Splunk-only | pySigma converts correlations only for Splunk. Elastic and Kusto users get the members and must build the join. |
-| G-15 | No `1 of` cross-source campaign rule | Sequence *across* techniques (triage → tamper → persist) is not modelled. |
+| G-13 | The stage0 → stage1 join is not implemented | A process-tree join is not expressible in Sigma; it has to be built in the SIEM. Documented, not built. | **Closed - `analytics/stage_join.py` + `tests/test_stage_join.py` (11 tests; four distinct near-misses each asserted separately).** |
+| G-14 | Five correlations are Splunk-only | pySigma converts correlations only for Splunk. Elastic and Kusto users get the members and must build the join. | **Closed - `deploy/build_joins.py` (10 files in `deploy/joins/`) + `tests/test_joins.py` (13 tests, including a regression test for an OR/AND precedence bug the generator had).** |
+| G-15 | No `1 of` cross-source campaign rule | Sequence *across* techniques (triage → tamper → persist) is not modelled. | **Closed - `sigma/campaign_implant_sequence.yml` (3-of-4) + `analytics/campaign.py` + `tests/test_campaign.py` (10 tests; lowering the threshold to 2 is asserted to change the verdict).** |
 | G-16 | YARA rules have no corpus | `yara/ghost_implant_structural.yar` compiles, but nothing proves it matches a build or stays quiet on real software. |
 
 ### P2b. Operational path

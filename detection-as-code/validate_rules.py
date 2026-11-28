@@ -118,7 +118,10 @@ def check(path, pinned, allowed_tactics, version):
         return ["top-level YAML is not a mapping"]
 
     missing = REQUIRED - set(doc)
-    if "detection" not in doc and "correlation" not in doc:
+    # A campaign rule has neither: it is an "at least N of these correlations
+    # fired" layer that Sigma 2.1 cannot express. Exempting it here is only safe
+    # because the campaign block is checked for real members in main().
+    if not any(k in doc for k in ("detection", "correlation", "campaign")):
         missing.add("detection or correlation")
     if missing:
         errors.append(f"missing keys: {', '.join(sorted(missing))}")
@@ -189,9 +192,24 @@ def check(path, pinned, allowed_tactics, version):
                     errors.append(f"tactics: missing; pinned bundle says {sorted(expected)}")
 
     det = doc.get("detection", {})
-    if "detection" not in doc and "correlation" not in doc:
+    # A campaign rule is neither a selection nor a Sigma correlation: it is an
+    # "at least N of these chains fired" layer that Sigma 2.1 cannot express and
+    # analytics/campaign.py implements. Accepting it here without a check would
+    # let any rule skip detection; the check is that the campaign block names
+    # real correlation members.
+    if "campaign" in doc:
+        camp = doc.get("campaign") or {}
+        members = camp.get("of") or {}
+        if not isinstance(members, dict) or not members:
+            errors.append("campaign block has no `of` members")
+        if not isinstance(camp.get("require_at_least"), int):
+            errors.append("campaign.require_at_least must be an integer")
+        elif not 1 <= camp["require_at_least"] <= len(members):
+            errors.append("campaign.require_at_least is outside 1..len(of)")
+    elif "detection" not in doc and "correlation" not in doc:
         errors.append("neither detection nor correlation block present")
-    elif isinstance(det, dict) and "condition" not in det and "correlation" not in doc:
+    elif (isinstance(det, dict) and "condition" not in det
+          and "correlation" not in doc and "campaign" not in doc):
         errors.append("detection.condition missing")
     if "correlation" in doc and "rules" not in doc.get("correlation", {}):
         errors.append("correlation block has no rules")
@@ -246,8 +264,27 @@ def main():
 
     seen_ids = {}
     failed = 0
+    docs = {}
+    for f in files:
+        try:
+            docs[f] = yaml.safe_load(f.read_text(encoding="utf-8")) or {}
+        except yaml.YAMLError:
+            docs[f] = {}
+    by_id = {d.get("id"): d for d in docs.values() if isinstance(d, dict) and d.get("id")}
     for f in files:
         errs = check(f, pinned, tactics, version)
+        doc = docs[f]
+        # Campaign members must be correlations. Checked here, not in check(),
+        # because it needs the whole collection: a campaign of single-event
+        # rules is just an event_count and would misrepresent its own shape.
+        camp = doc.get("campaign") if isinstance(doc, dict) else None
+        for label, rid in (camp or {}).get("of", {}).items():
+            member = by_id.get(rid)
+            if member is None:
+                errs.append(f"campaign member {label!r} ({rid}) is not a rule")
+            elif not member.get("correlation"):
+                errs.append(f"campaign member {label!r} ({rid}) is not a "
+                            f"correlation")
         text = f.read_text(encoding="utf-8")
         m = re.search(r"^id:\s*([0-9a-f-]{36})\s*$", text, re.MULTILINE)
         if m:

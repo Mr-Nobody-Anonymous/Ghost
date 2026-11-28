@@ -36,10 +36,34 @@ in the SIEM.
 ## 3. Stage 0 -> stage 1
 
 - **ATT&CK:** T1105 -> T1027.002
-- **Type:** not implemented as a Sigma correlation. A process-tree join is not
-  expressible in Sigma; the two rules deploy separately and the join belongs in
-  the SIEM (see `hunt-queries.md`).
+- **Type:** a **shared-parent** join, not a temporal sequence. Expressing it as
+  `temporal` would group by a field present in both events, and Sysmon puts the
+  parent's identity in the child event under `ParentProcessGuid`, never under
+  `ProcessGuid`. Sigma cannot state that, so the join is
+  `analytics/stage_join.py`.
+- **Key:** `stage1.ParentProcessGuid == stage0.ProcessGuid`
+- **Window:** 600 s between the drop and the first child process
 - **Rules:** `dropper_unsigned_temp_exec.yml`, `python_parent_child_shape.yml`
+- **Rejects:** a signed updater in `%TEMP%` spawning a shell; an installed
+  Python outside a user-writable path; a `_MEI` interpreter whose child ran
+  20 minutes later; a sensor clock skew putting the child first. All four are in
+  `fixtures/stage_join_sample.jsonl` and each is asserted separately.
+
+```bash
+python3 analytics/stage_join.py --selftest
+python3 analytics/stage_join.py events.jsonl
+```
+
+## 3b. Cross-source campaign
+
+- **Rule:** `sigma/campaign_implant_sequence.yml`
+- **Type:** "at least 3 of 4 chains fired for the same host inside 1 h". Sigma
+  2.1 has no operator over correlation members, so writing this as `temporal`
+  would mean "all four, in order" - a different and much weaker detector.
+- **Chains:** recon->tamper, WMI subscription triple, beacon frequency, DGA burst
+- **Implementation:** `analytics/campaign.py`
+- **Fixture contrast:** `LAB-WS01` fires 3 of 4 (campaign); `LAB-WS02` fires 2
+  and must not; `LAB-WS03` fires 1.
 
 ## 4. Beacon frequency
 
