@@ -20,10 +20,10 @@ engineering is provable, the detection is not.
 | Fixtures | 77 | 38 positive + 38 negative + 1 schema example, generated and verified |
 | Suricata rules | 3 | custom-header C2 signatures |
 | YARA rules | 1 | structural implant fingerprint, 12 strings, 6 conditions |
-| Python tooling | ~4,500 lines | validator, evaluator, generator, capture kit, linters |
+| Python tooling | ~5,000 lines | validator, evaluator, generator, capture kit, linters, Navigator export |
 | Docs | 77 files / ~2,700 lines | runbook, maturity, gaps, deployment, triage per rule |
-| Gate stages | 10 | each fails on its own, none can skip |
-| Tests | 47 | structural, behavioural, and mutation-verified |
+| Gate stages | 11 | each fails on its own, none can skip; stage 0 pins the environment |
+| Tests | 53 | structural, behavioural, scope-enforcing, and mutation-verified |
 
 ## What is mechanically proven
 
@@ -45,8 +45,15 @@ These hold every time `ci/gate.sh` runs. This is the part you can rely on.
   `alert.suppress` string per rule.
 - **YARA match logic is asserted both ways** — five shapes must hit, three
   partial indicators must not.
-- **Nothing drifts**: fixtures, coverage matrix and conversion results are all
-  freshness-checked, and the gate is idempotent.
+- **Nothing drifts**: fixtures, coverage matrix, Navigator layer and conversion
+  results are all freshness-checked, and the gate is idempotent.
+- **The environment is part of the proof**: `requirements.txt` is pinned and a
+  gate stage fails on any version drift, because the conversion results depend
+  on the exact pySigma and backend versions.
+- **The emulator feeds its own rules**: `verify_emulation.py` parses the
+  listener's traffic log and fails when the beacon rules stop matching it.
+- **The defensive-only claim is enforced**, not just stated: no capability
+  imports or calls, loopback-only emulation, no committed binaries.
 
 ## What is *not* proven — and cannot be, from inside this repo
 
@@ -58,6 +65,7 @@ These hold every time `ci/gate.sh` runs. This is the part you can rely on.
 | **No volume measurement** | All 38 ceilings say `measured: false`; they are budgets, not observations. |
 | **No deployment performed** | `docs/deployment.md` is a procedure, not a result. |
 | **No sample** | `sample_ref: PIN-0000` everywhere, by design for a defensive repo. |
+| **No SigmaHQ overlap check** | Whether any of the 38 rules duplicates or contradicts an upstream Sigma rule is unknown. |
 
 ## Rule-quality profile (measured, not asserted)
 
