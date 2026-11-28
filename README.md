@@ -19,7 +19,7 @@ contains **detection content and inert lab tooling only**. It answers:
 | `docs/gap-register.md` | What is missing, ordered by cost |
 | `docs/deployment.md` | Host -> index -> scheduled search, with the silent failure modes |
 | `hunt-queries.md`, `lab-setup.md`, `inventory.md`, `os-matrix.md` | Hunting queries, lab build, behavior inventory, OS support |
-| `attack/` | Generated coverage matrix + per-rule conversion results (`conversion.json`) |
+| `attack/` | Coverage matrix, Navigator layer (`navigator-layer.json`), per-rule conversion results (`conversion.json`) |
 
 ## What is deliberately NOT here
 
@@ -52,6 +52,7 @@ python3 tools/evtx_to_fixture.py --input captured.xml --rule-id <id> \
   --sample-ref PIN-0001     # writes fixtures/captured/ and refuses if the rule
                             # does not fire on the capture
 python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl
+python3 tools/export_navigator.py     # attack/navigator-layer.json for ATT&CK Navigator
 ```
 
 The gate passes today: 38/38 rules convert to Splunk, 32/38 to Elastic and Kusto

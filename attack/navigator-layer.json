@@ -1,0 +1,545 @@
+{
+  "name": "Ghost detection lab",
+  "versions": {
+    "attack": "20.1",
+    "navigator": "5.1.0",
+    "layer": "4.5"
+  },
+  "domain": "enterprise-attack",
+  "description": "Generated 2026-11-28 from 38 Sigma rules. Score is evidence, not rule count: 1 = designed, 2 = captured, 3 = validated. No rule has a captured fixture, so every score here is 1.",
+  "filters": {
+    "platforms": [
+      "Windows"
+    ]
+  },
+  "sorting": 0,
+  "layout": {
+    "layout": "side",
+    "aggregateFunction": "max",
+    "showID": true,
+    "showName": true
+  },
+  "hideDisabled": false,
+  "techniques": [
+    {
+      "techniqueID": "T1005",
+      "score": 1,
+      "color": "",
+      "comment": "Access to Browser Credential Stores and Wallet Vaults (medium, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/credential_file_access.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "Access to Browser Credential Stores and Wallet Vaults",
+          "url": "sigma/credential_file_access.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1027.002",
+      "score": 1,
+      "color": "",
+      "comment": "PyInstaller Onefile Staging Directory Execution (medium, designed); PyInstaller _MEI Extraction Directory Created (medium, designed); Executable Launched from User-Writable Path with No Signer (medium, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/pyinstaller_onefile_execution.yml, sigma/windows/file/mei_extraction_dir.yml, sigma/windows/process/dropper_unsigned_temp_exec.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "PyInstaller Onefile Staging Directory Execution",
+          "url": "sigma/pyinstaller_onefile_execution.yml"
+        },
+        {
+          "label": "PyInstaller _MEI Extraction Directory Created",
+          "url": "sigma/windows/file/mei_extraction_dir.yml"
+        },
+        {
+          "label": "Executable Launched from User-Writable Path with No Signer",
+          "url": "sigma/windows/process/dropper_unsigned_temp_exec.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1053.005",
+      "score": 1,
+      "color": "",
+      "comment": "Run Key, Scheduled Task, or Startup Folder Persistence (medium, designed); Scheduled Task Created at Logon by Unusual Parent (high, designed); Python Interpreter Spawning Shell or Task Tools (medium, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/runkey_schtask_startup_persistence.yml, sigma/windows/persistence/schtask_onlogon.yml, sigma/windows/process/python_parent_child_shape.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "Run Key, Scheduled Task, or Startup Folder Persistence",
+          "url": "sigma/runkey_schtask_startup_persistence.yml"
+        },
+        {
+          "label": "Scheduled Task Created at Logon by Unusual Parent",
+          "url": "sigma/windows/persistence/schtask_onlogon.yml"
+        },
+        {
+          "label": "Python Interpreter Spawning Shell or Task Tools",
+          "url": "sigma/windows/process/python_parent_child_shape.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1056.001",
+      "score": 1,
+      "color": "",
+      "comment": "Encrypted Keylog Staging File Appended in Temp (low, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/windows/file/keylog_encrypted_file.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "Encrypted Keylog Staging File Appended in Temp",
+          "url": "sigma/windows/file/keylog_encrypted_file.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1059",
+      "score": 1,
+      "color": "",
+      "comment": "Python Interpreter Spawning Shell or Task Tools (medium, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/windows/process/python_parent_child_shape.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "Python Interpreter Spawning Shell or Task Tools",
+          "url": "sigma/windows/process/python_parent_child_shape.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1070.004",
+      "score": 1,
+      "color": "",
+      "comment": "Self-Deleting Executable (high, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/windows/file/self_delete.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "Self-Deleting Executable",
+          "url": "sigma/windows/file/self_delete.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1071.001",
+      "score": 1,
+      "color": "",
+      "comment": "Beacon with Custom X-Id / X-Seq Headers (high, designed); Beaconing - High Request Frequency with Regular Intervals (medium, designed); Beacon Interval Shift After Configuration Change (low, designed); Generic Browser UA with No Accept-Language or Cookie Header (medium, designed); Process TLS Session to Self-Signed Certificate on 443 (medium, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/beacon_custom_headers.yml, sigma/beaconing_frequency.yml, sigma/network/netflow/beacon_interval_shift.yml, sigma/network/proxy/ua_anomaly.yml, sigma/windows/network/host_selfsigned_tls.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "Beacon with Custom X-Id / X-Seq Headers",
+          "url": "sigma/beacon_custom_headers.yml"
+        },
+        {
+          "label": "Beaconing - High Request Frequency with Regular Intervals",
+          "url": "sigma/beaconing_frequency.yml"
+        },
+        {
+          "label": "Beacon Interval Shift After Configuration Change",
+          "url": "sigma/network/netflow/beacon_interval_shift.yml"
+        },
+        {
+          "label": "Generic Browser UA with No Accept-Language or Cookie Header",
+          "url": "sigma/network/proxy/ua_anomaly.yml"
+        },
+        {
+          "label": "Process TLS Session to Self-Signed Certificate on 443",
+          "url": "sigma/windows/network/host_selfsigned_tls.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1091",
+      "score": 1,
+      "color": "",
+      "comment": "autorun.inf Written Outside Trusted Install Paths (high, designed); Removable-Media Spreader Writes Executable and autorun.inf (low, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/autorun_inf_writes.yml, sigma/windows/process/removable_media_spreader_write.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "autorun.inf Written Outside Trusted Install Paths",
+          "url": "sigma/autorun_inf_writes.yml"
+        },
+        {
+          "label": "Removable-Media Spreader Writes Executable and autorun.inf",
+          "url": "sigma/windows/process/removable_media_spreader_write.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1105",
+      "score": 1,
+      "color": "",
+      "comment": "Executable Overwritten in a User-Writable Install Directory (medium, designed); Executable Launched from User-Writable Path with No Signer (medium, designed); Removable-Media Spreader Writes Executable and autorun.inf (low, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/windows/file/self_update_rewrite.yml, sigma/windows/process/dropper_unsigned_temp_exec.yml, sigma/windows/process/removable_media_spreader_write.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "Executable Overwritten in a User-Writable Install Directory",
+          "url": "sigma/windows/file/self_update_rewrite.yml"
+        },
+        {
+          "label": "Executable Launched from User-Writable Path with No Signer",
+          "url": "sigma/windows/process/dropper_unsigned_temp_exec.yml"
+        },
+        {
+          "label": "Removable-Media Spreader Writes Executable and autorun.inf",
+          "url": "sigma/windows/process/removable_media_spreader_write.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1113",
+      "score": 1,
+      "color": "",
+      "comment": "Screen-Sized BMP Written to Temp Directory (medium, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/windows/file/screenshot_bmp_artifact.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "Screen-Sized BMP Written to Temp Directory",
+          "url": "sigma/windows/file/screenshot_bmp_artifact.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1135",
+      "score": 1,
+      "color": "",
+      "comment": "Internal Reconnaissance via net view and SecurityCenter2 Queries (medium, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/net_view_recon.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "Internal Reconnaissance via net view and SecurityCenter2 Queries",
+          "url": "sigma/net_view_recon.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1497",
+      "score": 1,
+      "color": "",
+      "comment": "CPU Information Enumeration Followed by Security Tool Tampering (medium, designed); ProcessorNameString Registry Read via Object Access Audit (low, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/windows/defense-evasion/patch_sequence.yml, sigma/windows/registry/cpu_info_read.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "CPU Information Enumeration Followed by Security Tool Tampering",
+          "url": "sigma/windows/defense-evasion/patch_sequence.yml"
+        },
+        {
+          "label": "ProcessorNameString Registry Read via Object Access Audit",
+          "url": "sigma/windows/registry/cpu_info_read.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1546.003",
+      "score": 1,
+      "color": "",
+      "comment": "WMI Filter-to-Consumer Binding Created Under root\\subscription (medium, designed); WMI Command-Line Event Consumer Created Under root\\subscription (medium, designed); WMI Event Filter Created Under root\\subscription (low, designed); WMI Event Subscription Triple Create (high, designed); WMI Event Subscription Persistence (high, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/windows/persistence/wmi_binding_create.yml, sigma/windows/persistence/wmi_consumer_create.yml, sigma/windows/persistence/wmi_filter_create.yml, sigma/windows/persistence/wmi_subscription_triple.yml, sigma/wmi_event_subscription_persistence.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "WMI Filter-to-Consumer Binding Created Under root\\subscription",
+          "url": "sigma/windows/persistence/wmi_binding_create.yml"
+        },
+        {
+          "label": "WMI Command-Line Event Consumer Created Under root\\subscription",
+          "url": "sigma/windows/persistence/wmi_consumer_create.yml"
+        },
+        {
+          "label": "WMI Event Filter Created Under root\\subscription",
+          "url": "sigma/windows/persistence/wmi_filter_create.yml"
+        },
+        {
+          "label": "WMI Event Subscription Triple Create",
+          "url": "sigma/windows/persistence/wmi_subscription_triple.yml"
+        },
+        {
+          "label": "WMI Event Subscription Persistence",
+          "url": "sigma/wmi_event_subscription_persistence.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1547.001",
+      "score": 1,
+      "color": "",
+      "comment": "autorun.inf Written Outside Trusted Install Paths (high, designed); Run Key, Scheduled Task, or Startup Folder Persistence (medium, designed); Run Key Write by Non-Installer Process (high, designed); Script Written to User Startup Folder (medium, designed); Named Mutex Created by Unsigned Temp Process (low, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/autorun_inf_writes.yml, sigma/runkey_schtask_startup_persistence.yml, sigma/windows/persistence/run_key_write.yml, sigma/windows/persistence/startup_folder_cmd.yml, sigma/windows/process/mutex_single_instance.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "autorun.inf Written Outside Trusted Install Paths",
+          "url": "sigma/autorun_inf_writes.yml"
+        },
+        {
+          "label": "Run Key, Scheduled Task, or Startup Folder Persistence",
+          "url": "sigma/runkey_schtask_startup_persistence.yml"
+        },
+        {
+          "label": "Run Key Write by Non-Installer Process",
+          "url": "sigma/windows/persistence/run_key_write.yml"
+        },
+        {
+          "label": "Script Written to User Startup Folder",
+          "url": "sigma/windows/persistence/startup_folder_cmd.yml"
+        },
+        {
+          "label": "Named Mutex Created by Unsigned Temp Process",
+          "url": "sigma/windows/process/mutex_single_instance.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1555.003",
+      "score": 1,
+      "color": "",
+      "comment": "Access to Browser Credential Stores and Wallet Vaults (medium, designed); SQLite Database Copied to Random Temp Filename (medium, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/credential_file_access.yml, sigma/windows/file/sqlite_temp_copy.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "Access to Browser Credential Stores and Wallet Vaults",
+          "url": "sigma/credential_file_access.yml"
+        },
+        {
+          "label": "SQLite Database Copied to Random Temp Filename",
+          "url": "sigma/windows/file/sqlite_temp_copy.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1568.002",
+      "score": 1,
+      "color": "",
+      "comment": "Possible DGA - High Entropy Labels and NXDOMAIN Burst (medium, designed); NXDOMAIN Response for a Long High-Entropy Label (low, designed); Host Process Resolving Many Random Labels (medium, designed); Process Resolves a Random-Looking Label (low, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/dga_high_entropy_dns.yml, sigma/network/dns/nxdomain_long_label.yml, sigma/windows/process/dns_query_burst_host.yml, sigma/windows/process/dns_random_label_query.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "Possible DGA - High Entropy Labels and NXDOMAIN Burst",
+          "url": "sigma/dga_high_entropy_dns.yml"
+        },
+        {
+          "label": "NXDOMAIN Response for a Long High-Entropy Label",
+          "url": "sigma/network/dns/nxdomain_long_label.yml"
+        },
+        {
+          "label": "Host Process Resolving Many Random Labels",
+          "url": "sigma/windows/process/dns_query_burst_host.yml"
+        },
+        {
+          "label": "Process Resolves a Random-Looking Label",
+          "url": "sigma/windows/process/dns_random_label_query.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1592.002",
+      "score": 1,
+      "color": "",
+      "comment": "Internal Reconnaissance via net view and SecurityCenter2 Queries (medium, designed); Public IP Discovery Service Egress from Unexpected Process (medium, designed); Security Product Enumeration via SecurityCenter2 (medium, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/net_view_recon.yml, sigma/windows/network/ipify_egress.yml, sigma/windows/process/wmi_recon_command.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "Internal Reconnaissance via net view and SecurityCenter2 Queries",
+          "url": "sigma/net_view_recon.yml"
+        },
+        {
+          "label": "Public IP Discovery Service Egress from Unexpected Process",
+          "url": "sigma/windows/network/ipify_egress.yml"
+        },
+        {
+          "label": "Security Product Enumeration via SecurityCenter2",
+          "url": "sigma/windows/process/wmi_recon_command.yml"
+        }
+      ],
+      "showSubtechniques": true
+    },
+    {
+      "techniqueID": "T1685",
+      "score": 1,
+      "color": "",
+      "comment": "AMSI or ETW Function Patch (Process Access to ntdll/amsi) (high, designed); CPU Information Enumeration Followed by Security Tool Tampering (medium, designed); Security Component Stopped or Unregistered by Command Line (high, designed)",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "rules",
+          "value": "sigma/amsi_etw_patch.yml, sigma/windows/defense-evasion/patch_sequence.yml, sigma/windows/defense-evasion/security_component_tamper.yml"
+        }
+      ],
+      "links": [
+        {
+          "label": "AMSI or ETW Function Patch (Process Access to ntdll/amsi)",
+          "url": "sigma/amsi_etw_patch.yml"
+        },
+        {
+          "label": "CPU Information Enumeration Followed by Security Tool Tampering",
+          "url": "sigma/windows/defense-evasion/patch_sequence.yml"
+        },
+        {
+          "label": "Security Component Stopped or Unregistered by Command Line",
+          "url": "sigma/windows/defense-evasion/security_component_tamper.yml"
+        }
+      ],
+      "showSubtechniques": true
+    }
+  ],
+  "gradient": {
+    "colors": [
+      "#ffffff",
+      "#ffd6a5",
+      "#fdae61",
+      "#e34a33"
+    ],
+    "minValue": 0,
+    "maxValue": 3
+  },
+  "legendItems": [
+    {
+      "label": "no rule",
+      "color": "#ffffff"
+    },
+    {
+      "label": "rule, no capture",
+      "color": "#ffd6a5"
+    },
+    {
+      "label": "captured fixture",
+      "color": "#fdae61"
+    },
+    {
+      "label": "validated from a pinned sample",
+      "color": "#e34a33"
+    }
+  ],
+  "metadata": [
+    {
+      "name": "coverage",
+      "value": "18 techniques, 12 tactics"
+    },
+    {
+      "name": "evidence level",
+      "value": "designed only - nothing captured"
+    },
+    {
+      "name": "missing tactics",
+      "value": "exfiltration, impact, resource-development"
+    }
+  ],
+  "links": [
+    {
+      "label": "gap register",
+      "url": "docs/gap-register.md"
+    }
+  ]
+}

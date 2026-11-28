@@ -30,7 +30,11 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | 15 | **`|re` selections produced unmatchable fixtures** | The generator ignored the modifier and rendered a `C:\` path for a `[D-Z]:` rule. | Pattern expansion *verified with `re.search`*, raising instead of emitting a value the rule cannot match |
 | 16 | **`Source: true` in a DNS fixture** | `|exists` returned the constraint literal, not telemetry. | Field-appropriate present values; a test rejects boolean leakage |
 | 17 | **An IOC with no detector** | `analysis/iocs.md` named `svc_update.exe`; no rule covered it. | `removable_media_spreader_write.yml` |
-| 18 | **The gate rewrote the tree** | Wall clock in `conversion.json` and in the matrix header made `git status` dirty after every run, which hides real changes. | Two consecutive gate runs leave the tree clean |
+| 18 | **Dependencies were unpinned** | CI installed whatever pip resolved while the gate compared generated query text against a fixed result. | `requirements.txt` + a gate stage that fails on drift |
+| 19 | **The emulator was never checked against its rules** | Running it proved nothing about whether the beacon rules match its output. | `emulation/verify_emulation.py`, which does fail when they diverge |
+| 20 | **The defensive-only claim had no test** | SCOPE.md's central promise was prose; one commit could have made it false. | `tests/test_scope.py` - capability imports, calls, loopback-only, no binaries |
+| 21 | **No ATT&CK Navigator layer** | Coverage existed only as a Markdown table. | `tools/export_navigator.py`; scores evidence, not rule count, so it renders at 1 |
+| 22 | **The gate rewrote the tree** | Wall clock in `conversion.json` and in the matrix header made `git status` dirty after every run, which hides real changes. | Two consecutive gate runs leave the tree clean |
 
 ---
 
@@ -86,6 +90,20 @@ These cannot be fixed with a query. They need a sensor decision.
 | G-28 | **Field-name mapping is vendor-specific and undocumented per platform** | Sigma `EventID` vs Splunk `EventCode` vs ECS `event.code`. A missing alias makes a rule evaluate against a null, silently. `docs/deployment.md` gives the Splunk `props.conf`; Elastic/Kusto equivalents are not written. |
 | G-29 | **No saved-search packaging** | The bundle is a query per rule plus JSON. Importing 38 saved searches with schedules and suppression is manual; nothing generates a `savedsearches.conf` or an API payload. |
 | G-30 | **No alert-quality feedback loop** | `docs/tuning-log.md` is empty and there is no link from an alert back to the rule's ceiling or triage step. |
+
+### P2c. Reproducibility and scope
+
+| ID | Gap | Detail |
+|---|---|---|
+| G-31 | **No dependency pinning** | CI installed unpinned pySigma and backends while the gate compares generated query text. Closed: `requirements.txt` + gate stage 0 fails on any drift. |
+| G-32 | **The emulator was never checked against its rules** | `local_listener.py` + `inert_beacon.py` were documented as producing "comparable telemetry"; nothing tested it. Closed: `emulation/verify_emulation.py`, and it now does fail when the two diverge. |
+| G-33 | **Fake Zeek** | Two blocks fenced as Zeek called functions Zeek does not have. Now labelled pseudocode with real log fields and a working `zeek-cut` command. |
+| G-34 | **The defensive-only claim was prose** | SCOPE.md's central promise had no test. Closed: `tests/test_scope.py` fails on capability imports/calls, a non-loopback emulator, or a committed binary. |
+| G-35 | **No Python version matrix** | Everything is tested on 3.11. `str.is_relative_to` and match semantics need >= 3.9; older interpreters are untested and unstated. |
+| G-36 | **No formatter or linter for the Python** | 4,500 lines with no `ruff`/`black` enforcement; style drift is invisible. |
+| G-37 | **No release or change discipline** | `CHANGELOG.md` is hand-maintained and was stale twice. Nothing derives a version or tags a release. |
+| G-38 | **No upstream Sigma rule overlap check** | This repo defines 38 rules; whether any duplicates an existing SigmaHQ rule (and diverges from it) is unknown. Citation and fork management are unhandled. |
+
 
 ### P3. Engineering hygiene
 

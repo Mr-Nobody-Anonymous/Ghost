@@ -248,6 +248,29 @@ self-referential version passed that test's inverse.
   meta tag moved off the revoked T1562.001, and a test now asserts five intended
   shapes fire and three partial indicators do not.
 
+### Reproducibility, emulation and scope
+
+- **No dependency pinning.** CI installed unpinned pySigma and backends while
+  the gate compares generated query text against `attack/conversion.json`, so
+  the "measured" result was reproducible only on the day it was measured. Added
+  `requirements.txt` and a gate stage that fails on any version drift.
+- **The emulator was never checked against the rules it claims to exercise.**
+  Added `emulation/verify_emulation.py`: it parses `emulator_traffic.log` into
+  proxy-shaped events and runs the beacon rules over them, failing when the two
+  diverge. Its first draft reported two false failures - it ran every proxy rule
+  including one that needs an egress the emulator never makes, and one keyed on
+  the absence of a header a synthetic event should not fake.
+- **Two Zeek blocks were not Zeek.** `network/ja3-x509.md` fenced pseudocode as
+  a script, calling `ja3_hash()` and `is_known_python_host()` - neither exists in
+  Zeek - and indexing a set never defined. Both are now labelled pseudocode with
+  real log fields and a `zeek-cut` command that works as written.
+- **The defensive-only claim had no test.** SCOPE.md's central promise was prose.
+  `tests/test_scope.py` now fails on capability-bearing imports or calls, on an
+  emulator that is not loopback-only, and on a committed binary.
+- **Coverage existed only as a table.** `tools/export_navigator.py` emits an
+  ATT&CK Navigator layer whose score comes from the fixture lifecycle, not the
+  rule count - so with nothing captured, every technique renders at 1.
+
 ### Still not done
 
 No blind capture, no benign-corpus run, no measured volume, no sample. Nothing

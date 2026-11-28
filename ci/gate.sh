@@ -44,6 +44,7 @@ python3 ci/convert_check.py --backends splunk elastic kusto --quiet
 
 echo "[10/11] coverage + deployable bundle + package"
 python3 tools/generate_matrix.py
+python3 tools/export_navigator.py
 python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl
 mkdir -p dist
 tar --exclude=dist --exclude=__pycache__ --exclude='*.pyc' --exclude=attack/cache \

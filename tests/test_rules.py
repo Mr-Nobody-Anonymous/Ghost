@@ -152,6 +152,28 @@ class RuleTests(unittest.TestCase):
         if out.exists():
             out.unlink()
 
+    def test_navigator_layer_is_current_and_honest(self):
+        """The layer scores evidence, not rule count.
+
+        Every fixture is `designed`, so every score must be 1. A layer showing
+        green would be the repository's own central false claim, rendered as a
+        heat map.
+        """
+        out = ROOT / "attack" / "navigator-layer.json"
+        self.assertTrue(out.is_file(), "run tools/export_navigator.py")
+        before = out.read_text()
+        r = subprocess.run([sys.executable, str(ROOT / "tools" / "export_navigator.py")],
+                           capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        layer = json.loads(out.read_text())
+        self.assertEqual(before, out.read_text(), "navigator layer is stale")
+        scores = {t["score"] for t in layer["techniques"]}
+        self.assertEqual(scores, {1},
+                         f"with no captured fixture every score must be 1, got {scores}")
+        self.assertTrue(layer["techniques"])
+        for t in layer["techniques"]:
+            self.assertRegex(t["techniqueID"], r"^T\d{4}(\.\d{3})?$")
+
     def test_matrix_is_current(self):
         """attack/matrix.md is generated; a stale copy is a coverage claim nobody re-checked."""
         before = (ROOT / "attack" / "matrix.md").read_text()
