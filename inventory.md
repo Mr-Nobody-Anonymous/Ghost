@@ -35,7 +35,7 @@ claims; the Status column states which one holds.
 
 ## Coverage arithmetic
 
-37 rules, 18 distinct ATT&CK techniques. Every rule converts
+39 rules, 18 distinct ATT&CK techniques. Every rule converts
 on at least one backend; `attack/matrix.md` carries the per-backend result.
 **No rule has a captured fixture**, so no technique is *covered* under the
 definition in `docs/maturity.md` - that definition is ten gates, not one.

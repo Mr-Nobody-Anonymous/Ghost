@@ -16,14 +16,19 @@ engineering is provable, the detection is not.
 
 | Component | Count | What it is |
 |---|---|---|
-| Sigma rules | 38 | 33 single-event + 5 correlations, 18 ATT&CK techniques |
-| Fixtures | 77 | 38 positive + 38 negative + 1 schema example, generated and verified |
+| Sigma rules | 39 | 33 single-event + 5 correlations + 1 campaign, 18 ATT&CK techniques |
+| Fixtures | 79 | 39 positive + 40 negative, generated and verified |
 | Suricata rules | 3 | custom-header C2 signatures |
-| YARA rules | 1 | structural implant fingerprint, 12 strings, 6 conditions |
-| Python tooling | ~5,000 lines | validator, evaluator, generator, capture kit, linters, Navigator export |
-| Docs | 77 files / ~2,700 lines | runbook, maturity, gaps, deployment, triage per rule |
-| Gate stages | 11 | each fails on its own, none can skip; stage 0 pins the environment |
-| Tests | 53 | structural, behavioural, scope-enforcing, and mutation-verified |
+| YARA rules | 11 | structural implant fingerprint plus packer and stage families |
+| Python tooling | ~12,400 lines | validator, evaluator, generator, capture kit, linters, precision harness, Navigator export |
+| Docs | 82 files / ~5,300 lines | runbook, maturity, gaps, deployment, technique lab guide, triage per rule |
+| Gate stages | 20 | each fails on its own, none can skip; stage 0 pins the environment |
+| Tests | 273 | structural, behavioural, scope-enforcing, field-plausibility, and mutation-verified |
+| Open gaps | 17 of 38 | none closed by prose; each names what it needs |
+
+Every number in that table is read out of the tree by
+`tests/test_assessment_counts.py`, so it fails the gate rather than drifting
+when a rule lands.
 
 ## What is mechanically proven
 
@@ -61,7 +66,7 @@ These hold every time `ci/gate.sh` runs. This is the part you can rely on.
 |---|---|
 | **No blind capture** (all 39 rule fixtures are `designed`) | The rules are internally consistent. That is not detection. A fixture derived from a rule cannot fail for the reason real telemetry fails. |
 | **No clean baseline** | Nobody has shown the required EventIDs and fields appear on an idle host. A rule may be silently unmatched forever. |
-| **No benign corpus run** | Precision is unknown. 24 of 39 rules have no filter section at all. |
+| **No benign corpus run** | Precision is unknown. 18 of the 33 single-event rules have no filter section at all. |
 | **No volume measurement** | All 38 ceilings say `measured: false`; they are budgets, not observations. |
 | **No deployment performed** | `docs/deployment.md` is a procedure, not a result. |
 | **No sample** | `sample_ref: PIN-0000` everywhere, by design for a defensive repo. |
@@ -72,10 +77,10 @@ These hold every time `ci/gate.sh` runs. This is the part you can rely on.
 | Property | Value | Reading |
 |---|---|---|
 | Median distinct fields per rule | 3 | thin; most rules key on one object |
-| Rules with a filter/allowlist | 20 / 38 (53%) | the other 18 rely entirely on the selection being rare |
-| Rules selecting ≤2 fields | 18 / 38 | high false-positive risk, all rated `low`/`medium` |
+| Rules with a filter/allowlist | 15 / 33 (45%) | the other 18 single-event rules rely entirely on the selection being rare |
+| Rules selecting ≤2 fields | 13 / 33 | high false-positive risk, all rated `low`/`medium` |
 | Correlations | 5 | ordering is detected; all Splunk-only |
-| Level distribution | 10 high / 20 medium / 8 low | weighted toward medium, appropriate for unmeasured precision |
+| Level distribution | 10 high / 21 medium / 8 low | weighted toward medium, appropriate for unmeasured precision |
 | ATT&CK tactics covered | 12 of 15 | zero: exfiltration, impact, resource-development |
 | Rules in Command and Control | 11 | this is a C2-artifact detector, not a general EDR |
 
@@ -91,7 +96,7 @@ These hold every time `ci/gate.sh` runs. This is the part you can rely on.
    drop unknown headers. If yours does, those rules are dead and quiet.
 4. **Thirty-eight queries without suppression.** The manifest now carries it, but
    nothing applies it for you; an unsuppressed deploy is a flood on day one.
-5. **Precision.** 24 of the 39 rules have no filter. The first week of a real deployment
+5. **Precision.** 18 of the 33 single-event rules have no filter. The first week of a real deployment
    will produce false positives that no test in this repository can predict.
 
 ## How it compares to what it claims to be

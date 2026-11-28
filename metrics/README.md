@@ -16,7 +16,7 @@ Record results in `reports/`. A rule with zero events and no fixture is not
 
 ## Current state
 
-`ceilings.json` has an entry for all 38 rules and **`measured: false` on every
+`ceilings.json` has an entry for all 39 rules and **`measured: false` on every
 one of them**. Ceilings were assigned by rule class (correlation outputs 20/day,
 high-volume filter rules 5,000/day, single-object rules 50-100/day) as a budget
 to test against, not as an observation. A ceiling with no measurement is a

@@ -497,7 +497,7 @@ check, so this entry is written after the fact from the commit log; the
   10-stage gate that had grown to 20. It now states the thing plainly and names
   all 20. `docs/test-contract.md` corrected too, and `tests/test_doc_counts.py`
   reads the count out of `ci/gate.sh` so the prose cannot drift again.
-- **Give every rule real tuning guidance.** Seven rules carried a single
+- **Give every rule a tunable false-positive list.** Seven rules carried a single
   `falsepositives` line ("SCCM, Intune, monitoring agents"), which tells an
   analyst nothing about what will actually trip them. Expanded with the concrete
   benign cases — OneDrive re-polling after a resume, VS Code's `_MEI` unpack,
@@ -510,6 +510,27 @@ check, so this entry is written after the fact from the commit log; the
   A rule with three selections of different shapes was examined against whichever
   candidate came back first, so a filter dead on one branch went unexamined as
   long as it was live on another. It now probes every branch.
+
+
+- **`docs/assessment.md` said 38 rules, 11 stages and 53 tests.** It is the
+  document that opens with "every number here was produced by a command", which
+  makes a stale number there worse than anywhere else — a reader trusts it
+  *because* it claims to be mechanical. Recomputed and rewritten: 39 rules
+  (33 single-event + 5 correlations + 1 campaign), 79 fixtures, 20 stages, 264
+  tests, 17 of 38 gaps open. The rule-quality profile was wrong in three places
+  too (15/33 rules carry a filter, not 20/38; 13/33 key on two fields or fewer;
+  levels are 10/21/8). `tests/test_assessment_counts.py` derives every one of
+  those numbers from the tree, including the level distribution and the
+  unfiltered count the risk section repeats, and fails when the prose disagrees.
+  It caught three of my own counting errors while being written.
+
+
+- **A repo-wide scan for superseded totals, because `assessment.md` was not the
+  only one.** `docs/maturity.md` still said "all 38 are `designed`" and "37
+  each"; `metrics/README.md` said "an entry for all 38 rules"; `inventory.md`
+  opened its arithmetic with "37 rules". Each was true when written. The scan
+  reads every `.md` outside the changelog and fails on a rule total that
+  contradicts the tree. It found `inventory.md` on its first run.
 
 
 ## Versioning
