@@ -108,6 +108,19 @@ def stated_counts(text):
             out.append((match.group(0), denominator, n_rules))
         elif denominator == n_rules and numerator > n_rules:
             out.append((match.group(0), numerator, n_rules))
+    # "N Sigma rules", "N query pairs" - a bare count in a table cell, which is
+    # where the README's own summary had been wrong for four commits.
+    for match in re.finditer(r"\b(\d+)\s+(?:Sigma\s+)?(?:rules?|queries|pairs)\b",
+                             text):
+        claimed = int(match.group(1))
+        before = text[max(0, match.start() - 20):match.start()].lower()
+        if any(w in before for w in ("of the", "of 3", "have ", "has ")):
+            continue
+        if "correlation" in before or "single-event" in before:
+            continue    # those are sub-counts, checked separately below
+        if claimed not in (n_rules, len(list((ROOT / "fixtures" / "per_rule")
+                                             .glob("*.json")))):
+            out.append((match.group(0), claimed, n_rules))
     # "N rules" / "N queries" where N is not a plausible subset statement.
     for match in re.finditer(r"\b(\d+)\s+(?:rules|queries)\b(?!\s+(?:to|have|are|"
                              r"read|declare|convert)\b)", text):

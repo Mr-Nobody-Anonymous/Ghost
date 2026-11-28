@@ -8,10 +8,10 @@ contains **detection content and inert lab tooling only**. It answers:
 
 | Path | Purpose |
 |---|---|
-| `sigma/` | 38 Sigma rules (33 single-event + 5 correlations) + schema + Suricata header rules |
+| `sigma/` | 39 Sigma rules (34 single-event + 5 correlations) + schema + Suricata header rules |
 | `yara/` | Structural rules: packers, stage fingerprints, config artifacts |
 | `telemetry/` | Data-source map, Sysmon config, audit policy + SACLs, ETW provider list |
-| `fixtures/` | Generated positive/negative fixture per rule (37 pairs); benign FP corpus spec |
+| `fixtures/` | Generated positive/negative fixture per rule (39 pairs); benign FP corpus spec |
 | `tests/`, `ci/`, `tools/` | Rule/fixture tests, CI gate, coverage generator |
 | `samples/` | Sample pin **schema** — no binary stored |
 | `network/`, `docs/`, `analysis/` | Fingerprint detections, runbook/tuning/maturity, triage templates |

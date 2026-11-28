@@ -67,6 +67,16 @@ class CountTest(unittest.TestCase):
         self.assertEqual(
             D.stated_counts("Windows 2003/2102 events cover device arrival"), [])
 
+    def test_the_correct_table_cell_passes(self):
+        self.assertEqual(D.stated_counts("| `sigma/` | 39 Sigma rules |"), [])
+
+    def test_a_stale_count_in_a_table_cell_is_flagged(self):
+        """The README's own summary table said "38 Sigma rules (33 single-event
+        + 5 correlations)" and "37 pairs" for four commits. Table cells are
+        where numbers go to die: they are scanned, not read."""
+        self.assertTrue(D.stated_counts("| `sigma/` | 38 Sigma rules |"))
+        self.assertTrue(D.stated_counts("| `fixtures/` | 37 pairs |"))
+
     def test_a_stale_total_in_any_document_is_flagged(self):
         self.assertTrue(D.stated_counts("The gate converts 38/38 rules."))
 

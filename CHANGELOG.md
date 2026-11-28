@@ -445,6 +445,13 @@ check, so this entry is written after the fact from the commit log; the
 - **G-33 and G-08 were fixed but still listed as open**; the register's own test
   caught both.
 
+- **Find four more stale counts, in the table cells.** The README's
+  own summary table still said "38 Sigma rules (33 single-event + 5
+  correlations)" and "37 pairs"; `docs/assessment.md` said "all 38 rule
+  fixtures". The sweep now covers bare counts in table cells, not just `N/N`
+  ratios. `39` rules is `34` single-event plus `5` correlations, and there are
+  `39` fixture pairs.
+
 ## Versioning
 
 `tools/release.py` derives the version from the date and the existing tags

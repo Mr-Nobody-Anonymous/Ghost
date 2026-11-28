@@ -59,7 +59,7 @@ These hold every time `ci/gate.sh` runs. This is the part you can rely on.
 
 | Missing | Consequence |
 |---|---|
-| **No blind capture** (all 38 rule fixtures are `designed`) | The rules are internally consistent. That is not detection. A fixture derived from a rule cannot fail for the reason real telemetry fails. |
+| **No blind capture** (all 39 rule fixtures are `designed`) | The rules are internally consistent. That is not detection. A fixture derived from a rule cannot fail for the reason real telemetry fails. |
 | **No clean baseline** | Nobody has shown the required EventIDs and fields appear on an idle host. A rule may be silently unmatched forever. |
 | **No benign corpus run** | Precision is unknown. 24 of 39 rules have no filter section at all. |
 | **No volume measurement** | All 38 ceilings say `measured: false`; they are budgets, not observations. |
@@ -91,7 +91,7 @@ These hold every time `ci/gate.sh` runs. This is the part you can rely on.
    drop unknown headers. If yours does, those rules are dead and quiet.
 4. **Thirty-eight queries without suppression.** The manifest now carries it, but
    nothing applies it for you; an unsuppressed deploy is a flood on day one.
-5. **Precision.** 24 rules have no filter. The first week of a real deployment
+5. **Precision.** 24 of the 39 rules have no filter. The first week of a real deployment
    will produce false positives that no test in this repository can predict.
 
 ## How it compares to what it claims to be
