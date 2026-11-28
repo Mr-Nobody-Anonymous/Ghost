@@ -57,11 +57,32 @@ in the SIEM.
 - **Rules:** `sigma/dga_high_entropy_dns.yml`, `sigma/windows/process/dns_query_burst_host.yml`
 - **Converts:** splunk only
 
-## Beacon jitter note
+## Beacon jitter
 
 Jitter 0.35 on a 45s base gives ~29-61s intervals. A fixed `count >= N in T`
-threshold will miss a slow beacon and fire on a fast poller. `beacon_interval_shift.yml`
-is a **candidate filter**, not an alert: it carries no threshold and must feed an
-inter-arrival distribution job (mean and standard deviation per
-host/destination pair). That job is documented here and **not implemented** - it
-is a named gap in `inventory.md`, not a capability.
+threshold will miss a slow beacon and fire on a fast poller:
+`analytics/beacon_jitter.py --selftest` builds one of each with the same event
+count and shows a count cannot separate them.
+
+`beacon_interval_shift.yml` remains a **candidate filter**, not an alert. The
+job it feeds is now implemented:
+
+```bash
+python3 analytics/beacon_jitter.py flows.jsonl          # table
+python3 analytics/beacon_jitter.py flows.jsonl --json   # for a pipeline
+python3 analytics/beacon_jitter.py --selftest           # gate stage 6
+```
+
+Per (source, destination) pair it takes sorted timestamps, diffs them to
+inter-arrival times, and reports median and coefficient of variation (CV =
+stdev/mean). A pair is `beacon_like` when CV <= 0.30 and the median interval is
+between 5 s and 1 h. A 45 s beacon with 0.35 uniform jitter lands at CV ~= 0.23;
+a log-normal poller with the same mean lands near 0.76.
+
+**The limitation is stated, not hidden.** Backups, NTP and metrics scrapers are
+periodic on purpose: a 300 s backup to `vault.corp` has CV 0.012 and is
+statistically a beacon. No statistic fixes that, so the tool applies the rule's
+own local-domain filter (`.local`, `.internal`, `.corp`) before measuring, and
+prints what it filtered. `--no-rule-filter` shows the raw result if you want to
+see why the filter exists. What remains after both is a candidate for a human,
+not an alert.

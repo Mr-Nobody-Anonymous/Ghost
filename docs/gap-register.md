@@ -80,7 +80,7 @@ These cannot be fixed with a query. They need a sensor decision.
 
 | ID | Gap | Detail |
 |---|---|---|
-| G-12 | Beacon jitter is not detected | `beacon_interval_shift.yml` is a filter, not a detector. Needs inter-arrival mean/variance per host-destination pair. A fixed `count >= N in T` misses a 45 s beacon with 0.35 jitter. |
+| G-12 | Beacon jitter is not detected | `beacon_interval_shift.yml` is a filter, not a detector. Needs inter-arrival mean/variance per host-destination pair. A fixed `count >= N in T` misses a 45 s beacon with 0.35 jitter. **Closed - `analytics/beacon_jitter.py` (median + CV per pair, rule's domain filter applied, selftest in gate) + 10 tests, including one that asserts a regular backup *is* statistically a beacon so the limitation cannot be forgotten.** |
 | G-13 | The stage0 → stage1 join is not implemented | A process-tree join is not expressible in Sigma; it has to be built in the SIEM. Documented, not built. |
 | G-14 | Five correlations are Splunk-only | pySigma converts correlations only for Splunk. Elastic and Kusto users get the members and must build the join. |
 | G-15 | No `1 of` cross-source campaign rule | Sequence *across* techniques (triage → tamper → persist) is not modelled. |
