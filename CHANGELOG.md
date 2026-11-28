@@ -418,6 +418,23 @@ check, so this entry is written after the fact from the commit log; the
   vanished, a "closed" gap with no code behind it, and an "open" gap whose row
   does not say what it is waiting for. It immediately caught four wrong rows.
 
+- **Execute the checkable half of the deployment procedure** (`G-27`).
+  `docs/deployment.md` was honest that it had never run; it was not honest about
+  the repository it described. It said 38 rules when there were 39, quoted
+  per-backend conversions out of 38 rather than 39, and sent the reader to
+  `response/rules/<id>.md`, which is a pattern, not a file. `tools/check_deployment_doc.py` now verifies every path
+  it names, every count it asserts - read from `conversion.json`, not from the
+  generated matrix - and runs the four commands that depend only on this
+  repository. The seven steps that need Splunk, Elastic, Sentinel or Windows are
+  printed as unverified rather than passing quietly.
+- **A checker that rewrites what it checks is not a checker.** The first version
+  of `check_deployment_doc.py` ran the Splunk-only `convert_check.py` line the
+  doc shows, and that command writes `attack/conversion.json` as a side effect:
+  the file came back with elastic and kusto blank, the matrix was regenerated
+  from it, and `test_matrix_is_current` failed two stages later with no visible
+  link to the cause. It now runs all three backends and restores the file via
+  git; both facts are tests.
+
 ## Versioning
 
 `tools/release.py` derives the version from the date and the existing tags

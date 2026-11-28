@@ -91,7 +91,6 @@ These cannot be fixed with a query. They need a sensor decision.
 
 | ID | Gap | Detail |
 |---|---|---|
-| G-27 | **No deployment procedure** | The repo could emit 38 queries and a manifest but said nothing about ingesting telemetry, mapping `EventCode`->`EventID`, or applying suppression. Now `docs/deployment.md` — written, never executed. |
 
 ### P2c. Reproducibility and scope
 
@@ -160,6 +159,7 @@ because a paragraph was added.
 | G-37 | No upstream Sigma rule overlap check | `tools/sigmahq_overlap.py`: 3,164-rule pinned snapshot, family/product/technique/directed-coverage join; **no duplicate, no divergence**, two ancestor-path artefacts recorded as artefacts |
 | G-28 | Field-name mapping is vendor-specific | `telemetry/field-map.json` names all 36 fields a rule reads on Splunk, Elastic and Kusto; generated configs are checked in the gate. **Still not executed against a live platform** |
 | G-19 | `attack/cache/` is 55 MB and gitignored | `tools/verify_pins.py` separates *verified from bytes* from *derived-only*, and catches a review measured against a tree that has since moved |
+| G-27 | **No deployment procedure** | The repo could emit 39 queries and a manifest but said nothing about ingesting telemetry, mapping `EventCode`->`EventID`, or applying suppression. `docs/deployment.md` now covers all of it, and `tools/check_deployment_doc.py` verifies the half that can be verified here: every path it names exists, every count matches (`38/39` Splunk, `32/39` Elastic and Kusto, read from `conversion.json`), and the four commands that depend only on this repo are executed on every gate run. **The other half has never run** - installing Sysmon, loading saved searches, applying a SACL on Windows, producing an alert. That half is named, not implied |
 | G-08 | File and registry **reads** are unobserved until a SACL exists | `tools/build_sacl_script.py` derives the SACL targets from the rules that read a 4663 field - exactly one rule does, and the generator fails when that count and the targets disagree. `deploy/telemetry/set-sacls.ps1` backs up each ACL, verifies the SACL reads back, and has `-Rollback`. **The script has never been run on Windows** - there is no PowerShell here, and the tests check its shape rather than its effect |
 | G-18 | Triage steps are untested | `tools/generate_playbooks.py` + `response/check_playbooks.py`: all 39 playbooks verified against the fields their rules actually read. **Still not worked by a human** |
 

@@ -2,7 +2,7 @@
 
 The repository can produce validated rules and a deployable bundle. It could not
 tell anyone how to get telemetry from a host into an index, or how to load the
-38 queries as scheduled searches. That gap is the difference between a rule set
+39 queries as scheduled searches. That gap is the difference between a rule set
 and a working detection, so this page closes it.
 
 Everything below is generic Splunk-on-Windows unless stated. Nothing here has
@@ -17,9 +17,9 @@ conversion run. As of the current pin:
 
 | Backend | Rules that convert | What you get |
 |---|---|---|
-| Splunk | 38/38 | everything, including the 5 correlations and the one `fieldref` rule |
-| Elastic | 32/38 | single-event rules only; correlations must be rebuilt (see §6) |
-| Kusto / Sentinel | 32/38 | same, plus `fieldref` does not translate |
+| Splunk | 38/39 | everything except the cross-source campaign rule, which needs two indices |
+| Elastic | 32/39 | single-event rules only; correlations must be rebuilt (see §6) |
+| Kusto / Sentinel | 32/39 | same, plus `fieldref` does not translate |
 
 **If you pick Elastic or Kusto, the five correlations do not deploy.** They are
 `temporal` and `event_count` Sigma correlations, which pySigma converts only for
@@ -28,12 +28,12 @@ Splunk. The member rules deploy fine; the join is yours to build.
 ## 2. Get the telemetry in
 
 The rules read fields this repository documents in `telemetry/data-sources.md`.
-A rule cannot read a field that was never collected, and 37 of the 38 rules are
+A rule cannot read a field that was never collected, and 34 of the 39 rules are
 Windows-only. Minimum viable ingestion:
 
 | Source | Channel / input | Why |
 |---|---|---|
-| Sysmon | `Microsoft-Windows-Sysmon/Operational` | 32 of the rules; the pinned config in `telemetry/sysmon-config.xml` is what they were written against |
+| Sysmon | `Microsoft-Windows-Sysmon/Operational` | 33 of the rules; the pinned config in `telemetry/sysmon-config.xml` is what they were written against |
 | Security | `Security` | 4663 (SACL reads) for `cpu_info_read.yml` and the tamper sequence |
 | Zeek or equivalent | `dns.log`, `ssl.log`, `conn.log` | the two DGA rules and the TLS rule |
 | Proxy / SWG | access log **with request headers** | `beacon_custom_headers.yml` reads `cs-header-X-Id` |
@@ -53,7 +53,7 @@ Two things that break silently:
 ## 3. Normalise field names
 
 Sigma says `EventID`; Splunk's Windows add-on produces `EventCode`. Do not edit
-38 rules to match one vendor. Map at ingest:
+39 rules to match one vendor. Map at ingest:
 
 `deploy/fieldmap/props-sigma.conf` is generated, one stanza per sourcetype.
 Install it:
@@ -115,7 +115,8 @@ than `dedup_window` for every rule; the validator rejects the inverse.
 3. Watch `metrics/ceilings.json` against reality. Every ceiling is currently
    `measured: false` — the numbers are budgets, not observations.
 4. Every trip gets a row in `docs/tuning-log.md` with an `allowlist` / `threshold`
-   / `retire` / `keep` decision. `response/rules/<id>.md` has the first triage step.
+   / `retire` / `keep` decision. `response/rules/` has a playbook per rule, generated from the rule and
+   checked by `response/check_playbooks.py`.
 
 A rule stays at `informational` until it has survived a week of a real environment
 or the benign corpus. Nothing in this repository has yet.
@@ -147,13 +148,37 @@ deployment, before you trust a quiet dashboard.
 
 ---
 
-## Status
+## Status: what is verified and what is not
 
-This document is a correct procedure for a deployment that has never been
-performed. No click, query, configuration line or hash above has been verified
-against a running SIEM, and no rule in this repository has produced an alert on
-real telemetry. Treat it as a plan with named risks, not a report of results.
+The two halves of this page have different standing, and the difference is the
+point rather than a footnote.
+
+**Verified, every run of the gate** (`tools/check_deployment_doc.py`, stage 17):
+
+- every repository path named here exists
+- every count asserted here matches the repository (the rule total, each
+  backend's conversion count, read from `attack/matrix.md`)
+- the four commands that depend only on this repository were executed and
+  exited 0: the conversion measurement, the bundle build, the field-map
+  generation, and the SACL generation
+
+**Not verified, and cannot be from here:**
+
+- installing the Sysmon config on Windows and confirming it did not fall back
+  to a default
+- ingesting through a forwarder into an index
+- loading the saved searches into Splunk, the pipeline into Elastic, or the
+  views into Sentinel
+- running `set-sacls.ps1` and confirming the SACL reads back on a real host
+- producing an alert on real telemetry
+
+That second list is the honest status: **this is a correct procedure for a
+deployment that has never been performed.** No alert in this repository has come
+from a live host. The first list is what stops the page rotting. This page had already
+drifted: its rule totals were one behind the repository, and it sent the reader
+to a per-rule playbook path written as a pattern rather than a directory. Both
+survived review because the prose still read correctly.
 
 Gaps this page does *not* solve, tracked in `docs/gap-register.md`:
 G-01 blind capture, G-02 clean baseline, G-03 benign corpus, G-04 volume,
-G-11 header retention, and G-14 the five Splunk-only correlations.
+G-11 header retention, G-14 the Splunk-only correlations, G-17 no real sample.
