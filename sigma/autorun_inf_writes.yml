@@ -36,6 +36,9 @@ detection:
   condition: selection and not filter_trusted
 falsepositives:
   - Legitimate setup media and enterprise imaging tools
+  - ISO burners and imaging tools (Rufus, Ventoy) writing autorun.inf for autorun-capable media
+  - Enterprise deployment shares staging vendor setup media
+  - USB drives reused as install media between machines
 level: high
 conversion:
   splunk: supported

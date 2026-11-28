@@ -4,7 +4,10 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "Legitimate setup media and enterprise imaging tools"
+    "Legitimate setup media and enterprise imaging tools",
+    "ISO burners and imaging tools (Rufus, Ventoy) writing autorun.inf for autorun-capable media",
+    "Enterprise deployment shares staging vendor setup media",
+    "USB drives reused as install media between machines"
   ],
   "tuning_decision": "pending",
   "must_not_match": {

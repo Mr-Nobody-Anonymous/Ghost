@@ -26,7 +26,12 @@ detection:
     EventID: 11
     TargetFilename|contains: '_MEI'
   condition: selection
-falsepositives: [legitimate PyInstaller-packaged tools]
+falsepositives:
+  - legitimate PyInstaller-packaged tools
+  - pipx / pex / shiv launchers that unpack to _MEI on every run
+  - Antivirus or EDR detonating a PyInstaller sample in a sandbox under a _MEI path
+  - Developer running `python -m PyInstaller --onefile` and testing the build
+  - Any Electron app: VS Code, Slack, Teams unpack to a similar temp directory
 level: medium
 conversion:
   splunk: supported

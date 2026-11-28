@@ -35,6 +35,10 @@ correlation:
     gte: 20
 falsepositives:
   - CDN clients, telemetry agents, DNS security probes
+  - Browsers resolving the same CDN hostname across many processes at load
+  - Package managers (pip, npm, Chocolatey) resolving a mirror fleet at start
+  - DNS-over-HTTPS resolvers or VPN clients re-querying after a tunnel change
+  - Any host behind a flaky link: retries inflate the count without a beacon
 level: medium
 notes: >
   Covers the DGA fallback only; the primary C2 path uses IP literals and never

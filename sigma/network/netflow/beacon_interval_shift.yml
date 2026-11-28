@@ -38,6 +38,10 @@ detection:
   condition: selection and not filter_local_destination
 falsepositives:
   - Anything on 443 - this rule is a candidate filter, not an alert
+  - OneDrive/Dropbox sync clients re-polling after a network change or resume
+  - Windows Update or Defender signature checks after a missed schedule
+  - Any process that has been paused and resumed - the gap is a pause, not a beacon
+  - NTP clients compensating for clock drift over a long window
 level: low
 conversion:
   splunk: supported

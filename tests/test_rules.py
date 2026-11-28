@@ -265,10 +265,21 @@ class RuleTests(unittest.TestCase):
                      if k.startswith("filter") and isinstance(v, dict)}
             if not filts or not sels:
                 continue
-            base = evaluate.candidate_events({**doc, "detection": sels})
-            if not base:
+            # One probe per branch, not the first probe overall. A rule with
+            # three selections of different event shapes used to be examined
+            # against whichever candidate came back first - so a filter that
+            # was dead on the registry branch went unexamined as long as it was
+            # live on the process branch. That is exactly how
+            # `runkey_schtask_startup_persistence` kept a ParentImage filter on
+            # Sysmon 12-14 for its whole life.
+            bases = []
+            for sname, sbody in sels.items():
+                cand = evaluate.candidate_events(
+                    {**doc, "detection": {sname: sbody}})
+                if cand:
+                    bases.append(cand[0])
+            if not bases:
                 continue
-            event = base[0]
             sel_fields = {k.split("|")[0] for body in sels.values() for k in body}
             filt_fields = {k.split("|")[0] for body in filts.values() for k in body}
             shared = sel_fields & filt_fields
@@ -286,11 +297,12 @@ class RuleTests(unittest.TestCase):
                     if k.endswith("|re") and isinstance(v, str):
                         re_values[k.split("|")[0]] = render_regex(v)
 
-            def probes_for(field, fkey, fval, _re=re_values, _ev=event):
-                # Defaults bind the loop variables: a closure over a loop
-                # variable is the classic late-binding bug (ruff B023), and in a
-                # test it produces a pass or fail that depends on the last rule.
-                pos = _re.get(field) or str(_ev.get(field, ""))
+            def probes_for(field, fkey, fval, event, _re=re_values):
+                # `event` is passed explicitly: it varies per branch now, and a
+                # closure over the loop variable would be the classic
+                # late-binding bug (ruff B023) - a pass or fail that depends on
+                # the last rule examined.
+                pos = _re.get(field) or str(event.get(field, ""))
                 mods = fkey.split("|")[1:]
                 v = str(fval)
                 if "contains" in mods:
@@ -303,19 +315,24 @@ class RuleTests(unittest.TestCase):
                     return [v + "artifact.exe", v]
                 return [v]
 
-            reachable = False
-            for field in sorted(shared):
-                for fbody in filts.values():
-                    for fkey, fvalue in fbody.items():
-                        if fkey.split("|")[0] != field:
-                            continue
-                        for fv in (fvalue if isinstance(fvalue, list) else [fvalue]):
-                            for cand in probes_for(field, fkey, fv):
-                                probe = dict(event, **{field: cand})
-                                if not evaluate.match_selection(probe, fbody):
-                                    continue
-                                if any(evaluate.match_selection(probe, sb) for sb in sels.values()):
-                                    reachable = True
+            dead_branches = []
+            for event in bases:
+                reachable = False
+                for field in sorted(shared):
+                    for fbody in filts.values():
+                        for fkey, fvalue in fbody.items():
+                            if fkey.split("|")[0] != field:
+                                continue
+                            for fv in (fvalue if isinstance(fvalue, list) else [fvalue]):
+                                for cand in probes_for(field, fkey, fv, event):
+                                    probe = dict(event, **{field: cand})
+                                    if not evaluate.match_selection(probe, fbody):
+                                        continue
+                                    if any(evaluate.match_selection(probe, sb)
+                                           for sb in sels.values()):
+                                        reachable = True
+                                        break
+                                if reachable:
                                     break
                             if reachable:
                                 break
@@ -323,9 +340,15 @@ class RuleTests(unittest.TestCase):
                             break
                     if reachable:
                         break
-                if reachable:
-                    break
-            if not reachable:
+                if not reachable:
+                    dead_branches.append(event.get("EventID"))
+            # Only report when every branch is unreachable: a filter that
+            # legitimately targets one event shape (registry vs process) is
+            # fine as long as *some* branch can reach it. The bug is a rule
+            # where the branches that are filtered and the branches that are
+            # not are silently different, which `test_field_plausibility`
+            # pins down per branch.
+            if dead_branches and len(dead_branches) == len(bases):
                 offenders.append(f"{f.name} ({sorted(shared)})")
         self.assertEqual(offenders, [],
                          f"filter(s) that can never exclude a selected event: {offenders}")

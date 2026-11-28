@@ -4,7 +4,10 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "SCCM, Intune, monitoring agents"
+    "SCCM, Intune, monitoring agents",
+    "Patch-management agents registering a filter for a reboot-required query",
+    "Backup agents (Veeam, Windows Server Backup) registering a filter during the job",
+    "Lab or CI boxes creating filters as part of an exercise"
   ],
   "tuning_decision": "pending",
   "must_not_match": {

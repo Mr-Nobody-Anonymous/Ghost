@@ -468,6 +468,50 @@ check, so this entry is written after the fact from the commit log; the
   changelog line was sitting there in bold. 24 characters now — still specific,
   and far less likely to end inside a word the changelog splits.
 
+- **Fix an installer filter that could never match, and stop the gate reverting
+  its own conversion record.** Two defects, both found by building the missing
+  half of the benign-corpus harness. The installer filter in
+  `runkey_schtask_startup_persistence` tested `ParentImage`, but its registry
+  branch selects Sysmon 12-14, which have no parent field — the writer is
+  `Image`. So the filter could never exclude anything, and **every MSI install
+  tripped the rule**. It survived review, three backend conversions and a
+  playbook because the fixture held only the attacker-shaped event and the
+  generated negative used `EventID 999999`, which no rule can match.
+  Fixed by splitting the filter per branch shape. `tests/test_field_plausibility.py`
+  now asks, for every rule that negates a filter, whether **each** selected
+  branch can be rejected by at least one filter; `tools/generate_fixtures.py`
+  emits realistic installer negatives (an MSI writing a Run key, an MSI spawning
+  `schtasks`) so the negative fixture is a real test. Separately,
+  `tools/check_deployment_doc.py` ran `git checkout` on `conversion.json`
+  whenever its own commands dirtied it — after a rule edit that reverted a fresh
+  conversion result and reinstated a stamp that no longer matched, so the next
+  stage said "re-run `ci/convert_check.py`" and the gate then undid it. It now
+  restores the bytes captured before the run.
+- **Add the collection runbook the benign corpus never had.** `--classes` named
+  eight software classes and stopped; an operator had to invent the export step.
+  `tools/benign_corpus.py --collect <class>` prints the exact `wevtutil` /
+  PowerShell commands, the flat field schema the rules read, and the scoring
+  commands — verified by round-tripping the documented XML through `--from-xml`.
+- **Say what this repository is, and how many stages it runs.** The README opened
+  by describing itself relative to a request a reader cannot see, and claimed a
+  10-stage gate that had grown to 20. It now states the thing plainly and names
+  all 20. `docs/test-contract.md` corrected too, and `tests/test_doc_counts.py`
+  reads the count out of `ci/gate.sh` so the prose cannot drift again.
+- **Give every rule real tuning guidance.** Seven rules carried a single
+  `falsepositives` line ("SCCM, Intune, monitoring agents"), which tells an
+  analyst nothing about what will actually trip them. Expanded with the concrete
+  benign cases — OneDrive re-polling after a resume, VS Code's `_MEI` unpack,
+  pip resolving a mirror fleet, an MSI whose `CustomAction` writes Startup
+  directly.
+- **`tests/test_gap_register.py` asserted a hardcoded 37.** Adding the newest
+  gap failed the test for the wrong reason. It now derives the count from the
+  rows and requires the prose to agree with them.
+- **`test_filter_sections_can_actually_exclude_something` probed one event.**
+  A rule with three selections of different shapes was examined against whichever
+  candidate came back first, so a filter dead on one branch went unexamined as
+  long as it was live on another. It now probes every branch.
+
+
 ## Versioning
 
 `tools/release.py` derives the version from the date and the existing tags

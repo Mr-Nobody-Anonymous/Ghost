@@ -65,7 +65,10 @@
         "condition": "selection"
       },
       "falsepositives": [
-        "SCCM, Intune, monitoring agents"
+        "SCCM, Intune, monitoring agents",
+        "Patch-management agents registering a filter for a reboot-required query",
+        "Backup agents (Veeam, Windows Server Backup) registering a filter during the job",
+        "Lab or CI boxes creating filters as part of an exercise"
       ],
       "level": "low",
       "conversion": {
@@ -161,7 +164,10 @@
         "condition": "selection"
       },
       "falsepositives": [
-        "SCCM, Intune, monitoring agents"
+        "SCCM, Intune, monitoring agents",
+        "Software that registers a temporary consumer to watch for one event, then removes it",
+        "Backup agents (Veeam, Windows Server Backup) registering a filter during the job",
+        "Legacy AV products that still use permanent WMI subscriptions"
       ],
       "level": "medium",
       "conversion": {

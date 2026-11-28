@@ -4,7 +4,10 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "SCCM, Intune, monitoring agents"
+    "SCCM, Intune, monitoring agents",
+    "Software that registers a temporary consumer to watch for one event, then removes it",
+    "Backup agents (Veeam, Windows Server Backup) registering a filter during the job",
+    "Legacy AV products that still use permanent WMI subscriptions"
   ],
   "tuning_decision": "pending",
   "must_not_match": {

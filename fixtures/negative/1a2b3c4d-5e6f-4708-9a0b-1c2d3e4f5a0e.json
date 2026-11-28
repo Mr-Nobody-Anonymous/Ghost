@@ -4,7 +4,13 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "CDN clients, telemetry agents, DNS security probes"
+    "CDN clients, telemetry agents, DNS security probes",
+    "Browsers resolving the same CDN hostname across many processes at load",
+    "Package managers (pip, npm, Chocolatey) resolving a mirror fleet at start",
+    "DNS-over-HTTPS resolvers or VPN clients re-querying after a tunnel change",
+    {
+      "Any host behind a flaky link": "retries inflate the count without a beacon"
+    }
   ],
   "tuning_decision": "pending",
   "must_not_match": {
