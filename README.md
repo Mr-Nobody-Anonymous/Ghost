@@ -55,8 +55,8 @@ python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl
 python3 tools/export_navigator.py     # attack/navigator-layer.json for ATT&CK Navigator
 ```
 
-The gate passes today: 38/38 rules convert to Splunk, 32/38 to Elastic and Kusto
-(five correlations and one `fieldref` rule are Splunk-only in pySigma), every
+The gate passes today: 38/39 rules convert to Splunk, 32/39 to Elastic and Kusto
+(the correlations and one `fieldref` rule are Splunk-only in pySigma), every
 rule matches its generated fixture and stays silent on its negative fixture.
 
 What it does **not** prove: no event in this repository came off a machine.

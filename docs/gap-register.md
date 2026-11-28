@@ -14,7 +14,7 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | # | Gap | Why it was worse than "missing" | Now |
 |---|---|---|---|
 | 1 | **No rule could reach a backend** | Every rule carried `status: designed`, which pySigma rejects with `SigmaStatusError` *before* conversion. Conversion was never going to work, on any machine. | `status` is the Sigma field; the repo lifecycle moved to `lifecycle:` |
-| 2 | **The conversion gate could never pass** | It required `pysigma-backend-kql`, **404 on PyPI**. The gate was red for a reason nobody could fix, which trained everyone to ignore it. | Requires packages that exist; measures each rule's *declared* support and fails on over- and under-claiming: splunk 38/38, elastic 32/38, kusto 32/38 |
+| 2 | **The conversion gate could never pass** | It required `pysigma-backend-kql`, **404 on PyPI**. The gate was red for a reason nobody could fix, which trained everyone to ignore it. | Requires packages that exist; measures each rule's *declared* support and fails on over- and under-claiming: splunk 38/39, elastic 32/39, kusto 32/39 |
 | 3 | **Correlations were not Sigma** | `type: frequency` and `type: sequence` are not Sigma 2.1 correlation types. pySigma refused to load the files while the local evaluator "passed" them — two harnesses, neither agreeing with reality. | `event_count` / `temporal`; evaluator implements the real semantics |
 | 4 | **The ATT&CK pin validated itself** | It contained `T1533`, which is not a technique in ATT&CK at all, because the "pinned" list had been written from the rules. | Generated from the real STIX bundle by `tools/pin_attack_bundle.py`, hash-recorded, revocations surfaced |
 | 5 | **The pin was 6 releases stale** | Pinned to 14.1 while 20.1 was current. v20 **revoked `T1562`** and split Defense Evasion into `Stealth` and `Defense Impairment`, so six rules cited a dead ID and a dead tactic. | Upgraded to **20.1** (706 techniques, 15 tactics). `T1562.001` → `T1685`. Tactic lists are now **derived** from the bundle and a test fails on any pair the bundle does not support |
@@ -22,11 +22,11 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | 7 | **Fixtures held values no host emits** | Registry keys under `C:\Users\...\Software\`, URIs as file paths, `.bmp` as a directory name. | `detection-as-code/fieldtypes.py` field-type model; test-enforced |
 | 8 | **Rules that could not fire on the telemetry they claimed** | Sysmon `23` for a delete (it is 26), `TargetImage` = a DLL on Sysmon 10, double-escaped path literals, a URI rule requiring a path *and* a query. | All fixed, with a field-contract check that rejects these shapes by name |
 | 9 | **The Sysmon config enabled nothing useful** | Archive path did not exist; the ProcessAccess selection could never match; it claimed EID 24 was off while enabling it. | Rewritten, XML-parsed, hash-pinned in `baseline/manifest.json` |
-| 10 | **No deployable artifact** | 38 rules and nothing a SIEM could ingest. | `deploy/build_bundle.py` emits real pySigma query text + manifest, refuses stale conversion results |
+| 10 | **No deployable artifact** | 39 rules and nothing a SIEM could ingest. | `deploy/build_bundle.py` emits real pySigma query text + manifest, refuses stale conversion results |
 | 11 | **Silent skips** | A missing dependency made stages "pass". | 10-stage gate; an absent dependency is a failure |
 | 12 | **The staleness check could not fail** | `deploy/build_bundle.py` compared a wall clock, then a stamp derived only from the stored results. Both agreed with themselves. | Stamp is sha256 over the rule files *and* the outcomes; a test edits a rule and asserts the build exits 1 |
 | 13 | **Three checks warned instead of failing** | The query lint printed `warn` for a field that does not exist and exited 0; Suricata rules had no check at all; YARA was only compiled, never matched. | Unknown hunt fields fail; `pipeline/lint_suricata.py` parses signatures, SIDs and their ATT&CK metadata; YARA match logic is asserted both ways |
-| 14 | **37 rules declared suppression that nothing shipped** | `dedup_key`, `dedup_window` and `min_eval_interval` existed on every rule and were consumed by nothing, so a deploy was 38 queries with no dedup policy. | Suppression travels in the bundle manifest with a Splunk `alert.suppress` string; the arithmetic is validated |
+| 14 | **Every rule declared suppression that nothing shipped** | `dedup_key`, `dedup_window` and `min_eval_interval` existed on every rule and were consumed by nothing, so a deploy was 39 queries with no dedup policy. | Suppression travels in the bundle manifest with a Splunk `alert.suppress` string; the arithmetic is validated |
 | 15 | **`|re` selections produced unmatchable fixtures** | The generator ignored the modifier and rendered a `C:\` path for a `[D-Z]:` rule. | Pattern expansion *verified with `re.search`*, raising instead of emitting a value the rule cannot match |
 | 16 | **`Source: true` in a DNS fixture** | `|exists` returned the constraint literal, not telemetry. | Field-appropriate present values; a test rejects boolean leakage |
 | 17 | **An IOC with no detector** | `analysis/iocs.md` named `svc_update.exe`; no rule covered it. | `removable_media_spreader_write.yml` |
@@ -55,7 +55,7 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 
 | ID | Gap | What closing it costs | Where |
 |---|---|---|---|
-| G-01 | **No blind capture.** Every one of the 38 fixtures is `designed`: derived from its rule, so it proves consistency, not detection. | One lab VM, one Sysmon install, one run of `tools/capture_kit.py` per rule. Hours, not weeks. | `docs/maturity.md` gate 5 |
+| G-01 | **No blind capture.** Every one of the 39 fixtures is `designed`: derived from its rule, so it proves consistency, not detection. | One lab VM, one Sysmon install, one run of `tools/capture_kit.py` per rule. Hours, not weeks. | `docs/maturity.md` gate 5 |
 | G-02 | **No golden clean baseline.** Nobody has shown that the required EventIDs and fields even appear on an idle host, so a rule could be silently unmatched forever. | 24 h of a clean VM with the pinned config. This is the cheapest P0 and it unblocks G-01. | gate 4 |
 | G-03 | **No benign corpus run.** Precision is unknown. A rule that fires on every Chrome update is worse than no rule. | One business day per software class in `fixtures/benign/`. | gate 7 |
 | G-04 | **No volume measurement.** Every `metrics/ceilings.json` entry says `measured: false`. The ceilings are editorial budgets. | Needs G-02 + G-03. | gate 10 |
@@ -71,7 +71,7 @@ These cannot be fixed with a query. They need a sensor decision.
 | G-07 | Clipboard capture | Sysmon 24 exists but is a firehose and is off in this config. | Sysmon 24 with a scoped window, or EDR |
 | G-09 | Single-instance mutex | Handle telemetry is EDR-only. | EDR, or skip — very low signal |
 | G-10 | USB insertion, to pair with `autorun.inf` writes | Sysmon has no device-arrival event here. | Windows `DriverFrameworks-UserMode` 2003/2102, or EDR device control |
-| G-11 | Custom HTTP header retention | The C2 rules read `cs-header-X-Id`; most proxies drop unknown headers. **Unproven, not unknown-but-fine.** | Test one request through the actual proxy before trusting 4 of 38 rules |
+| G-11 | Custom HTTP header retention | The C2 rules read `cs-header-X-Id`; most proxies drop unknown headers. **Unproven, not unknown-but-fine.** | Test one request through the actual proxy before trusting 4 of 39 rules |
 
 ### P1b. Detectors that exist but are weaker than their description
 
@@ -96,7 +96,6 @@ These cannot be fixed with a query. They need a sensor decision.
 
 | ID | Gap | Detail |
 |---|---|---|
-| G-33 | **Fake Zeek** | Two blocks fenced as Zeek called functions Zeek does not have. Now labelled pseudocode with real log fields and a working `zeek-cut` command. |
 
 
 
@@ -159,6 +158,7 @@ because a paragraph was added.
 | G-37 | No upstream Sigma rule overlap check | `tools/sigmahq_overlap.py`: 3,164-rule pinned snapshot, family/product/technique/directed-coverage join; **no duplicate, no divergence**, two ancestor-path artefacts recorded as artefacts |
 | G-28 | Field-name mapping is vendor-specific | `telemetry/field-map.json` names all 36 fields a rule reads on Splunk, Elastic and Kusto; generated configs are checked in the gate. **Still not executed against a live platform** |
 | G-19 | `attack/cache/` is 55 MB and gitignored | `tools/verify_pins.py` separates *verified from bytes* from *derived-only*, and catches a review measured against a tree that has since moved |
+| G-33 | **Fake Zeek** | Two code blocks fenced as Zeek called functions Zeek does not have, so a reader who pasted them got a syntax error and no explanation. Now labelled pseudocode beside the real log fields, with a `zeek-cut` command that works |
 | G-27 | **No deployment procedure** | The repo could emit 39 queries and a manifest but said nothing about ingesting telemetry, mapping `EventCode`->`EventID`, or applying suppression. `docs/deployment.md` now covers all of it, and `tools/check_deployment_doc.py` verifies the half that can be verified here: every path it names exists, every count matches (`38/39` Splunk, `32/39` Elastic and Kusto, read from `conversion.json`), and the four commands that depend only on this repo are executed on every gate run. **The other half has never run** - installing Sysmon, loading saved searches, applying a SACL on Windows, producing an alert. That half is named, not implied |
 | G-08 | File and registry **reads** are unobserved until a SACL exists | `tools/build_sacl_script.py` derives the SACL targets from the rules that read a 4663 field - exactly one rule does, and the generator fails when that count and the targets disagree. `deploy/telemetry/set-sacls.ps1` backs up each ACL, verifies the SACL reads back, and has `-Rollback`. **The script has never been run on Windows** - there is no PowerShell here, and the tests check its shape rather than its effect |
 | G-18 | Triage steps are untested | `tools/generate_playbooks.py` + `response/check_playbooks.py`: all 39 playbooks verified against the fields their rules actually read. **Still not worked by a human** |

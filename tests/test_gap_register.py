@@ -17,6 +17,7 @@ REGISTER = ROOT / "docs" / "gap-register.md"
 CLOSED_WITH_EVIDENCE = {
     "G-08": "deploy/telemetry/set-sacls.ps1",
     "G-27": "tools/check_deployment_doc.py",
+    "G-33": "telemetry/data-sources.md",
     "G-12": "analytics/beacon_jitter.py",
     "G-13": "analytics/stage_join.py",
     "G-14": "ci/convert_check.py",

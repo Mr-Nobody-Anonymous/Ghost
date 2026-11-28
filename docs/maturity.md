@@ -5,8 +5,8 @@ Per technique, ten checks. A behavior is **covered** only at ten.
 | # | Gate | Evidence | State |
 |---|---|---|---|
 | 1 | Telemetry present | `telemetry/data-sources.md` names source, event, and field; `pipeline/field_contract.py` passes | **passing** for documented fields; 7 behaviors have no source at all |
-| 2 | Rule exists | `attack/matrix.md` lists a rule with a pinned `attack.tXXXX` tag | **passing** - 38 rules, 18 techniques, pin generated from the ATT&CK 20.1 bundle (706 techniques, 15 tactics) |
-| 3 | Rule compiles to the *deployed* backend | `ci/convert_check.py` compares each rule's declared support to real pySigma output | **passing but partial** - splunk 38/38, elastic 32/38, kusto 32/38 |
+| 2 | Rule exists | `attack/matrix.md` lists a rule with a pinned `attack.tXXXX` tag | **passing** - 39 rules, 18 techniques, pin generated from the ATT&CK 20.1 bundle (706 techniques, 15 tactics) |
+| 3 | Rule compiles to the *deployed* backend | `ci/convert_check.py` compares each rule's declared support to real pySigma output | **passing but partial** - splunk 38/39, elastic 32/39, kusto 32/39 |
 | 4 | Telemetry proven to emit | clean baseline capture contains the required event ID and fields | **missing** - no golden capture exists |
 | 5 | TP fixture captured blind | `fixtures/per_rule/<id>.json` status `captured`, written without reading the rule | **missing** - all 38 are `designed` |
 | 6 | TP evaluated against a real event | `detection-as-code/evaluate.py` matches and asserts field values | **passing on generated events only** |
@@ -19,7 +19,7 @@ Per technique, ten checks. A behavior is **covered** only at ten.
 
 | Capability | State |
 |---|---|
-| Rule authoring | have (38 rules, 18 techniques) |
+| Rule authoring | have (39 rules, 18 techniques) |
 | Schema validation | have - duplicate keys, Sigma status enum, repo lifecycle, required fields, ATT&CK pin, conversion claim |
 | Backend conversion | **passing** - measured per rule per backend, mismatches fail the gate |
 | Deployable bundle | have - `deploy/build_bundle.py` emits real query text for the backends a rule converts to |
@@ -52,7 +52,7 @@ evaluator implements the real semantics.
 
 `attack/matrix.md` ends with a per-tactic rule count against the pinned bundle.
 Three tactics have **zero** rules: exfiltration, impact, resource development.
-Command and Control has 11 of the 38 rules and Collection 3, which says what this
+Command and Control has 11 of the 39 rules and Collection 3, which says what this
 rule set is: a C2-artifact detector with persistence coverage, not a full
 lifecycle detector. That is a property of the implant being studied, and it is
 stated here rather than averaged away in a coverage percentage.

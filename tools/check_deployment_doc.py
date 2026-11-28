@@ -98,14 +98,23 @@ def stated_counts(text):
             claimed = int(match.group(1))
             if claimed != count:
                 out.append((f"{backend} conversion count", claimed, count))
-    # Only phrases that assert a TOTAL. "34 of the 39 rules are Windows-only" is
-    # a true subset and flagging it trains the reader to ignore this check.
-    for match in re.finditer(r"\b(\d+)/(\d+)\b", text):
-        claimed = int(match.group(2))
-        if claimed != n_rules:
-            out.append((match.group(0), claimed, n_rules))
-    for match in re.finditer(r"\b(\d+)\s+(?:rules|queries)\b(?!\s+to\b)", text):
+    # Only phrases that assert a TOTAL. "34 of the 39 rules are Windows-only"
+    # and "32 rules read EventID" are true subsets; flagging them trains the
+    # reader to ignore this check. A ratio counts only when its denominator is
+    # the rule total - `2003/2102` is a Windows event-ID pair, not a fraction.
+    for match in re.finditer(r"\b(\d+)/(\d{2})\b", text):
+        numerator, denominator = int(match.group(1)), int(match.group(2))
+        if denominator in (36, 37, 38, 39, 40) and denominator != n_rules:
+            out.append((match.group(0), denominator, n_rules))
+        elif denominator == n_rules and numerator > n_rules:
+            out.append((match.group(0), numerator, n_rules))
+    # "N rules" / "N queries" where N is not a plausible subset statement.
+    for match in re.finditer(r"\b(\d+)\s+(?:rules|queries)\b(?!\s+(?:to|have|are|"
+                             r"read|declare|convert)\b)", text):
         claimed = int(match.group(1))
+        before = text[max(0, match.start() - 24):match.start()].lower()
+        if any(word in before for word in ("of the", "of 3", "have ", "has ")):
+            continue        # explicit subset: "24 of the 39 rules"
         if claimed != n_rules:
             out.append((match.group(0), claimed, n_rules))
     for match in re.finditer(r"\b(one|two|three|four|five|six|seven|eight|nine|"
@@ -177,6 +186,18 @@ def main():
     for phrase, claimed, actual in stated_counts(text):
         problems.append(f"docs/deployment.md says {phrase!r}; the repository "
                         f"has {actual}")
+
+    # The same drift happens in every document that quotes a count, and it is
+    # always prose that reads correctly. Sweeping the rest costs nothing.
+    for other in ("README.md", "docs/maturity.md", "docs/assessment.md",
+                  "docs/gap-register.md", "docs/runbook.md"):
+        path = ROOT / other
+        if not path.is_file():
+            continue
+        for phrase, claimed, actual in stated_counts(
+                path.read_text(encoding="utf-8")):
+            problems.append(f"{other} says {phrase!r}; the repository has "
+                            f"{actual}")
 
     runs = run_commands()
     for run in runs:

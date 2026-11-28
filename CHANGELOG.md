@@ -435,6 +435,16 @@ check, so this entry is written after the fact from the commit log; the
   link to the cause. It now runs all three backends and restores the file via
   git; both facts are tests.
 
+- **Sweep the stale rule counts out of every document.** The 39th rule landed
+  two commits ago; six files still said 38, including a README line claiming
+  `38/38` conversions. All of them read correctly as prose, which is why they
+  survived. `tools/check_deployment_doc.py` now checks every document that
+  quotes a total, and it distinguishes a *total* ("38/38 rules") from a true
+  subset ("32 of the 39 rules evaluate against a null") - flagging subsets would
+  teach the reader to ignore the check.
+- **G-33 and G-08 were fixed but still listed as open**; the register's own test
+  caught both.
+
 ## Versioning
 
 `tools/release.py` derives the version from the date and the existing tags

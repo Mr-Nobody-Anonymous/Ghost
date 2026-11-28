@@ -50,6 +50,26 @@ class CountTest(unittest.TestCase):
         """34 of the 39 rules are Windows-only - true, and not a total."""
         self.assertEqual(D.stated_counts("34 of the 39 rules are Windows-only"), [])
 
+    def test_no_document_quotes_a_stale_rule_total(self):
+        """The 38-vs-39 drift was in six files at once. Each one read correctly.
+        A subset statement - "32 of the 39 rules" - is fine and must stay fine,
+        or people stop writing useful sentences to appease the checker."""
+        import subprocess
+        r = subprocess.run([sys.executable, str(ROOT / "tools" /
+                                                "check_deployment_doc.py")],
+                           capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertNotIn("says '", r.stderr)
+
+    def test_a_subset_sentence_is_not_flagged(self):
+        self.assertEqual(
+            D.stated_counts("32 of the 39 rules read EventID."), [])
+        self.assertEqual(
+            D.stated_counts("Windows 2003/2102 events cover device arrival"), [])
+
+    def test_a_stale_total_in_any_document_is_flagged(self):
+        self.assertTrue(D.stated_counts("The gate converts 38/38 rules."))
+
     def test_the_deployability_numbers_come_from_the_matrix(self):
         total, per_backend = D.deployability()
         self.assertEqual(total, len(list((ROOT / "sigma").rglob("*.yml"))))
