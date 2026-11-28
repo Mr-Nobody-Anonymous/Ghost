@@ -9,64 +9,68 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-echo "[0/16] environment matches requirements.txt (pinned pySigma + backends)"
+echo "[0/17] environment matches requirements.txt (pinned pySigma + backends)"
 python3 ci/check_env.py
 
-echo "[1/16] structural validation (schema, Sigma status, ATT&CK pin, conversion claims)"
+echo "[1/17] structural validation (schema, Sigma status, ATT&CK pin, conversion claims)"
 python3 detection-as-code/validate_rules.py
 
-echo "[2/16] python correctness lint (ruff: undefined names, closures, unused)"
+echo "[2/17] python correctness lint (ruff: undefined names, closures, unused)"
 python3 -m ruff check .
 
-echo "[3/16] rule and contract tests"
+echo "[3/17] rule and contract tests"
 python3 -m unittest discover -s tests -p 'test_*.py'
 
-echo "[4/16] rule evaluation against concrete fixtures (TP/FP/sequence/frequency)"
+echo "[4/17] rule evaluation against concrete fixtures (TP/FP/sequence/frequency)"
 python3 detection-as-code/evaluate.py
 
-echo "[5/16] fixtures match their rules (stale fixture = failing test)"
+echo "[5/17] fixtures match their rules (stale fixture = failing test)"
 python3 tools/generate_fixtures.py --check
 
-echo "[6/16] emulation: descriptors verify, and the beacon emulator feeds its rules"
+echo "[6/17] emulation: descriptors verify, and the beacon emulator feeds its rules"
 python3 emulation/emit_expected_events.py >/dev/null
 python3 emulation/verify_emulation.py --dry-run
 python3 tools/generate_fixtures.py --check
 
-echo "[7/16] analytics: beacon jitter, stage0->stage1 join, cross-source campaign"
+echo "[7/17] analytics: beacon jitter, stage0->stage1 join, cross-source campaign"
 python3 analytics/beacon_jitter.py --selftest
 python3 analytics/stage_join.py --selftest
 python3 analytics/campaign.py --selftest
 
-echo "[8/16] cross-platform joins for the correlations pySigma will not convert"
+echo "[8/17] cross-platform joins for the correlations pySigma will not convert"
 python3 deploy/build_joins.py --check
 
-echo "[9/16] telemetry field contract (every field a rule reads is documented)"
+echo "[9/17] telemetry field contract (every field a rule reads is documented)"
 python3 pipeline/field_contract.py --strict
 
-echo "[10/16] query + Suricata lint (hunt queries, signatures, SIDs, ATT&CK metadata)"
+echo "[10/17] query + Suricata lint (hunt queries, signatures, SIDs, ATT&CK metadata)"
 python3 pipeline/lint_queries.py
 python3 pipeline/lint_suricata.py
 
-echo "[11/16] tuning loop: observations valid, no rule claims tuning it cannot prove"
+echo "[11/17] tuning loop: observations valid, no rule claims tuning it cannot prove"
 python3 tools/tuning_log.py --check --render
 
-echo "[12/16] PENDING ratchet"
+echo "[12/17] release discipline: changelog covers every commit, digest is real"
+python3 tools/release.py --check-changelog
+
+echo "[13/17] PENDING ratchet"
 python3 ci/pending_ratchet.py main
 
-echo "[13/16] backend conversion: every rule's declared support is measured"
+echo "[14/17] backend conversion: every rule's declared support is measured"
 python3 ci/convert_check.py --backends splunk elastic kusto --quiet
 
-echo "[14/16] coverage + deployable bundle + package"
+echo "[15/17] coverage + deployable bundle + package"
 python3 tools/generate_matrix.py
 python3 tools/export_navigator.py
 python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl \
   --manifest dist/splunk-manifest.json
 python3 deploy/build_savedsearches.py
 
-echo "[15/16] saved searches: installable, disabled, uniquely named"
+echo "[16/17] saved searches: installable, disabled, uniquely named"
 python3 -m unittest tests.test_savedsearches
 
 mkdir -p dist
+python3 tools/release.py --json > dist/release.json
 tar --exclude=dist --exclude=__pycache__ --exclude='*.pyc' --exclude=attack/cache \
   -czf dist/detection-lab.tgz \
   README.md SCOPE.md CHANGELOG.md LICENSE SECURITY.md CODE_OF_CONDUCT.md \

@@ -275,3 +275,56 @@ self-referential version passed that test's inverse.
 
 No blind capture, no benign-corpus run, no measured volume, no sample. Nothing
 in this changelog changes that: every fixture still says `designed`.
+
+## Release 2026.11.27 (first recorded release)
+
+The first release with a derived version, a content digest and a changelog
+check that fails on an unrecorded commit. Every commit below predates that
+check, so this entry is written after the fact from the commit log; the
+`tools/release.py --check-changelog` gate keeps it from drifting again.
+
+- **Fix blocking defects, close harness gaps, add capture workflow** (`c5156e2`). Blocking defects: `status: designed` made every rule unloadable by pySigma, the conversion gate required a package that does not exist on PyPI, and correlations used types Sigma does not have. Adds the capture workflow.
+- **Upgrade ATT&CK pin to 20.1, derive tactics, make capture honest** (`a0ee5fa`). ATT&CK pin 14.1 -> 20.1. v20 revoked T1562 and split Defense Evasion into Stealth and Defense Impairment, so six rules cited a dead technique and a dead tactic. The pin is now generated from the STIX bundle with a hash, and tactic lists are derived from it.
+- **Content-address conversion results, make the gate idempotent** (`bf5d764`). Conversion results are content-addressed over the rule files and the outcomes, so the staleness check can fail. Two consecutive gate runs leave the tree clean.
+- **Register the stale-check defect and the idempotency fix** (`7cc4409`). Gap register records the stale-check defect and the idempotency fix.
+- **Make the advisory checks fail, lint Suricata, ship suppression** (`ed0c013`). Three checks that printed `warn` and exited 0 now fail: unknown hunt fields, Suricata signatures, YARA matching. Suppression travels in the bundle manifest.
+- **Fix the generator's regex and exists handling, add the missing spreader rule** (`38685fd`). Fixture generator expands `|re` patterns and verifies the expansion with `re.search` instead of emitting a value the rule cannot match. Adds `removable_media_spreader_write.yml`, which closes an IOC with no detector.
+- **Register the advisory-check, suppression and generator gaps** (`baeea67`). Gap register records the advisory-check, suppression and generator gaps.
+- **Add the deployment procedure the repo never had** (`a4dd3b0`). `docs/deployment.md`: telemetry prerequisites, field mapping per platform, suppression, and the enable-one-severity-band-at-a-time procedure.
+- **Find dead filters with a test, and kill the two that were there** (`b90f1a2`). A test now proves a filter disjoint from its selection can never fire; two rules had exactly that and are fixed.
+- **Add the measured assessment of the repository as a whole** (`48bb00d`). `docs/assessment.md`: what the repository can and cannot support, measured rather than asserted.
+- **Pin dependencies, verify the emulator against its rules, fix fake Zeek** (`5dfa06e`). Dependencies pinned in `requirements.txt` with a gate stage that fails on drift. The beacon emulator is verified against the rules it feeds, and fails when both OR branches diverge. Two fenced blocks that called nonexistent Zeek functions are relabelled pseudocode.
+- **Pin deps, test the defensive-only claim, export a Navigator layer** (`252dc71`). `tests/test_scope.py` enforces the defensive-only claim: no capability imports or calls, loopback-only emulators, no tracked binaries. `tools/export_navigator.py` scores evidence rather than rule count, so the layer renders at 1, not green.
+- **Declare and enforce the Python floor** (`369bb5d`). The Python floor is 3.9 because of `Path.is_relative_to`; it is declared in `ci/check_env.py`, enforced by a grammar parse test, and CI matrixes 3.9 and 3.11.
+- **Update the assessment with the pinned environment, emulator check and scope tests** (`7a69b58`). `docs/assessment.md` updated for the pinned environment, the emulator check, and the scope tests.
+- **Add correctness lint (G-35) and importable Splunk saved searches (G-29)** (`1b565e2`). ruff correctness rules (two real late-binding closure bugs and a `--verbose` flag that did nothing). `deploy/build_savedsearches.py` emits an installable `savedsearches.conf`: 33 searches, all disabled, five-minute schedule floor, suppression from each rule's own `dedup_key`.
+- **Close the alert-quality loop (G-30)** (`fab7c11`). `tuning/observations.csv` plus `tools/tuning_log.py`: the Markdown log is generated from the CSV, a measured events/day promotes a ceiling, and `lifecycle: tuned` without a `keep` observation fails the gate.
+- **Implement the beacon jitter job the docs said was not implemented (G-12)** (`400086a`). `analytics/beacon_jitter.py` implements the inter-arrival distribution job the docs called unimplemented: median and coefficient of variation per source/destination pair, with the rule's local-domain filter applied and the limitation asserted in a test.
+- **Add Sigma evaluator, concrete fixtures, config fixes, gate hardening, governance** (`16e07b8`). The evaluator that made rule testing possible offline: Sigma condition parsing, fixture evaluation, the Sysmon config rewrite, and the governance files (`SCOPE.md`, `SECURITY.md`, `CONTRIBUTING.md`).
+- **Build the joins that were only specified, and add the campaign layer (G-13, G-14, G-15)** (`265397d`). `deploy/build_joins.py` generates EQL, ES|QL and Kusto forms of the five correlations pySigma will not convert. `analytics/stage_join.py` implements the stage0->stage1 shared-parent join. `sigma/campaign_implant_sequence.yml` plus `analytics/campaign.py` add a 3-of-4 cross-source campaign.
+
+## 2026-11-28
+
+- **Add a pre-commit hook and a commit-message check** (`G-20`). `.githooks/`
+  runs ruff, the tests and the fixture-freshness check on any commit that
+  touches code, rules or fixtures, and rejects a subject like `fix` or `wip`.
+  Install with `git config core.hooksPath .githooks`. `tests/test_hooks.py`
+  executes the scripts with crafted input rather than inspecting them, because a
+  hook that is a readable file but not executable is worse than no hook.
+- **Derive a release identity from the tree** (`G-36`). `tools/release.py`
+  computes a content digest over 196 behaviour-relevant files, derives the
+  version from the date and existing tags, and fails the gate on any commit the
+  changelog does not mention. It found 19 unrecorded commits, all now written up
+  above. `dist/release.json` ships inside the bundle so a consumer can say what
+  they have.
+
+## Versioning
+
+`tools/release.py` derives the version from the date and the existing tags
+(`vYYYY.MM.DD.N`) and computes a **content digest**: sha256 over every
+behaviour-relevant tracked file. The digest, not the version string, is the real
+identity - two trees with the same digest have the same rules, fixtures, gate and
+tooling. `--verify <tag>` re-hashes the tagged tree and fails if it no longer
+matches.
+
+A version here is a name for an exact tree, not a claim about its quality.

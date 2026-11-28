@@ -41,7 +41,9 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | 26 | **Five correlations were dead ends on Elastic and Kusto** | `ci/convert_check.py` recorded `unsupported` and the docs said "build the join in the SIEM". A user on Elastic got five `unsupported` lines and a Markdown spec. | `deploy/build_joins.py` emits EQL `sequence`, ES|QL thresholds and Kusto joins from the rules; a gate stage keeps them current |
 | 27 | **The stage0 -> stage1 join was documented, not built** | `docs/sequence-rules.md` entry 3 said "not implemented". Two rules deployed and nothing connected them. | `analytics/stage_join.py`: shared-parent join on `ParentProcessGuid`, signature/window/skew checked, one chain and four near-misses in a fixture |
 | 28 | **No cross-source campaign rule** | Every correlation proved one ordering inside one source; nothing said "recon then tamper then persist then egress on one host". | `sigma/campaign_implant_sequence.yml` + `analytics/campaign.py`: 3-of-4 chains, with a 2-of-4 host in the fixture that must not fire |
-| 29 | **No saved-search packaging** | Importing 38 searches with schedules and suppression was manual. | `deploy/build_savedsearches.py` emits `dist/savedsearches.conf`: 33 searches, all disabled, 5m schedule floor, suppression from each rule's own `dedup_key`, unique id-suffix tags |
+| 29 | **No pre-commit hook** | The gate existed and nothing ran it before a commit; 19 commits landed with no local check. | `.githooks/pre-commit` (ruff + tests + fixture freshness) and `commit-msg`; both proven to reject bad input by `tests/test_hooks.py` |
+| 30 | **No release or change discipline** | `CHANGELOG.md` was hand-maintained and stale twice; no tags, no derived version, no artifact identity. | `tools/release.py`: content digest over 196 behaviour files, derived `vYYYY.MM.DD.N`, and `--check-changelog` fails on any commit the changelog does not mention. Found 19 unrecorded commits; all now written up |
+| 31 | **No saved-search packaging** | Importing 38 searches with schedules and suppression was manual. | `deploy/build_savedsearches.py` emits `dist/savedsearches.conf`: 33 searches, all disabled, 5m schedule floor, suppression from each rule's own `dedup_key`, unique id-suffix tags |
 
 ---
 
@@ -108,7 +110,7 @@ These cannot be fixed with a query. They need a sensor decision.
 | G-34 | **The defensive-only claim was prose** | SCOPE.md's central promise had no test. Closed: `tests/test_scope.py` fails on capability imports/calls, a non-loopback emulator, or a committed binary. |
 
 | G-35 | **No Python linter or formatter** | 4,500 lines with no `ruff`/`black` enforcement; style drift is invisible. | **Closed - ruff correctness rules in `pyproject.toml`, pinned in `requirements.txt`, gate stage 2; 31 initial findings, 2 real closure bugs fixed.** |
-| G-36 | **No release or change discipline** | `CHANGELOG.md` is hand-maintained and was stale twice. Nothing derives a version or tags a release. |
+| G-36 | **No release or change discipline** | `CHANGELOG.md` is hand-maintained and was stale twice. Nothing derives a version or tags a release. | **Closed - `tools/release.py` + `tests/test_release.py` (8 tests, including one that deletes a changelog line and asserts the check fails); gate stage 12; `dist/release.json` ships with the bundle.** |
 | G-37 | **No upstream Sigma rule overlap check** | This repo defines 38 rules; whether any duplicates an existing SigmaHQ rule (and diverges from it) is unknown. Citation and fork management are unhandled. |
 
 
@@ -121,7 +123,7 @@ These cannot be fixed with a query. They need a sensor decision.
 | G-21 | Captures are not reproducible | `tools/evtx_to_fixture.py` records the input hash, the config hash, and the evaluator's verdict, so a captured fixture is tied to the box it came from. Still no VM image hash. |
 | G-18 | `response/rules/*.md` triage steps are untested | Generated from metadata; no alert has been worked in the lab. |
 | G-19 | `attack/cache/` is 55 MB and gitignored | `--verify` prints MISSING until re-fetched. Correct, but it means CI cannot prove the pin hash without downloading. |
-| G-20 | No pre-commit hook | The gate exists but nothing runs it before a commit. |
+| G-20 | No pre-commit hook | The gate exists but nothing runs it before a commit. | **Closed - `.githooks/` + `tests/test_hooks.py` (6 tests; the hook is executed with crafted input, not inspected).** |
 
 ---
 
