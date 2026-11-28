@@ -23,6 +23,12 @@ python3 tools/verify_pins.py
 echo "[2/20] python correctness lint (ruff: undefined names, closures, unused)"
 python3 -m ruff check .
 
+echo "[2b/20] generate gitignored artifacts the tests read"
+# yara/corpus/ is generated, never committed (tests/test_scope.py forbids
+# binary artifacts). On a clean clone the corpus tests would fail on absence
+# rather than on content, so build it before anything reads it.
+python3 tools/build_yara_corpus.py
+
 echo "[3/20] rule and contract tests"
 python3 -m unittest discover -s tests -p 'test_*.py'
 
@@ -43,6 +49,12 @@ echo "[7/20] analytics: beacon jitter, stage0->stage1 join, cross-source campaig
 python3 analytics/beacon_jitter.py --selftest
 python3 analytics/stage_join.py --selftest
 python3 analytics/campaign.py --selftest
+
+echo "[7b/20] benign corpus harness: the precision arithmetic is right"
+# G-03 cannot close without a VM, but the measurement it depends on can be
+# proven correct here: a filtered event must score 0 and an unfiltered one must
+# score 1, or any precision number a lab produced would be meaningless.
+python3 tools/benign_corpus.py --classes > /dev/null
 
 echo "[8/20] cross-platform joins for the correlations pySigma will not convert"
 python3 deploy/build_joins.py --check

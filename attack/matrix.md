@@ -83,7 +83,7 @@ A technique is covered only when telemetry, rule, compilation, TP fixture, and F
 
 ## Deployability (generated from ci/convert_check.py)
 
-Conversion stamp: sha256:c6cd0017ab7c7519. A rule is only deployable where the backend is `supported`.
+Conversion stamp: sha256:dcccfe101a6282e1. A rule is only deployable where the backend is `supported`.
 
 | Rule | splunk | elastic | kusto |
 |---|---|---|---|

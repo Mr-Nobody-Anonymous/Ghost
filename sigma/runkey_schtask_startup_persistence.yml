@@ -45,11 +45,20 @@ detection:
       - '.lnk'
       - '.vbs'
       - '.ps1'
-  filter_installers:
+  # A registry event (12-14) carries the writing process in `Image`, not in
+  # `ParentImage` - Sysmon 12-14 have no parent field at all. Filtering the
+  # registry branch on `ParentImage` therefore never matched, and every MSI
+  # install tripped it. The process-creation branch (sel_schtask, EventID 1) is
+  # the one that has a parent.
+  filter_installers_registry:
+    Image|endswith:
+      - '\msiexec.exe'
+      - '\setup.exe'
+  filter_installers_process:
     ParentImage|endswith:
       - '\msiexec.exe'
       - '\setup.exe'
-  condition: (sel_runkey or sel_schtask or sel_startup) and not filter_installers
+  condition: (sel_runkey or sel_schtask or sel_startup) and not (filter_installers_registry or filter_installers_process)
 falsepositives:
   - Software installers and update mechanisms
   - IT deployment scripts

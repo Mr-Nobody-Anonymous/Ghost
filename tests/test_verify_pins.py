@@ -65,6 +65,9 @@ class AttackPinTest(unittest.TestCase):
 
 class SigmaPinTest(unittest.TestCase):
     def test_the_record_and_the_cache_agree_on_the_commit(self):
+        if not (ROOT / "attack" / "cache" / "sigmahq" / "index.json").is_file():
+            self.skipTest("no upstream snapshot cached; the gate reports that "
+                          "separately rather than failing unrelated tests")
         rows = V.check_sigmahq()
         self.assertTrue(rows)
         self.assertEqual(rows[0][1], "verified",
@@ -73,6 +76,9 @@ class SigmaPinTest(unittest.TestCase):
                          "exact failure G-19 names")
 
     def test_a_review_of_a_different_tree_is_caught(self):
+        if not (ROOT / "attack" / "cache" / "sigmahq" / "index.json").is_file():
+            self.skipTest("no upstream snapshot cached; the gate reports that "
+                          "separately rather than failing unrelated tests")
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)
             (root / "attack" / "cache" / "sigmahq").mkdir(parents=True)

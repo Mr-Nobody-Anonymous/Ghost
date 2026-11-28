@@ -7,6 +7,9 @@ prose fixes it — it needs a lab machine, a sample, or an hours-long capture.
 This file is the answer to "what is this missing". It is generated from a real
 audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 
+**Now: 38 gaps - 17 open, 21 closed.** The count is checked against
+the rows by `tests/test_gap_register.py`; it is not maintained by hand.
+
 ---
 
 ## Closed in this pass (the things that made every other claim unreliable)
@@ -55,9 +58,9 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 
 | ID | Gap | What closing it costs | Where |
 |---|---|---|---|
-| G-01 | **No blind capture.** Every one of the 39 fixtures is `designed`: derived from its rule, so it proves consistency, not detection. | One lab VM, one Sysmon install, one run of `tools/capture_kit.py` per rule. Hours, not weeks. | `docs/maturity.md` gate 5 |
+| G-01 | **No blind capture.** Every one of the 39 fixtures is `designed`: derived from its rule, so it proves consistency, not detection. `docs/technique-lab-guide.md` now supplies the missing half - mechanism, expected event IDs and a safe test for all 18 techniques - but no one has run it. | One lab VM, one Sysmon install, one run of `tools/capture_kit.py` per rule. Hours, not weeks. | `docs/maturity.md` gate 5 |
 | G-02 | **No golden clean baseline.** Nobody has shown that the required EventIDs and fields even appear on an idle host, so a rule could be silently unmatched forever. | 24 h of a clean VM with the pinned config. This is the cheapest P0 and it unblocks G-01. | gate 4 |
-| G-03 | **No benign corpus run.** Precision is unknown. A rule that fires on every Chrome update is worse than no rule. | One business day per software class in `fixtures/benign/`. | gate 7 |
+| G-03 | **No benign corpus run.** Precision is unknown. `tools/benign_corpus.py` now measures it from collected telemetry, and its arithmetic is tested in both directions (a filtered event scores 0, the same event unfiltered scores 1). The measurement works; the corpus does not exist. | One business day per software class in `fixtures/benign/`. | gate 7 |
 | G-04 | **No volume measurement.** Every `metrics/ceilings.json` entry says `measured: false`. The ceilings are editorial budgets. | Needs G-02 + G-03. | gate 10 |
 
 ### P1. Telemetry the implant needs and Windows does not log
@@ -155,6 +158,7 @@ because a paragraph was added.
 | G-34 | The defensive-only claim was prose | `tests/test_scope.py`: no binary artifacts, no offensive tooling, no live C2 |
 | G-35 | No Python linter or formatter | `ruff check .` as gate stage 2, configured to catch undefined names and closures rather than style |
 | G-36 | No release or change discipline | `tools/release.py`: version derived from the changelog, digest over content, every commit must be recorded |
+| G-38 | **A rule's installer filter was dead code.** `runkey_schtask_startup_persistence` negated a filter on `ParentImage` - but its `sel_runkey` branch selects Sysmon 12-14, registry events that carry the writing process in `Image` and have no parent field at all. The filter evaluated against a missing key, returned False, and the rule fired on **every MSI install**. It was reviewed, tested, converted to three backends, and covered by a playbook, because the fixture it was tested against contained only the attacker-shaped event and never the installer the filter existed for. | `tests/test_field_plausibility.py`: asserts that in any rule negating a filter, every selected branch can be rejected by at least one filter, and that a filter only counts if the branch's events can carry the field it tests. The fixture now carries both installer events as `must_not_match`, so the broken rule fails evaluation with `FP failed` and the fixed one passes. |
 | G-37 | No upstream Sigma rule overlap check | `tools/sigmahq_overlap.py`: 3,164-rule pinned snapshot, family/product/technique/directed-coverage join; **no duplicate, no divergence**, two ancestor-path artefacts recorded as artefacts |
 | G-28 | Field-name mapping is vendor-specific | `telemetry/field-map.json` names all 36 fields a rule reads on Splunk, Elastic and Kusto; generated configs are checked in the gate. **Still not executed against a live platform** |
 | G-19 | `attack/cache/` is 55 MB and gitignored | `tools/verify_pins.py` separates *verified from bytes* from *derived-only*, and catches a review measured against a tree that has since moved |

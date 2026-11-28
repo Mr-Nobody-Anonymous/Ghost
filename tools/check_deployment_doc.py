@@ -151,11 +151,19 @@ def referenced_paths(text):
         path = match.group(1).rstrip(".,;")
         if "*" in path or path.endswith("/"):
             continue
+        # `dist/` is build output: gitignored, absent on a clean clone, and
+        # produced by the commands the doc tells you to run. Requiring it would
+        # make the check pass only on a machine that had already done the work.
+        if path.startswith("dist/"):
+            continue
         found.add(path)
     return found
 
 
 def run_commands():
+    # Snapshot before any command runs. Capturing it afterwards would save the
+    # modified bytes and "restore" the change the commands just made.
+    original = (ROOT / "attack" / "conversion.json").read_bytes()
     results = []
     for cmd in RUNNABLE:
         r = subprocess.run([str(part) if part != "python3" else sys.executable
@@ -163,14 +171,19 @@ def run_commands():
                            cwd=ROOT, capture_output=True, text=True)
         results.append({"command": " ".join(cmd), "exit": r.returncode,
                         "tail": (r.stdout + r.stderr).strip().splitlines()[-1:]})
-    # Restore conversion.json: the run above rewrites it, and a checker that
-    # leaves the repository in a different state than it found it is not a
-    # checker.
-    guard = subprocess.run(["git", "status", "--porcelain", "attack/conversion.json"],
-                           cwd=ROOT, capture_output=True, text=True)
-    if guard.stdout.strip():
-        subprocess.run(["git", "checkout", "--", "attack/conversion.json"],
-                       cwd=ROOT, check=False)
+    # Put conversion.json back exactly as it was found - but only that.
+    #
+    # The original form ran `git checkout -- attack/conversion.json` whenever
+    # the file was dirty afterwards, which cannot tell "this checker's own
+    # command rewrote it" from "a rule changed and the record was correctly
+    # updated". After a rule edit it therefore reverted the fresh conversion
+    # result and reinstated a stamp that no longer matched the rules, and the
+    # next stage failed with "re-run ci/convert_check.py" - advice that the
+    # gate itself then undid. Restore the bytes captured before the run, so a
+    # dirty tree stays dirty for the reason it was dirty.
+    current = (ROOT / "attack" / "conversion.json").read_bytes()
+    if current != original:
+        (ROOT / "attack" / "conversion.json").write_bytes(original)
     for name in ("dist/_deploycheck.spl", "dist/_deploycheck.json"):
         target = ROOT / name
         if target.is_file():

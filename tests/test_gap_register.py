@@ -97,12 +97,22 @@ class RegisterTest(unittest.TestCase):
                 f"{gap} is open and its row does not say what it needs: {row[:160]}")
 
     def test_the_register_states_the_count_it_actually_has(self):
+        """The prose must quote the number the rows add up to.
+
+        The old form asserted `open_n + closed_n == 37`, which restates the
+        count it is supposed to check: adding a gap failed the test for the
+        wrong reason (a hardcoded 37, not a prose mismatch), and the fix was to
+        edit this line rather than the document. Derive the total, then require
+        the prose to agree with it.
+        """
         open_n = len([g for g, s in self.where.items()
                       if any(x and "Open" in x for x in s)])
-        closed_n = len(self.where) - open_n
-        self.assertEqual(open_n + closed_n, 37)
-        self.assertIn(f"{open_n}", self.text,
-                      "the prose count and the row count disagree")
+        total = len(self.where)
+        self.assertGreater(total, 0, "the register parsed as empty")
+        self.assertIn(str(total), self.text,
+                      f"the register has {total} rows; its prose never says so")
+        self.assertIn(f"{open_n} open", self.text,
+                      f"{open_n} gaps are open; the prose does not say so")
 
 
 if __name__ == "__main__":

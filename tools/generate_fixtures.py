@@ -163,6 +163,63 @@ def negative_event(doc, positive):
     return neg
 
 
+# A negative fixture only proves something if the rule could plausibly have
+# fired on it. `negative_event` above builds one by inverting the selections,
+# which produces an event that is *structurally* incompatible - EventID 999999
+# matches no rule. That is a test of the evaluator, not of the rule, and it is
+# how `runkey_schtask_startup_persistence` shipped an installer filter that
+# read `ParentImage` against registry events, which have no such field: nothing
+# ever handed it a real installer event to reject.
+#
+# The installer rows below are real telemetry shapes - an MSI writing a Run key,
+# an MSI spawning schtasks - that select on the same events the rule reads and
+# must be excluded by its `filter*` sections. They are appended for any rule
+# that writes a registry value or creates a scheduled task.
+INSTALLER_NEGATIVES = {
+    "registry": {
+        "EventID": 13,
+        "Image": "C:\\Windows\\System32\\msiexec.exe",
+        "ParentImage": "C:\\Windows\\explorer.exe",
+        "TargetObject": "HKLM\\Software\\Microsoft\\Windows"
+                        "\\CurrentVersion\\Run\\SevenZip",
+        "Details": "C:\\Program Files\\7-Zip\\7zFM.exe",
+        "_ts": 1,
+    },
+    "scheduled_task": {
+        "EventID": 1,
+        "Image": "C:\\Windows\\System32\\schtasks.exe",
+        "ParentImage": "C:\\Windows\\System32\\msiexec.exe",
+        "CommandLine": "schtasks.exe /Create /TN SevenZipUpdate /TR 7zFM.exe",
+        "_ts": 2,
+    },
+}
+
+
+def installer_negatives(doc):
+    """Realistic installer events a rule must reject, if it selects their shape.
+
+    Only events the rule's own selections accept are returned: an event the
+    rule cannot match would make the negative vacuous again, in the other
+    direction.
+    """
+    det = doc.get("detection", {}) or {}
+    picked = []
+    for key, event in INSTALLER_NEGATIVES.items():
+        if not any(evaluate.eval_detection(doc, event) for _ in [0]):
+            # `eval_detection` already applies the filters, so a clean False
+            # could mean "filtered" or "never selected". Ask the unfiltered
+            # question to tell them apart.
+            det_only = {k: v for k, v in det.items()
+                        if not k.startswith("filter") and k != "condition"}
+            if not det_only:
+                continue
+            if any(evaluate.match_selection(event, body)
+                   for name, body in det_only.items()
+                   if isinstance(body, dict) and name in str(det.get("condition", ""))):
+                picked.append(event)
+    return picked
+
+
 def campaign_events(doc, rules):
     """A campaign fixture is the union of its members' own verified sequences.
 
@@ -237,7 +294,10 @@ def build(rid, doc, rules):
         "sample_ref": "benign",
         "benign_lookalikes": doc.get("falsepositives", []),
         "tuning_decision": "pending",
-        "must_not_match": {"events": [negative_event(doc, events[0] if events else {})]},
+        "must_not_match": {
+            "events": [negative_event(doc, events[0] if events else {})]
+                      + installer_negatives(doc),
+        },
     }
     return pos, neg
 

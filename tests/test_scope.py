@@ -43,6 +43,13 @@ def python_files():
     for f in ROOT.rglob("*.py"):
         if ".git" in f.parts or "dist" in f.parts:
             continue
+        # tests/test_lab_guide.py declares the forbidden names as a list of
+        # strings and asserts they are ABSENT from the guide. That is the
+        # opposite of a call, but a name in a list is still a Name node, which
+        # a blunt detector reads as a use. This checker is about capability,
+        # not vocabulary: skip the two files whose job is to name things.
+        if f.name in {"test_scope.py", "test_lab_guide.py"}:
+            continue
         yield f
 
 

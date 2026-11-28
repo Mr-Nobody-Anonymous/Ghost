@@ -1,5 +1,5 @@
 {
-  "generated_utc": "sha256:c6cd0017ab7c7519",
+  "generated_utc": "sha256:dcccfe101a6282e1",
   "rules": 39,
   "backends": [
     "splunk",
