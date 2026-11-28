@@ -365,6 +365,17 @@ check, so this entry is written after the fact from the commit log; the
   `pipeline/field_contract.py` already proved every field a rule reads is
   documented; this proves every documented field has a name everywhere.
 
+- **Verify pins without downloading them** (`G-19`). The ATT&CK bundle and the
+  SigmaHQ snapshot are gitignored, so `--verify` said `MISSING` everywhere except
+  on the machine that fetched them. `tools/verify_pins.py` separates the two
+  claims that were being conflated: *verified from bytes* when the cache is
+  present and hashes correctly, and *derived-only* when it is not - because the
+  derived data (tactic list, technique list, snapshot commit) is small and
+  committed, and its digest still proves the repo is internally consistent.
+  What it now catches that nothing caught before: a review measured against one
+  upstream tree and still cited after the cache moved. `--strict` turns
+  "unhashed" into a failure for anyone who does have the caches.
+
 ## Versioning
 
 `tools/release.py` derives the version from the date and the existing tags

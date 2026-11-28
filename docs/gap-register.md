@@ -124,7 +124,7 @@ These cannot be fixed with a query. They need a sensor decision.
 | G-22 | No baseline capture has been taken | `tools/verify_baseline.py` now exists and says exactly what a capture is missing; the capture itself is still G-02. |
 | G-21 | Captures are not reproducible | `tools/evtx_to_fixture.py` records the input hash, the config hash, and the evaluator's verdict, so a captured fixture is tied to the box it came from. Still no VM image hash. |
 | G-18 | `response/rules/*.md` triage steps are untested | Generated from metadata; no alert has been worked in the lab. |
-| G-19 | `attack/cache/` is 55 MB and gitignored | `--verify` prints MISSING until re-fetched. Correct, but it means CI cannot prove the pin hash without downloading. |
+| G-19 | `attack/cache/` is 55 MB and gitignored | `--verify` prints MISSING until re-fetched, so CI could not prove the pin hash without downloading. | `tools/verify_pins.py` separates *verified from bytes* from *derived-only*: the derived data (tactic list, technique list, snapshot commit) is committed and its digest still proves internal consistency. It now catches a review measured against one upstream tree and cited after the cache moved. `--strict` fails on unhashed artifacts for anyone holding the caches. **The 55 MB still is not in Git** - that is the point, not a remaining defect. |
 | G-20 | No pre-commit hook | The gate exists but nothing runs it before a commit. | **Closed - `.githooks/` + `tests/test_hooks.py` (6 tests; the hook is executed with crafted input, not inspected).** |
 
 ---

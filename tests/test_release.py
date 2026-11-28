@@ -59,7 +59,7 @@ class ReleaseTest(unittest.TestCase):
         # Drop every line that mentions the most recent commit's subject.
         commits = self.tool.commits_since(None)
         latest = commits[0]
-        needle = (self.tool.release_note(latest) or latest["subject"]).split("(")[0][:40]
+        needle = self.tool.needle_for(latest)
         pruned = "\n".join(line for line in original.splitlines()
                            if needle.lower() not in line.lower())
         try:

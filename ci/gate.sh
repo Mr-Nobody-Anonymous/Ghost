@@ -14,6 +14,11 @@ python3 ci/check_env.py
 
 echo "[1/18] structural validation (schema, Sigma status, ATT&CK pin, conversion claims)"
 python3 detection-as-code/validate_rules.py
+# The pinned artifacts are gitignored, so a fresh clone cannot hash them. This
+# still fails when the derived data a pin is cited for no longer matches it -
+# the stale-review case - and says plainly when the bytes went unchecked.
+echo "       pins: recorded hashes still describe the committed derived data"
+python3 tools/verify_pins.py
 
 echo "[2/18] python correctness lint (ruff: undefined names, closures, unused)"
 python3 -m ruff check .

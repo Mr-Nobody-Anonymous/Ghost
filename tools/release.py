@@ -124,6 +124,17 @@ def release_note(commit):
     return m.group(1).strip() if m else None
 
 
+def needle_for(commit):
+    """The string that must appear in CHANGELOG.md for this commit.
+
+    One definition, because the check and its own regression test disagreed:
+    the check stripped whitespace before truncating and the test did not, so a
+    subject whose 40th character is a space produced two different needles and
+    the test pruned nothing.
+    """
+    return (release_note(commit) or commit["subject"]).split("(")[0].strip()[:40]
+
+
 def changelog_text():
     path = ROOT / "CHANGELOG.md"
     return path.read_text(encoding="utf-8") if path.is_file() else ""
@@ -141,8 +152,8 @@ def coverage(tag=None):
     covered, uncovered = [], []
     for c in commits:
         note = release_note(c)
-        needle = note or c["subject"]
-        if needle and needle.split("(")[0].strip()[:40].lower() in text.lower():
+        needle = needle_for(c)
+        if needle and needle.lower() in text.lower():
             covered.append({**c, "note": note})
         else:
             uncovered.append({**c, "note": note})
