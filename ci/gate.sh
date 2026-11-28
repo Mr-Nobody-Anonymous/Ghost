@@ -47,12 +47,17 @@ python3 analytics/campaign.py --selftest
 echo "[8/19] cross-platform joins for the correlations pySigma will not convert"
 python3 deploy/build_joins.py --check
 
-echo "[9/19] telemetry field contract (every field a rule reads is documented)"
+echo "[9/19] telemetry: field contract, platform field map, and SACL coverage"
+echo "       a 4663 rule with no SACL cannot fire, and looks quiet"
 python3 pipeline/field_contract.py --strict
 # ...and every documented field has a name on every platform. A rule reading
 # EventID on Splunk, where it is EventCode, matches a null and looks quiet.
 echo "       field map: generated platform configs match the map"
 python3 pipeline/build_field_map.py --check
+# Security 4663 only exists when an object carries a SACL with an Audit ACE.
+# A rule reading it on a host without one is not quiet, it is incapable of
+# firing - and nothing in the telemetry distinguishes the two.
+python3 tools/build_sacl_script.py --check
 
 echo "[10/19] query + Suricata lint (hunt queries, signatures, SIDs, ATT&CK metadata)"
 python3 pipeline/lint_queries.py

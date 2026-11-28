@@ -400,6 +400,24 @@ check, so this entry is written after the fact from the commit log; the
   including the DNS rules. **Still not worked by a human** - followable is not
   followed, and every file says so.
 
+- **Generate the SACL script that 4663 rules depend on** (`G-08`).
+  `telemetry/auditpol.md` said "use Set-Acl / subinacl / your EDR's tooling" -
+  three options and no command, for a step that has to be exact or the rule
+  never fires and never says why. `tools/build_sacl_script.py` now derives the
+  targets from the rules that actually read a 4663 field and emits
+  `deploy/telemetry/set-sacls.ps1`: backup, apply, read the SACL back to prove
+  it stuck, `-Rollback` to undo. Writing it found that the hand-written list had
+  four targets and **one** was needed - two served rules that read Sysmon 11 or
+  only mentioned 4663 in prose, and `C:\Users` would have produced millions of
+  events a day for a rule that was never listening. Also `verify_baseline.py
+  --repin`, because the manifest hash had no regeneration path and the only
+  alternative was pasting a new hash until the drift test went green.
+- **Keep the gap register's own arithmetic honest** (`tests/test_gap_register.py`).
+  Twice a row was rewritten to describe a fix while staying in the Open section,
+  so the document read as both. The test fails on a gap listed twice, a gap that
+  vanished, a "closed" gap with no code behind it, and an "open" gap whose row
+  does not say what it is waiting for. It immediately caught four wrong rows.
+
 ## Versioning
 
 `tools/release.py` derives the version from the date and the existing tags

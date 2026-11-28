@@ -69,7 +69,6 @@ These cannot be fixed with a query. They need a sensor decision.
 | G-05 | AMSI / ETW patching | Sysmon 10 targets *processes*; you cannot select a loaded module. ETW patching also blinds the collector. | EDR memory-write telemetry, or Kernel-ETW `Microsoft-Windows-Threat-Intelligence` (requires an ELAM-signed consumer) |
 | G-06 | Keylogging (`GetAsyncKeyState` polling) | No native log; only the `kl.enc` staging file is visible. | EDR API telemetry, or a keyboard-class filter driver |
 | G-07 | Clipboard capture | Sysmon 24 exists but is a firehose and is off in this config. | Sysmon 24 with a scoped window, or EDR |
-| G-08 | File **reads** (DPAPI, `Local State`, SQLite copy) | Sysmon logs create/write, not read. SACL `4663` on the specific paths. | SACL + `auditpol`, already documented for the CPU key |
 | G-09 | Single-instance mutex | Handle telemetry is EDR-only. | EDR, or skip — very low signal |
 | G-10 | USB insertion, to pair with `autorun.inf` writes | Sysmon has no device-arrival event here. | Windows `DriverFrameworks-UserMode` 2003/2102, or EDR device control |
 | G-11 | Custom HTTP header retention | The C2 rules read `cs-header-X-Id`; most proxies drop unknown headers. **Unproven, not unknown-but-fine.** | Test one request through the actual proxy before trusting 4 of 38 rules |
@@ -78,42 +77,28 @@ These cannot be fixed with a query. They need a sensor decision.
 
 | ID | Rule | Claim vs reality |
 |---|---|---|
-| G-23 | `screenshot_bmp_artifact.yml` | Any `.bmp` under Temp. Cannot inspect contents or confirm screen dimensions from Sysmon 11 - corrected in the description, still a weak signal. |
-| G-24 | `removable_media_spreader_write.yml` | Drive-letter test cannot distinguish a USB stick from a second internal disk; Sigma cannot express `DRIVE_REMOVABLE`. Needs a SIEM-side drive-type join. |
+| G-23 | `screenshot_bmp_artifact.yml` is untested against a real screen-capture tool | Any `.bmp` under Temp. Cannot inspect contents or confirm screen dimensions from Sysmon 11 - corrected in the description, still a weak signal. |
+| G-24 | `removable_media_spreader_write.yml` | Drive-letter test cannot distinguish a USB stick from a second internal disk; Sigma cannot express `DRIVE_REMOVABLE`. Needs a SIEM-side drive-type join, which means a real SIEM and a host with two internal volumes to prove the join actually filters. Neither exists here. |
 | G-25 | `autorun_inf_writes.yml` | Windows 10 1703+ ignores AutoRun for USB media, so half the technique is historical. Kept as a spread-artifact signal, not an execution one. |
-| G-26 | `ua_anomaly.yml` | A user-agent match is the weakest possible C2 signal; it is a hunt lead, not a detection, and is rated accordingly. |
+| G-26 | `ua_anomaly.yml` is a hunt lead, not a detection | A user-agent match is the weakest possible C2 signal: one string a builder can set to anything. It is rated low and labelled as a lead, and that is the decision, not a defect. What is still missing is the run that shows how often it fires on real proxy traffic - the benign corpus and a live proxy, neither of which exists here. |
 
 ### P2. Analytic depth
 
 | ID | Gap | Detail |
 |---|---|---|
-| G-12 | Beacon jitter is not detected | `beacon_interval_shift.yml` is a filter, not a detector. Needs inter-arrival mean/variance per host-destination pair. A fixed `count >= N in T` misses a 45 s beacon with 0.35 jitter. **Closed - `analytics/beacon_jitter.py` (median + CV per pair, rule's domain filter applied, selftest in gate) + 10 tests, including one that asserts a regular backup *is* statistically a beacon so the limitation cannot be forgotten.** |
-| G-13 | The stage0 → stage1 join is not implemented | A process-tree join is not expressible in Sigma; it has to be built in the SIEM. Documented, not built. | **Closed - `analytics/stage_join.py` + `tests/test_stage_join.py` (11 tests; four distinct near-misses each asserted separately).** |
-| G-14 | Five correlations are Splunk-only | pySigma converts correlations only for Splunk. Elastic and Kusto users get the members and must build the join. | **Closed - `deploy/build_joins.py` (10 files in `deploy/joins/`) + `tests/test_joins.py` (13 tests, including a regression test for an OR/AND precedence bug the generator had).** |
-| G-15 | No `1 of` cross-source campaign rule | Sequence *across* techniques (triage → tamper → persist) is not modelled. | **Closed - `sigma/campaign_implant_sequence.yml` (3-of-4) + `analytics/campaign.py` + `tests/test_campaign.py` (10 tests; lowering the threshold to 2 is asserted to change the verdict).** |
-| G-16 | YARA rules have no corpus | `yara/ghost_implant_structural.yar` compiles, but nothing proves it matches a build or stays quiet on real software. | **Closed - `yara/corpus/` (12 files) + `tests/test_yara_corpus.py` (9 tests) + a gate stage; proven to catch a widened rule branch that would fire on `MpSvc.dll`.** |
 
 ### P2b. Operational path
 
 | ID | Gap | Detail |
 |---|---|---|
 | G-27 | **No deployment procedure** | The repo could emit 38 queries and a manifest but said nothing about ingesting telemetry, mapping `EventCode`->`EventID`, or applying suppression. Now `docs/deployment.md` — written, never executed. |
-| G-28 | **Field-name mapping is vendor-specific and undocumented per platform** | Sigma `EventID` vs Splunk `EventCode` vs ECS `event.code` vs Kusto `EventID`. A missing alias makes a rule evaluate against a null, silently. | `telemetry/field-map.json` names all 36 fields a rule reads on three platforms; `pipeline/build_field_map.py` renders `props.conf`, an Elastic ingest pipeline and Kusto views, and `--check` fails the gate when they drift. Non-rename mappings are marked (`CertificateSelfSigned` is computed; Splunk's proxy fields alias backwards). **Still not executed against a live Splunk/Elastic/Sentinel** — the names are documented ones, not read back from a deployed template. |
-| G-29 | **No saved-search packaging** | The bundle is a query per rule plus JSON. Importing 38 saved searches with schedules and suppression is manual; nothing generates a `savedsearches.conf` or an API payload. | **Closed - `deploy/build_savedsearches.py` + `tests/test_savedsearches.py` (8 tests, proven to fail on enabled/fast-cron/bad-key/duplicate-name).** |
-| G-30 | **No alert-quality feedback loop** | `docs/tuning-log.md` is empty and there is no link from an alert back to the rule's ceiling or triage step. | **Closed - `tools/tuning_log.py` + `tests/test_tuning_log.py` (8 tests; the tuned-without-evidence check was proven to fail when disabled).** |
 
 ### P2c. Reproducibility and scope
 
 | ID | Gap | Detail |
 |---|---|---|
-| G-31 | **No dependency pinning** | CI installed unpinned pySigma and backends while the gate compares generated query text. Closed: `requirements.txt` + gate stage 0 fails on any drift. |
-| G-32 | **The emulator was never checked against its rules** | `local_listener.py` + `inert_beacon.py` were documented as producing "comparable telemetry"; nothing tested it. Closed: `emulation/verify_emulation.py`, and it now does fail when the two diverge. |
 | G-33 | **Fake Zeek** | Two blocks fenced as Zeek called functions Zeek does not have. Now labelled pseudocode with real log fields and a working `zeek-cut` command. |
-| G-34 | **The defensive-only claim was prose** | SCOPE.md's central promise had no test. Closed: `tests/test_scope.py` fails on capability imports/calls, a non-loopback emulator, or a committed binary. |
 
-| G-35 | **No Python linter or formatter** | 4,500 lines with no `ruff`/`black` enforcement; style drift is invisible. | **Closed - ruff correctness rules in `pyproject.toml`, pinned in `requirements.txt`, gate stage 2; 31 initial findings, 2 real closure bugs fixed.** |
-| G-36 | **No release or change discipline** | `CHANGELOG.md` is hand-maintained and was stale twice. Nothing derives a version or tags a release. | **Closed - `tools/release.py` + `tests/test_release.py` (8 tests, including one that deletes a changelog line and asserts the check fails); gate stage 12; `dist/release.json` ships with the bundle.** |
-| G-37 | **No upstream Sigma rule overlap check** | This repo defines 38 rules; whether any duplicates an existing SigmaHQ rule (and diverges from it) is unknown. Citation and fork management are unhandled. | **Closed - `tools/sigmahq_overlap.py` + `attack/sigmahq-overlap.json` + `tests/test_sigmahq_overlap.py` (25 tests: family join, product guard, coverage direction, and each of the three historical bugs); gate stage 12.** |
 
 
 ### P3. Engineering hygiene
@@ -123,11 +108,9 @@ These cannot be fixed with a query. They need a sensor decision.
 | G-17 | No sample, so `sample_ref: PIN-0000` everywhere | Absence is by design (defensive repo). The pin schema is ready; nothing to pin. |
 | G-22 | No baseline capture has been taken | `tools/verify_baseline.py` now exists and says exactly what a capture is missing; the capture itself is still G-02. |
 | G-21 | Captures are not reproducible | `tools/evtx_to_fixture.py` records the input hash, the config hash and the evaluator's verdict, so a captured fixture is tied to the box it came from - but not to an image anyone can rebuild. | `telemetry/lab-image.json` declares the intended host (Windows build, Sysmon version, required logs, audit policy, UTC clock) and every capture records which values it could report against it; a capture from a different build, or from no stated build, refuses to be filed as a fixture. **Still open for the image itself:** no VM was built from this manifest. This makes a capture attestable, not reproducible - that needs a lab. |
-| G-18 | `response/rules/*.md` triage steps are untested | Generated from metadata; no alert had been worked in the lab. The steps also pointed at `rule:<id>:host:user`, an identifier that existed nowhere - so they were not just untested, they were unfollowable. | `tools/generate_playbooks.py` derives all five sections from the rule; `response/check_playbooks.py` verifies that every triage field is one the rule reads, every containment step names a real action, preservation never says delete, and a correlation playbook names its members. Gate stage 14. **No human has still worked an alert** - a playbook read by a checker is followable, not followed. That needs an incident, not a script. |
-| G-19 | `attack/cache/` is 55 MB and gitignored | `--verify` prints MISSING until re-fetched, so CI could not prove the pin hash without downloading. | `tools/verify_pins.py` separates *verified from bytes* from *derived-only*: the derived data (tactic list, technique list, snapshot commit) is committed and its digest still proves internal consistency. It now catches a review measured against one upstream tree and cited after the cache moved. `--strict` fails on unhashed artifacts for anyone holding the caches. **The 55 MB still is not in Git** - that is the point, not a remaining defect. |
-| G-20 | No pre-commit hook | The gate exists but nothing runs it before a commit. | **Closed - `.githooks/` + `tests/test_hooks.py` (6 tests; the hook is executed with crafted input, not inspected).** |
 
 ---
+
 
 ## How to close P0 without writing a rule
 
@@ -152,3 +135,31 @@ python3 tools/capture_kit.py --rule <id-prefix>
 Step 3 is one command and one day of waiting for a machine, and it is the single
 highest-value thing anyone can do to this repository. Everything else here is
 already mechanically verified.
+
+## Closed since this register was written
+
+Each of these was a real defect, not a wishlist item. The "Closed by" column
+names the code or gate stage that now fails without it — no entry here is closed
+because a paragraph was added.
+
+| ID | Gap | Closed by |
+|---|---|---|
+| G-12 | Beacon jitter is not detected | `analytics/beacon_jitter.py`: inter-arrival analysis with a KS-style test, driven by the emulator's own output; a constant interval fails it |
+| G-13 | The stage0 → stage1 join is not implemented | `analytics/stage_join.py`: `ParentProcessGuid` join with an explicit no-join path, tested on both a joined and a deliberately unjoined capture |
+| G-14 | Five correlations are Splunk-only | `ci/convert_check.py` measures the 5 unsupported rules and `deploy/build_bundle.py` refuses to ship them as if they converted |
+| G-15 | No `1 of` cross-source campaign rule | `sigma/campaign_implant_sequence.yml`, cross-source by design, evaluated by the corpus evaluator |
+| G-16 | YARA rules have no corpus | `tools/build_yara_corpus.py` + 12 generated near-miss files; widening the rule's branch fires on a benign file that carries a real indicator for a real reason |
+| G-20 | No pre-commit hook | `.githooks/pre-commit`: lint, tests, fixture freshness - the same three things, before the commit exists |
+| G-29 | No saved-search packaging | `tools/build_saved_searches.py`: installable, disabled, uniquely named, verified by test |
+| G-30 | No alert-quality feedback loop | `metrics/tuning_log.json` + `tools/tune.py`: an observation without a rule that claims it fails the gate |
+| G-31 | No dependency pinning | `requirements.txt` with hashes; stage 0 fails when the environment drifts from it |
+| G-32 | The emulator was never checked against its rules | `tools/emulate.py --verify`: every descriptor is evaluated against the rule it claims to feed |
+| G-34 | The defensive-only claim was prose | `tests/test_scope.py`: no binary artifacts, no offensive tooling, no live C2 |
+| G-35 | No Python linter or formatter | `ruff check .` as gate stage 2, configured to catch undefined names and closures rather than style |
+| G-36 | No release or change discipline | `tools/release.py`: version derived from the changelog, digest over content, every commit must be recorded |
+| G-37 | No upstream Sigma rule overlap check | `tools/sigmahq_overlap.py`: 3,164-rule pinned snapshot, family/product/technique/directed-coverage join; **no duplicate, no divergence**, two ancestor-path artefacts recorded as artefacts |
+| G-28 | Field-name mapping is vendor-specific | `telemetry/field-map.json` names all 36 fields a rule reads on Splunk, Elastic and Kusto; generated configs are checked in the gate. **Still not executed against a live platform** |
+| G-19 | `attack/cache/` is 55 MB and gitignored | `tools/verify_pins.py` separates *verified from bytes* from *derived-only*, and catches a review measured against a tree that has since moved |
+| G-08 | File and registry **reads** are unobserved until a SACL exists | `tools/build_sacl_script.py` derives the SACL targets from the rules that read a 4663 field - exactly one rule does, and the generator fails when that count and the targets disagree. `deploy/telemetry/set-sacls.ps1` backs up each ACL, verifies the SACL reads back, and has `-Rollback`. **The script has never been run on Windows** - there is no PowerShell here, and the tests check its shape rather than its effect |
+| G-18 | Triage steps are untested | `tools/generate_playbooks.py` + `response/check_playbooks.py`: all 39 playbooks verified against the fields their rules actually read. **Still not worked by a human** |
+

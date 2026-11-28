@@ -100,13 +100,47 @@ def check_document(doc, by_eid, all_events, rules):
     return present, missing, absent
 
 
+def repin():
+    """Recompute the manifest hashes from the repo copies.
+
+    The manifest was hand-maintained: editing `telemetry/auditpol.md` produced a
+    drift failure whose only fix was to paste a new hash in by hand. That is a
+    one-line change with no source of truth, and the natural shortcut - update
+    the hash until the test passes - turns the pin into a rubber stamp. This
+    makes the intended action explicit and leaves `captured: false` alone, so
+    re-pinning a config can never silently claim a baseline exists.
+    """
+    import hashlib
+    manifest_path = ROOT / "baseline" / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["sysmon_config_sha256"] = hashlib.sha256(
+        (ROOT / "telemetry" / "sysmon-config.xml").read_bytes()).hexdigest()
+    manifest["auditpol_doc_sha256"] = hashlib.sha256(
+        (ROOT / "telemetry" / "auditpol.md").read_bytes()).hexdigest()
+    manifest["captured"] = False
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n",
+                             encoding="utf-8")
+    print(f"repinned baseline/manifest.json: sysmon "
+          f"{manifest['sysmon_config_sha256'][:16]}, auditpol "
+          f"{manifest['auditpol_doc_sha256'][:16]} (captured=false)")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--input", required=True, help="wevtutil /f:xml output")
+    ap.add_argument("--input", help="wevtutil /f:xml output")
+    ap.add_argument("--repin", action="store_true",
+                    help="recompute baseline/manifest.json from the repo copies "
+                         "after a deliberate config change (does not need --input)")
     ap.add_argument("--json", help="write a machine-readable report here")
     ap.add_argument("--allow-missing", action="store_true",
                     help="exit 0 even when rules are unmatched (still reports)")
     args = ap.parse_args()
+
+    if args.repin:
+        return repin()
+    if not args.input:
+        ap.error("--input is required unless --repin is given")
 
     events = parse_events(pathlib.Path(args.input).read_text(encoding="utf-8", errors="replace"))
     if not events:
