@@ -1,7 +1,8 @@
 title: Scheduled Task Created at Logon by Unusual Parent
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a02
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a02:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: schtasks /Create /SC ONLOGON invoked by a non-installer parent process.
 author: ghost-detection-lab
 date: 2026-11-27
@@ -12,7 +13,10 @@ min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
 tags: [attack.t1053.005]
-tactics: [attack.persistence]
+tactics:
+  - attack.execution
+  - attack.persistence
+  - attack.privilege-escalation
 references:
   - https://attack.mitre.org/techniques/T1053.005/
   - inventory.md
@@ -29,4 +33,8 @@ detection:
   condition: selection and not filter_installer
 falsepositives: [software deployment, monitoring agent installation]
 level: high
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a02.json

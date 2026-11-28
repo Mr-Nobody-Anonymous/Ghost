@@ -1,0 +1,21 @@
+{
+  "fixture_id": "NF-9e0d4b71",
+  "rule_id": "9e0d4b71-6c25-4f38-b7a9-2d5e8c1f0a63",
+  "status": "designed",
+  "sample_ref": "benign",
+  "benign_lookalikes": [
+    "SCCM, Intune, monitoring agents",
+    "Software that registers a temporary consumer to watch for one event, then removes it",
+    "Backup agents (Veeam, Windows Server Backup) registering a filter during the job",
+    "Legacy AV products that still use permanent WMI subscriptions"
+  ],
+  "tuning_decision": "pending",
+  "must_not_match": {
+    "events": [
+      {
+        "_ts": 0,
+        "EventID": 999999
+      }
+    ]
+  }
+}

@@ -1,8 +1,14 @@
-title: Unsigned Rewrite of Executable in Install Directory
+title: Executable Overwritten in a User-Writable Install Directory
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a10
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a10:host:target"
-status: designed
-description: An unsigned process overwrites an existing executable in a user-writable install directory.
+status: experimental
+lifecycle: designed
+description: >
+  A new executable is written over an existing one inside a per-user install
+  location, the shape of a self-update that could just as easily replace the
+  binary with attacker code. Targets are limited to directories a user owns;
+  Program Files is excluded because a standard user cannot write it and the
+  resulting rule only produced noise.
 author: ghost-detection-lab
 date: 2026-11-27
 sample_ref: PIN-0000
@@ -12,7 +18,8 @@ min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
 tags: [attack.t1105]
-tactics: [attack.command-and-control]
+tactics:
+  - attack.command-and-control
 references:
   - https://attack.mitre.org/techniques/T1105/
   - inventory.md
@@ -23,9 +30,23 @@ detection:
   selection:
     EventID: 11
     TargetFilename|endswith: '.exe'
-    TargetFilename|contains: ['\AppData\Local\', '\Program Files (x86)\']
-  filter_signed:
-    Image|endswith: ['\msiexec.exe', '\setup.exe']
-  condition: selection and not filter_signed
-falsepositives: [legitimate updaters, portable app self-update]
+    TargetFilename|contains:
+      - '\AppData\Local\Programs\'
+      - '\AppData\Roaming\'
+      - '\AppData\Local\'
+  filter_packagers:
+    Image|endswith:
+      - '\msiexec.exe'
+      - '\setup.exe'
+      - '\TrustedInstaller.exe'
+  filter_signed_writer:
+    Signature: 'Microsoft Windows'
+  condition: selection and not filter_packagers and not filter_signed_writer
+falsepositives:
+  - Portable application self-updaters (VS Code, Discord, Slack)
+  - Per-user MSI and Squirrel installers
 level: medium
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported

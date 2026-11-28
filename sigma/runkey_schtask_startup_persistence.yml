@@ -1,7 +1,8 @@
 title: Run Key, Scheduled Task, or Startup Folder Persistence
 id: b6d4a2f8-1c07-4e93-9a55-7f0e2b8c6d41
 dedup_key: "rule:b6d4a2f8-1c07-4e93-9a55-7f0e2b8c6d41:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: >
   Covers the common persistence layers: registry Run key,schtasks /Create, and
   a script dropped into the user Startup folder. Correlate with a parent process
@@ -14,7 +15,10 @@ dedup_window: "5m"
 min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
-tactics: [attack.persistence]
+tactics:
+  - attack.execution
+  - attack.persistence
+  - attack.privilege-escalation
 tags: [attack.t1547.001, attack.t1053.005]
 logsource:
   product: windows
@@ -41,15 +45,28 @@ detection:
       - '.lnk'
       - '.vbs'
       - '.ps1'
-  filter_installers:
+  # A registry event (12-14) carries the writing process in `Image`, not in
+  # `ParentImage` - Sysmon 12-14 have no parent field at all. Filtering the
+  # registry branch on `ParentImage` therefore never matched, and every MSI
+  # install tripped it. The process-creation branch (sel_schtask, EventID 1) is
+  # the one that has a parent.
+  filter_installers_registry:
+    Image|endswith:
+      - '\msiexec.exe'
+      - '\setup.exe'
+  filter_installers_process:
     ParentImage|endswith:
       - '\msiexec.exe'
       - '\setup.exe'
-  condition: (sel_runkey or sel_schtask or sel_startup) and not filter_installers
+  condition: (sel_runkey or sel_schtask or sel_startup) and not (filter_installers_registry or filter_installers_process)
 falsepositives:
   - Software installers and update mechanisms
   - IT deployment scripts
 level: medium
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 references:
   - https://attack.mitre.org/techniques/T1547/001/
   - https://attack.mitre.org/techniques/T1053/005/

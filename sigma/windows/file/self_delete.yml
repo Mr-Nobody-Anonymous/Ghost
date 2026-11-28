@@ -1,8 +1,14 @@
-title: Self-Deleting Executable on Kill Command
+title: Self-Deleting Executable
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0f
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0f:host:process"
-status: designed
-description: A process deletes its own image file shortly after starting, consistent with a kill-switch cleanup.
+status: experimental
+lifecycle: designed
+description: >
+  A process deletes its own image file, consistent with a kill-switch cleanup or
+  an unpacks-and-removes dropper. The image path is compared to the deleted file
+  with Sigma's `fieldref` modifier so no per-sample path is hard-coded. The
+  original draft used Sysmon event ID 23, which Sysmon never emits; FileDelete is
+  event 26 in Sysmon 13+ and derives from EID 11.
 author: ghost-detection-lab
 date: 2026-11-27
 sample_ref: PIN-0000
@@ -10,19 +16,31 @@ sigma_spec_version: "2.1.0"
 dedup_window: "5m"
 min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
-sysmon_min_version: 13
+sysmon_min_version: 15
 tags: [attack.t1070.004]
-tactics: [attack.defense-evasion]
+tactics:
+  - attack.stealth
 references:
   - https://attack.mitre.org/techniques/T1070/004/
+  - https://learn.microsoft.com/sysinternals/downloads/sysmon
   - inventory.md
 logsource:
   product: windows
   service: sysmon
 detection:
   selection:
-    EventID: 23
-  condition: selection | count() by ProcessGuid >= 1
-falsepositives: [installers removing temporary copies, update helpers]
+    EventID: 26
+    TargetFilename|fieldref: Image
+  condition: selection
+falsepositives:
+  - Updaters that delete their previous image after staging a replacement
+  - Installers removing extracted temporary copies
 level: high
-notes: Requires Sysmon FileDelete (event 23) enabled in telemetry/sysmon-config.xml.
+conversion:
+  splunk: supported
+  elastic: unsupported
+  kusto: unsupported
+  note: >
+    `fieldref` converts to a Splunk `where` clause. Elastic and Kusto backends
+    raise SigmaFeatureNotSupportedByBackendError; on those platforms deploy the
+    FileDelete event with a post-processing join instead.

@@ -1,27 +1,175 @@
 {
   "fixture_id": "FX-1a2b3c4d",
   "rule_id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05",
-  "attack_id": "T1562.001",
+  "attack_id": "T1685",
   "status": "designed",
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
       "EventID": 4663,
-      "ObjectName": "C:\\Users\\lab\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
-      "AccessMask": "0x1"
+      "Computer": "LAB-WS01",
+      "ObjectName": "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+      "AccessMask": "0x1",
+      "_ts": 0
     },
     {
-      "_ts": 3,
-      "EventID": 10,
-      "TargetImage": "C:\\Windows\\System32\\amsi.dll",
-      "GrantedAccess": "0x001F0FFF"
+      "EventID": 1,
+      "Computer": "LAB-WS01",
+      "Image": "C:\\Windows\\System32\\sc.exe",
+      "CommandLine": "sc.exe stop windefend",
+      "_ts": 3
     }
   ],
   "assert_fields": {
     "EventID": 4663,
-    "ObjectName": "C:\\Users\\lab\\HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+    "Computer": "LAB-WS01",
+    "ObjectName": "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
     "AccessMask": "0x1"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture.",
+  "members": {
+    "4663b1a0-0000-4000-8000-000000000001": {
+      "title": "ProcessorNameString Registry Read via Object Access Audit",
+      "id": "4663b1a0-0000-4000-8000-000000000001",
+      "dedup_key": "rule:4663b1a0-0000-4000-8000-000000000001:host:user",
+      "status": "experimental",
+      "lifecycle": "designed",
+      "description": "SACL-triggered read of the CPU identifier; low signal alone, used as the first step of the patch-sequence correlation.",
+      "author": "ghost-detection-lab",
+      "date": "2026-11-27",
+      "sample_ref": "PIN-0000",
+      "sigma_spec_version": "2.1.0",
+      "dedup_window": "5m",
+      "min_eval_interval": "10s",
+      "min_os": "Windows 10 21H2",
+      "sysmon_min_version": 13,
+      "tags": [
+        "attack.t1497"
+      ],
+      "tactics": [
+        "attack.discovery",
+        "attack.stealth"
+      ],
+      "references": [
+        "https://attack.mitre.org/techniques/T1497/",
+        "inventory.md"
+      ],
+      "logsource": {
+        "product": "windows",
+        "service": "security"
+      },
+      "detection": {
+        "selection": {
+          "EventID": 4663,
+          "Computer|exists": true,
+          "ObjectName|contains": "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+          "AccessMask|re": "^0x1$"
+        },
+        "condition": "selection"
+      },
+      "falsepositives": [
+        "hardware inventory agents",
+        "licensing tools",
+        "installers checking specs"
+      ],
+      "level": "low",
+      "conversion": {
+        "splunk": "supported",
+        "elastic": "supported",
+        "kusto": "supported"
+      },
+      "fixture_ref": "fixtures/per_rule/4663b1a0-0000-4000-8000-000000000001.json"
+    },
+    "5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3": {
+      "title": "Security Component Stopped or Unregistered by Command Line",
+      "id": "5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3",
+      "dedup_key": "rule:5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3:host:user",
+      "status": "experimental",
+      "lifecycle": "designed",
+      "description": "Detects an attempt to disable or deregister a security component using tools that are present on a default Windows install: stopping a Defender or EDR service with sc/net, deleting the AMSI provider registration, turning off Defender real-time protection through the registry, or removing a Defender exclusion-free configuration with Set-MpPreference. Member rule for the CPU-enumeration-to-tamper sequence; it is also useful on its own.\n",
+      "author": "ghost-detection-lab",
+      "date": "2026-11-27",
+      "sample_ref": "PIN-0000",
+      "sigma_spec_version": "2.1.0",
+      "dedup_window": "5m",
+      "min_eval_interval": "10s",
+      "min_os": "Windows 10 21H2",
+      "sysmon_min_version": 13,
+      "tags": [
+        "attack.t1685"
+      ],
+      "tactics": [
+        "attack.defense-impairment"
+      ],
+      "references": [
+        "https://attack.mitre.org/techniques/T1685/",
+        "https://learn.microsoft.com/defender-endpoint/troubleshoot-microsoft-defender-antivirus"
+      ],
+      "logsource": {
+        "product": "windows",
+        "service": "sysmon"
+      },
+      "detection": {
+        "sel_service_stop": {
+          "EventID": 1,
+          "Computer|exists": true,
+          "Image|endswith": [
+            "\\sc.exe",
+            "\\net.exe",
+            "\\net1.exe"
+          ],
+          "CommandLine|contains": [
+            "stop windefend",
+            "stop sense",
+            "stop csagent",
+            "stop mbamservice"
+          ]
+        },
+        "sel_amsi_delete": {
+          "EventID": [
+            12,
+            13,
+            14
+          ],
+          "TargetObject|contains": "\\SOFTWARE\\Microsoft\\AMSI\\Providers\\"
+        },
+        "sel_defender_registry": {
+          "EventID": [
+            12,
+            13,
+            14
+          ],
+          "TargetObject|endswith": [
+            "\\Windows Defender\\DisableAntiSpyware",
+            "\\Windows Defender\\DisableAntiVirus",
+            "\\Windows Defender\\Real-Time Protection\\DisableRealtimeMonitoring"
+          ],
+          "Details": "DWORD (0x00000001)"
+        },
+        "sel_mp_preference": {
+          "EventID": 1,
+          "Image|endswith": [
+            "\\powershell.exe",
+            "\\pwsh.exe"
+          ],
+          "CommandLine|contains": [
+            "Set-MpPreference -Disable",
+            "Add-MpPreference -Disable",
+            "Set-MpPreference -ExclusionPath"
+          ]
+        },
+        "condition": "sel_service_stop or sel_amsi_delete or sel_defender_registry or sel_mp_preference"
+      },
+      "falsepositives": [
+        "Authorised endpoint-agent upgrades that stop the service briefly",
+        "Lab baselines built with Defender disabled on purpose"
+      ],
+      "level": "high",
+      "conversion": {
+        "splunk": "supported",
+        "elastic": "supported",
+        "kusto": "supported"
+      }
+    }
+  }
 }

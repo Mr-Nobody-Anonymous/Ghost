@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# A commit message is the only durable record of why a change exists, and this
+# repository's history is full of "fix" / "update" entries that explain nothing.
+# The rule is narrow on purpose: a subject line that says what changed, and a
+# body if the subject cannot carry the reason.
+#
+# Skip with: git commit --no-verify  (CI cannot check this, so it is advisory
+# in spirit but enforced locally on purpose.)
+set -euo pipefail
+
+msg_file="$1"
+subject="$(head -n1 "$msg_file")"
+
+if [ ${#subject} -lt 15 ]; then
+  echo "commit-msg: subject is ${#subject} characters; say what changed" >&2
+  echo "            e.g. 'Fix beacon rule matching on absent headers'" >&2
+  exit 1
+fi
+
+case "$subject" in
+  Merge*|Revert*|fixup!*|squash!*) exit 0 ;;
+esac
+
+if printf '%s' "$subject" | grep -qE '^(wip|fix|update|changes|stuff|misc)$'; then
+  echo "commit-msg: '$subject' does not say what changed" >&2
+  exit 1
+fi
+
+# A subject that fits in ~50 chars and names a file or a behaviour is enough.
+# Nothing here tries to be conventional-commits compliant; this repo has no
+# release tooling that parses it, and a format nobody consumes is ceremony.
+exit 0

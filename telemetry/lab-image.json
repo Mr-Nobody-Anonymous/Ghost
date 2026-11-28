@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "description": "The environment a capture has to come from for the fixture to mean anything. Recorded into every captured fixture by tools/evtx_to_fixture.py.",
+    "why": "A captured event is evidence about one specific machine: this Windows build, this Sysmon version, this configuration. Without that recorded, 'captured' means 'someone once saw this on some box' - a claim that cannot be re-run and cannot be argued with when a rule stops firing.",
+    "honest_limit": "No VM image has been built from this manifest. It describes the intended lab host, and a capture records which of these values the box it came from actually reported. The values are checked for shape and internal consistency, not against a machine that exists. G-21 stays partly open for that reason: this makes a capture attestable, it does not create the reproducible image."
+  },
+  "manifest_version": 1,
+  "os": {
+    "family": "windows",
+    "product": "Windows 11 Enterprise",
+    "release": "23H2",
+    "build": "10.0.22631",
+    "architecture": "x64",
+    "note": "Not Windows Server: the proxy and EDR telemetry in this lab exists on a workstation, and Sysmon's default behaviour differs by SKU in the areas the persistence rules read."
+  },
+  "sysmon": {
+    "version": "15.15",
+    "config_path": "telemetry/sysmon-config.xml",
+    "note": "The config hash is recorded per fixture; the version is recorded here because a schema change silently drops fields a rule reads."
+  },
+  "required_logs": [
+    "Microsoft-Windows-Sysmon/Operational",
+    "Security",
+    "Microsoft-Windows-WMI-Activity/Operational",
+    "Microsoft-Windows-PowerShell/Operational",
+    "Microsoft-Windows-TaskScheduler/Operational"
+  ],
+  "required_audit_policy": {
+    "Object Access": "Audit Registry: Success and Failure",
+    "note": "Security 4663 does not exist without a SACL. A 4663-based rule on a host without this audits nothing and never fires - the same silent failure as a missing field alias."
+  },
+  "clock": {
+    "timezone": "UTC",
+    "note": "Fixtures carry _utc; a capture from a host in local time produces sequence fixtures that order wrongly. This is the defect that made the earlier sequence fixture unevaluatable."
+  }
+}

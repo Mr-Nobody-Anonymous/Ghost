@@ -23,7 +23,12 @@ python3 emit_expected_events.py
 |---|---|---|
 | `local_listener.py` | HTTP POST/GET on 127.0.0.1:8080 with canary body | proxy/beacon rules (after adapting fields) |
 | `inert_beacon.py` | `X-Id` / `X-Seq` headers, `/poll?id=&seq=` URI, `Mozilla/5.0` UA | `sigma/beacon_custom_headers.yml` |
-| `emit_expected_events.py` | JSON descriptions of expected events; no system calls | validates your parsing/correlation logic |
+| `emit_expected_events.py` | the event each rule should see, **run through the evaluator**; no system calls | proves each rule matches its own expected event (37/37) |
+
+`emit_expected_events.py` is not prose. The previous version listed seven
+hand-written descriptors that no rule matched (0/32) while calling them
+"expected events", and cited two paths that no longer existed. It now derives the
+event from the rule and fails if the rule does not match it.
 
 ## Observed vs expected
 

@@ -1,0 +1,622 @@
+{
+  "generated_utc": "sha256:fd9b4636c36678b1",
+  "rules": 39,
+  "backends": [
+    "splunk",
+    "elastic",
+    "kusto"
+  ],
+  "results": {
+    "sigma/amsi_etw_patch.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/autorun_inf_writes.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/beacon_custom_headers.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/beaconing_frequency.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "unsupported: Backend does not support correlation rules."
+      },
+      "kusto": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "unsupported: Backend does not support correlation rules."
+      },
+      "note": "correlation rules convert only through the Splunk backend",
+      "correlation": true
+    },
+    "sigma/campaign_implant_sequence.yml": {
+      "splunk": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "load error: SigmaDetectionError: Sigma rule must have a detection definitions"
+      },
+      "elastic": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "load error: SigmaDetectionError: Sigma rule must have a detection definitions"
+      },
+      "kusto": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "load error: SigmaDetectionError: Sigma rule must have a detection definitions"
+      },
+      "note": ">",
+      "correlation": false
+    },
+    "sigma/credential_file_access.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "note": ">",
+      "correlation": false
+    },
+    "sigma/dga_high_entropy_dns.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "unsupported: Backend does not support correlation rules."
+      },
+      "kusto": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "unsupported: Backend does not support correlation rules."
+      },
+      "note": "correlation rules convert only through the Splunk backend",
+      "correlation": true
+    },
+    "sigma/net_view_recon.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/network/dns/nxdomain_long_label.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/network/netflow/beacon_interval_shift.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "note": ">",
+      "correlation": false
+    },
+    "sigma/network/proxy/ua_anomaly.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/pyinstaller_onefile_execution.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/runkey_schtask_startup_persistence.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/defense-evasion/patch_sequence.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "unsupported: Backend does not support correlation rules."
+      },
+      "kusto": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "unsupported: Backend does not support correlation rules."
+      },
+      "note": ">",
+      "correlation": true
+    },
+    "sigma/windows/defense-evasion/security_component_tamper.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/file/keylog_encrypted_file.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/file/mei_extraction_dir.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/file/screenshot_bmp_artifact.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/file/self_delete.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "SigmaFeatureNotSupportedByBackendError: ES Lucene backend can't handle field references."
+      },
+      "kusto": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "unsupported: Field reference expression is not supported by backend. (while converting rule None)"
+      },
+      "note": ">",
+      "correlation": false
+    },
+    "sigma/windows/file/self_update_rewrite.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/file/sqlite_temp_copy.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/network/host_selfsigned_tls.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/network/ipify_egress.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/persistence/run_key_write.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/persistence/schtask_onlogon.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/persistence/startup_folder_cmd.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/persistence/wmi_binding_create.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/persistence/wmi_consumer_create.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/persistence/wmi_filter_create.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/persistence/wmi_subscription_triple.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "unsupported: Backend does not support correlation rules."
+      },
+      "kusto": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "unsupported: Backend does not support correlation rules."
+      },
+      "note": "correlation rules are a Splunk-backend feature in pySigma 1.x",
+      "correlation": true
+    },
+    "sigma/windows/process/dns_query_burst_host.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "unsupported: Backend does not support correlation rules."
+      },
+      "kusto": {
+        "actual": "unsupported",
+        "declared": "unsupported",
+        "reason": "unsupported: Backend does not support correlation rules."
+      },
+      "note": "correlation rules convert only through the Splunk backend",
+      "correlation": true
+    },
+    "sigma/windows/process/dns_random_label_query.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/process/dropper_unsigned_temp_exec.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "note": ">",
+      "correlation": false
+    },
+    "sigma/windows/process/mutex_single_instance.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/process/python_parent_child_shape.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "note": "ParentCommandLine needs Sysmon 1 with command-line capture, which is default",
+      "correlation": false
+    },
+    "sigma/windows/process/removable_media_spreader_write.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/process/wmi_recon_command.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/windows/registry/cpu_info_read.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    },
+    "sigma/wmi_event_subscription_persistence.yml": {
+      "splunk": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "elastic": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "kusto": {
+        "actual": "supported",
+        "declared": "supported"
+      },
+      "correlation": false
+    }
+  }
+}

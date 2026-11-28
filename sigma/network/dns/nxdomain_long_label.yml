@@ -1,0 +1,40 @@
+title: NXDOMAIN Response for a Long High-Entropy Label
+id: d81f4a63-2c95-4b07-a3e8-6f10c5d92b47
+dedup_key: "rule:d81f4a63-2c95-4b07-a3e8-6f10c5d92b47:host:user"
+status: experimental
+lifecycle: designed
+description: >
+  Member rule of the DGA NXDOMAIN burst correlation. Flags a single NXDOMAIN
+  answer whose first label is at least 14 lowercase characters long - the label
+  shape produced by the domain generator, distinguished from normal CDN names by
+  the NXDOMAIN result. A bare NXDOMAIN is not a finding; the correlation is.
+author: ghost-detection-lab
+date: 2026-11-27
+sample_ref: PIN-0000
+sigma_spec_version: "2.1.0"
+dedup_window: "5m"
+min_eval_interval: "10s"
+min_os: "Windows 10 21H2"
+sysmon_min_version: 13
+tags: [attack.t1568.002]
+tactics:
+  - attack.command-and-control
+references:
+  - https://attack.mitre.org/techniques/T1568/002/
+logsource:
+  product: zeek
+  service: dns
+detection:
+  selection:
+    rcode: 'NXDOMAIN'
+    Source|exists: true
+    query|re: '^[a-z]{14,}\.(com|net|org|info|biz|ru|top|xyz)$'
+  condition: selection
+falsepositives:
+  - Typos and stale bookmarks with long hostnames
+  - Security scanners probing generated names
+level: low
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported

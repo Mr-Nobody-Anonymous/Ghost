@@ -1,7 +1,8 @@
 title: Public IP Discovery Service Egress from Unexpected Process
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0b
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0b:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: Outbound request to api.ipify.org or similar public-IP echo services from a non-browser process.
 author: ghost-detection-lab
 date: 2026-11-27
@@ -12,12 +13,18 @@ min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
 tags: [attack.t1592.002]
-tactics: [attack.discovery]
+tactics:
+  - attack.reconnaissance
 references:
   - https://attack.mitre.org/techniques/T1592.002/
   - inventory.md
 logsource:
   category: proxy
+  # `Process` is not a standard proxy field. This rule only works where the
+  # export joins the socket owner (see telemetry/data-sources.md, which marks it
+  # "not always available"). Without that join the browser filter is dead and
+  # the rule fires on ordinary browser traffic to these hosts.
+  definition: proxy export must carry the owning process
 detection:
   selection:
     DestinationHostname|endswith: ['api.ipify.org', 'ifconfig.me', 'icanhazip.com']
@@ -26,3 +33,7 @@ detection:
   condition: selection and not filter_browser
 falsepositives: [VPN clients, network diagnostic tools, browsers]
 level: medium
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported

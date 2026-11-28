@@ -1,0 +1,21 @@
+{
+  "fixture_id": "FX-d81f4a63",
+  "rule_id": "d81f4a63-2c95-4b07-a3e8-6f10c5d92b47",
+  "attack_id": "T1568.002",
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 0
+    }
+  ],
+  "assert_fields": {
+    "rcode": "NXDOMAIN",
+    "Source": "192.0.2.10",
+    "query": "aaaaaaaaaaaaaa.com"
+  },
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
+}

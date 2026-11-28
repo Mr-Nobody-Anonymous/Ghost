@@ -1,5 +1,15 @@
 # Contributing
 
+## Requirements
+
+- Python **3.9 or newer** (the floor: `Path.is_relative_to` in
+  `tools/evtx_to_fixture.py`; enforced by `ci/check_env.py`, and CI runs both
+  3.9 and 3.11)
+- `pip install -r requirements.txt` — the versions are pinned because the gate
+  compares generated query text against results produced with exactly those
+  versions. A backend upgrade is a deliberate commit, not a side effect.
+
+
 Thanks for helping improve the detection content.
 
 ## What belongs here
@@ -45,3 +55,30 @@ python3 tools/generate_matrix.py
 - Keep commits focused; one rule per commit where practical.
 - Never commit generated packages (`dist/`), bytecode, or traffic logs.
 - Use the repository LICENSE for all contributions.
+
+## Local hooks
+
+Install them once per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+`pre-commit` runs ruff, the test suite and the fixture-freshness check on any
+commit that touches code, rules or fixtures. `commit-msg` rejects a subject like
+`fix` or `wip`. Both are bypassable with `--no-verify`; CI runs the full gate
+regardless, so a bypass cannot get anything merged.
+
+## Changelog
+
+Every commit needs a line in `CHANGELOG.md`, or a `Release-Note:` trailer in the
+commit body:
+
+```
+Add the campaign layer
+
+Release-Note: a 3-of-4 cross-source campaign rule and its evaluator
+```
+
+`python3 tools/release.py --check-changelog` fails on any commit since the last
+tag that neither form covers. This is gate stage 12, not a convention.

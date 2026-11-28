@@ -6,20 +6,14 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
       "EventID": 12,
-      "TargetObject": "C:\\Users\\lab\\\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-      "Image": "C:\\Windows\\System32\\schtasks.exe",
-      "CommandLine": "prefix-/Create-suffix",
-      "TargetFilename": "C:\\Users\\lab\\Start Menu\\Programs\\Startup\\.cmd"
+      "TargetObject": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+      "_ts": 0
     }
   ],
   "assert_fields": {
     "EventID": 12,
-    "TargetObject": "C:\\Users\\lab\\\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-    "Image": "C:\\Windows\\System32\\schtasks.exe",
-    "CommandLine": "prefix-/Create-suffix",
-    "TargetFilename": "C:\\Users\\lab\\Start Menu\\Programs\\Startup\\.cmd"
+    "TargetObject": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

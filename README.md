@@ -1,21 +1,38 @@
 # Ghost detection lab
 
-Defensive counterpart to the implant design described in the request. This folder
-contains **detection content and inert lab tooling only**. It answers:
-"would our telemetry catch this behavior, and would it stay quiet?"
+A detection-engineering repository. It holds **39 Sigma rules**, the telemetry
+they need to work, and the checks that keep them honest - and it holds no
+software that attacks anything.
+
+The question it exists to answer: *if someone ran this implant, would our logs
+catch it - and would the rule stay quiet on a normal Tuesday?* Every rule
+describes behaviour, never code. Nothing here drops a file, calls out to a
+server, reads a credential, or patches a security product.
+
+It is a **specification with a test harness**, not a validated detection
+library. Rules are checked against fixtures derived from the rules themselves;
+none has fired on a machine, and precision is unmeasured. `docs/assessment.md`
+says exactly how far each claim goes, and `docs/gap-register.md` lists what is
+missing and what it would cost to close.
 
 ## What is here
 
 | Path | Purpose |
 |---|---|
-| `sigma/` | Detection rules (Systematic 10 rules + schema + Suricata header rules) |
+| `sigma/` | 39 Sigma rules (34 single-event + 5 correlations) + schema + Suricata header rules |
 | `yara/` | Structural rules: packers, stage fingerprints, config artifacts |
 | `telemetry/` | Data-source map, Sysmon config, audit policy + SACLs, ETW provider list |
-| `fixtures/` | Expected-event fixtures for five gap techniques; benign FP corpus spec |
+| `fixtures/` | Generated positive/negative fixture per rule (39 pairs); benign FP corpus spec |
+| `tools/benign_corpus.py` | **Measures per-rule precision** against collected benign telemetry; `--classes` lists what a full run needs |
 | `tests/`, `ci/`, `tools/` | Rule/fixture tests, CI gate, coverage generator |
 | `samples/` | Sample pin **schema** — no binary stored |
-| `network/`, `hunting/`, `docs/`, `analysis/` | Fingerprint detections, hunting queries, runbook/tuning/maturity, triage |
-| `attack/`, `reports/` | Generated coverage matrix and precision reports |
+| `network/`, `docs/`, `analysis/` | Fingerprint detections, runbook/tuning/maturity, triage templates |
+| `docs/assessment.md` | **What this is, measured** - what is proven and what is not |
+| `docs/gap-register.md` | What is missing, ordered by cost |
+| `docs/deployment.md` | Host -> index -> scheduled search, with the silent failure modes |
+| `docs/technique-lab-guide.md` | **How each technique works and the safe test for it** - mechanism, expected event IDs, cleanup, and what the test does *not* prove |
+| `hunt-queries.md`, `lab-setup.md`, `inventory.md`, `os-matrix.md` | Hunting queries, lab build, behavior inventory, OS support |
+| `attack/` | Coverage matrix, Navigator layer (`navigator-layer.json`), per-rule conversion results (`conversion.json`) |
 
 ## What is deliberately NOT here
 
@@ -39,15 +56,27 @@ included or accepted. All emulation is loopback-only and inert.
 ## Quick start
 
 ```bash
-bash ci/gate.sh          # validate -> tests -> evaluate -> ratchet -> convert -> matrix -> package
-python3 detection-as-code/evaluate.py     # TP/FP/sequence evaluation against concrete fixtures
+bash ci/gate.sh                       # 20 stages: validate, lint, build, test, evaluate,
+                                     # fixtures, emulation, analytics, precision harness,
+                                     # joins, telemetry, lint, tuning, overlap, release,
+                                     # deployment, playbooks, ratchet, convert, package
+python3 detection-as-code/evaluate.py # TP/FP/sequence/frequency against fixtures
 python3 -m unittest discover -s tests -p 'test_*.py'
-python3 tools/evtx_to_fixture.py --input captured.xml --rule-id <id> --output fixtures/per_rule/<id>.json
+python3 tools/capture_kit.py --rule <id-prefix>   # how to capture this rule for real
+python3 tools/evtx_to_fixture.py --input captured.xml --rule-id <id> \
+  --sample-ref PIN-0001     # writes fixtures/captured/ and refuses if the rule
+                            # does not fire on the capture
+python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl
+python3 tools/export_navigator.py     # attack/navigator-layer.json for ATT&CK Navigator
 ```
 
-The gate currently **fails at the backend-conversion stage**: pySigma's Splunk
-and KQL backends are not installed, so no rule is proven deployable. That is a
-real failure, not a glitch. See `docs/maturity.md` for the full honesty check.
+The gate passes today: 38/39 rules convert to Splunk, 32/39 to Elastic and Kusto
+(the correlations and one `fieldref` rule are Splunk-only in pySigma), every
+rule matches its generated fixture and stays silent on its negative fixture.
+
+What it does **not** prove: no event in this repository came off a machine.
+There is no blind capture, no benign-corpus run, no volume measurement. See
+`docs/maturity.md` - every fixture marked `designed` is saying exactly that.
 
 ## Safe use
 
@@ -56,7 +85,7 @@ real failure, not a glitch. See `docs/maturity.md` for the full honesty check.
 2. Start `emulation/local_listener.py`, then run the generators. All traffic stays
    on `127.0.0.1`.
 3. Compare the telemetry your SIEM/EDR actually produced against
-   `ATT&CK-coverage.md`.
+   `ATT&CK-coverage.md` and `inventory.md`.
 4. Clean up marker files and stop the listener; restore the snapshot.
 
 Do not run any of this against a system you do not own or an in-scope lab.

@@ -4,17 +4,16 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "SCCM/Intune",
-    "monitoring agents",
-    "security product self-healing"
+    "SCCM and Intune client remediation",
+    "Monitoring agents that recreate subscriptions after an update"
   ],
   "tuning_decision": "pending",
   "must_not_match": {
     "events": [
       {
         "_ts": 0,
-        "EventID": 999999,
-        "CommandLine": "benign-no-match"
+        "Image": "C:\\Windows\\explorer.exe",
+        "EventID": 1
       }
     ]
   }

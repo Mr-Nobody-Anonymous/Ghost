@@ -4,9 +4,9 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "portable tools",
-    "self-extracting installers",
-    "browser helpers"
+    "Portable tools run from a Downloads folder",
+    "Self-extracting installers that unpack into Temp",
+    "Vendor agents that update themselves through a per-user installer"
   ],
   "tuning_decision": "pending",
   "must_not_match": {
@@ -14,7 +14,9 @@
       {
         "_ts": 0,
         "EventID": 999999,
-        "Image": "C:\\Windows\\System32\\msiexec.exe"
+        "Image": "benign-no-match",
+        "IntegrityLevel": "benign-no-match",
+        "Signature": "Microsoft Windows"
       }
     ]
   }

@@ -18,6 +18,21 @@
         "CommandLine": "benign-no-match",
         "TargetFilename": "C:\\Windows\\explorer.exe",
         "ParentImage": "C:\\Windows\\System32\\msiexec.exe"
+      },
+      {
+        "EventID": 13,
+        "Image": "C:\\Windows\\System32\\msiexec.exe",
+        "ParentImage": "C:\\Windows\\explorer.exe",
+        "TargetObject": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\SevenZip",
+        "Details": "C:\\Program Files\\7-Zip\\7zFM.exe",
+        "_ts": 1
+      },
+      {
+        "EventID": 1,
+        "Image": "C:\\Windows\\System32\\schtasks.exe",
+        "ParentImage": "C:\\Windows\\System32\\msiexec.exe",
+        "CommandLine": "schtasks.exe /Create /TN SevenZipUpdate /TR 7zFM.exe",
+        "_ts": 2
       }
     ]
   }

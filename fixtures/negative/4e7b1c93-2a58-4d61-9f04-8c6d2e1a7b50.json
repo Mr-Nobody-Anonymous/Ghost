@@ -14,8 +14,9 @@
       {
         "_ts": 0,
         "EventID": 999999,
-        "TargetFilename": "C:\\Windows\\explorer.exe",
-        "SourceImage": "C:\\Windows\\System32\\\\chrome.exe"
+        "TargetFilename": "benign-no-match",
+        "TargetObject": "benign-no-match",
+        "Image": "C:\\Windows\\System32\\chrome.exe"
       }
     ]
   }

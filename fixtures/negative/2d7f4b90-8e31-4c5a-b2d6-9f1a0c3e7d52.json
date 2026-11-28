@@ -12,10 +12,9 @@
     "events": [
       {
         "_ts": 0,
-        "cs-uri-stem": "C:\\Windows\\explorer.exe",
         "cs-uri-query": "benign-no-match",
-        "cs-user-agent": "curl/8.0",
-        "cs-content-type": "benign-no-match"
+        "cs-uri-stem": "C:\\Windows\\explorer.exe",
+        "cs-user-agent": "curl/8.0"
       }
     ]
   }

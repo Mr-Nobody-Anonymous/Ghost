@@ -29,10 +29,30 @@ reg add "HKLM\HARDWARE\DESCRIPTION\System\CentralProcessor\0" /v ProcessorNameSt
 icacls "HKLM\HARDWARE\DESCRIPTION\System\CentralProcessor\0" /save acl_backup.txt
 ```
 
-Use `Set-Acl` / `subinacl` / your EDR's SACL tooling to add an `Audit Read`
-ACE for `Everyone` on that key. Correlate the resulting 4663 event with a
-process that also exhibits sleep-skew behavior — a single registry read is not
-a finding.
+Run the generated script — do not hand-apply this one:
+
+```powershell
+.\deploy\telemetry\set-sacls.ps1
+```
+
+`deploy/telemetry/set-sacls.ps1` is generated from the rules by
+`tools/build_sacl_script.py`. It backs up each ACL before changing it, applies
+the Audit Read ACE for `Everyone`, reads the SACL back to prove it stuck, and
+takes `-Rollback` to undo everything.
+
+It has exactly one target, because exactly one rule in this repository reads a
+4663 field (`cpu_info_read.yml`, AccessMask `0x1` on the processor key). An
+earlier version of this document said "use Set-Acl / subinacl / your EDR's
+tooling", which is three options and no command for a step that has to be exact
+or the rule never fires and never says why.
+
+A broad SACL is its own problem: audit `C:\Users` and you generate millions of
+events a day to feed a rule that is not listening for them. `--check` in the gate
+fails if a rule reads 4663 without a target, or if a target names a rule that
+does not read it.
+
+Correlate the resulting 4663 event with a process that also exhibits sleep-skew
+behavior — a single registry read is not a finding.
 
 ## Event IDs to expect
 

@@ -1,55 +1,25 @@
 {
-  "7a1c3e40-9b12-4d6e-8f21-0c3b5a9d7e11": {
+  "0b6a2f19-8d34-4c72-9e51-3a7d5f0c2b84": {
+    "events_per_day_ceiling": 5000,
+    "measured": false,
+    "note": "high-volume member/filter rule; must stay below the ingest budget"
+  },
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a01": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"
   },
-  "9b3f6a12-7c40-4e85-b2d1-5e8a0c4f7d63": {
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a02": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"
   },
-  "2d7f4b90-8e31-4c5a-b2d6-9f1a0c3e7d52": {
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"
   },
-  "8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52": {
-    "events_per_day_ceiling": 100,
-    "measured": false,
-    "note": "no deployment telemetry yet"
-  },
-  "4e7b1c93-2a58-4d61-9f04-8c6d2e1a7b50": {
-    "events_per_day_ceiling": 100,
-    "measured": false,
-    "note": "no deployment telemetry yet"
-  },
-  "5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84": {
-    "events_per_day_ceiling": 100,
-    "measured": false,
-    "note": "no deployment telemetry yet"
-  },
-  "6d0a4e87-3b19-4f52-a8c6-0d7e9b1f2a45": {
-    "events_per_day_ceiling": 100,
-    "measured": false,
-    "note": "no deployment telemetry yet"
-  },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a14": {
-    "events_per_day_ceiling": 100,
-    "measured": false,
-    "note": "no deployment telemetry yet"
-  },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a13": {
-    "events_per_day_ceiling": 100,
-    "measured": false,
-    "note": "no deployment telemetry yet"
-  },
-  "e91d5c37-0b82-4a1f-a6d8-3c7e9f2b4a60": {
-    "events_per_day_ceiling": 100,
-    "measured": false,
-    "note": "no deployment telemetry yet"
-  },
-  "b6d4a2f8-1c07-4e93-9a55-7f0e2b8c6d41": {
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a04": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"
@@ -59,17 +29,47 @@
     "measured": false,
     "note": "no deployment telemetry yet"
   },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0a": {
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a06": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"
   },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a11": {
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a07": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"
   },
   "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a08": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a09": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0a": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0b": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0c": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0d": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0e": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"
@@ -84,7 +84,7 @@
     "measured": false,
     "note": "no deployment telemetry yet"
   },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a09": {
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a11": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"
@@ -94,52 +94,32 @@
     "measured": false,
     "note": "no deployment telemetry yet"
   },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0b": {
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a13": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"
   },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a01": {
+  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a14": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"
   },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a02": {
+  "2d7f4b90-8e31-4c5a-b2d6-9f1a0c3e7d52": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"
   },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a04": {
+  "3570d46e-6cdb-4c0b-8886-972ce382f63a": {
     "events_per_day_ceiling": 100,
     "measured": false,
-    "note": "no deployment telemetry yet"
+    "note": "drive-letter writes are common on multi-volume hosts; tune before promoting"
   },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03": {
-    "events_per_day_ceiling": 100,
+  "3b7e1c48-9d02-4a6f-8e15-c740b2d93af1": {
+    "events_per_day_ceiling": 50,
     "measured": false,
-    "note": "no deployment telemetry yet"
+    "note": "low-signal single-object rule; keep the noise budget tight"
   },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0e": {
-    "events_per_day_ceiling": 100,
-    "measured": false,
-    "note": "no deployment telemetry yet"
-  },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a06": {
-    "events_per_day_ceiling": 100,
-    "measured": false,
-    "note": "no deployment telemetry yet"
-  },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0d": {
-    "events_per_day_ceiling": 100,
-    "measured": false,
-    "note": "no deployment telemetry yet"
-  },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a07": {
-    "events_per_day_ceiling": 100,
-    "measured": false,
-    "note": "no deployment telemetry yet"
-  },
-  "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a0c": {
+  "3f92b8d1-6a04-4c77-b0e9-2d8157ac4f30": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"
@@ -149,7 +129,67 @@
     "measured": false,
     "note": "no deployment telemetry yet"
   },
-  "3f92b8d1-6a04-4c77-b0e9-2d8157ac4f30": {
+  "4e7b1c93-2a58-4d61-9f04-8c6d2e1a7b50": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "6d0a4e87-3b19-4f52-a8c6-0d7e9b1f2a45": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "7a1c3e40-9b12-4d6e-8f21-0c3b5a9d7e11": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "7c4f9e02-5b83-4d61-a0f2-8e1d3c6b9a74": {
+    "events_per_day_ceiling": 50,
+    "measured": false,
+    "note": "low-signal single-object rule; keep the noise budget tight"
+  },
+  "7f3c9a21-4b68-4e07-9d15-2c8a6f0e4b93": {
+    "events_per_day_ceiling": 20,
+    "measured": false,
+    "note": "campaign output; one host firing three chains in an hour is rare by construction"
+  },
+  "8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "9b3f6a12-7c40-4e85-b2d1-5e8a0c4f7d63": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "9e0d4b71-6c25-4f38-b7a9-2d5e8c1f0a63": {
+    "events_per_day_ceiling": 50,
+    "measured": false,
+    "note": "low-signal single-object rule; keep the noise budget tight"
+  },
+  "b6d4a2f8-1c07-4e93-9a55-7f0e2b8c6d41": {
+    "events_per_day_ceiling": 100,
+    "measured": false,
+    "note": "no deployment telemetry yet"
+  },
+  "d81f4a63-2c95-4b07-a3e8-6f10c5d92b47": {
+    "events_per_day_ceiling": 5000,
+    "measured": false,
+    "note": "high-volume member/filter rule; must stay below the ingest budget"
+  },
+  "e91d5c37-0b82-4a1f-a6d8-3c7e9f2b4a60": {
     "events_per_day_ceiling": 100,
     "measured": false,
     "note": "no deployment telemetry yet"

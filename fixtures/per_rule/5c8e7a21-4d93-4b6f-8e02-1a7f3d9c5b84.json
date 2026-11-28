@@ -6,114 +6,185 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 0
     },
     {
-      "_ts": 1,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 1
     },
     {
-      "_ts": 2,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 2
     },
     {
-      "_ts": 3,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 3
     },
     {
-      "_ts": 4,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 4
     },
     {
-      "_ts": 5,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 5
     },
     {
-      "_ts": 6,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 6
     },
     {
-      "_ts": 7,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 7
     },
     {
-      "_ts": 8,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 8
     },
     {
-      "_ts": 9,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 9
     },
     {
-      "_ts": 10,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 10
     },
     {
-      "_ts": 11,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 11
     },
     {
-      "_ts": 12,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 12
     },
     {
-      "_ts": 13,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 13
     },
     {
-      "_ts": 14,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 14
     },
     {
-      "_ts": 15,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 15
     },
     {
-      "_ts": 16,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 16
     },
     {
-      "_ts": 17,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 17
     },
     {
-      "_ts": 18,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 18
     },
     {
-      "_ts": 19,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 19
     },
     {
-      "_ts": 20,
-      "query": "abcdefghijklmnop.top",
-      "rcode": "NXDOMAIN"
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 20
     }
   ],
   "assert_fields": {
-    "query": "abcdefghijklmnop.top",
-    "rcode": "NXDOMAIN"
+    "rcode": "NXDOMAIN",
+    "Source": "192.0.2.10",
+    "query": "aaaaaaaaaaaaaa.com"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture.",
+  "members": {
+    "d81f4a63-2c95-4b07-a3e8-6f10c5d92b47": {
+      "title": "NXDOMAIN Response for a Long High-Entropy Label",
+      "id": "d81f4a63-2c95-4b07-a3e8-6f10c5d92b47",
+      "dedup_key": "rule:d81f4a63-2c95-4b07-a3e8-6f10c5d92b47:host:user",
+      "status": "experimental",
+      "lifecycle": "designed",
+      "description": "Member rule of the DGA NXDOMAIN burst correlation. Flags a single NXDOMAIN answer whose first label is at least 14 lowercase characters long - the label shape produced by the domain generator, distinguished from normal CDN names by the NXDOMAIN result. A bare NXDOMAIN is not a finding; the correlation is.\n",
+      "author": "ghost-detection-lab",
+      "date": "2026-11-27",
+      "sample_ref": "PIN-0000",
+      "sigma_spec_version": "2.1.0",
+      "dedup_window": "5m",
+      "min_eval_interval": "10s",
+      "min_os": "Windows 10 21H2",
+      "sysmon_min_version": 13,
+      "tags": [
+        "attack.t1568.002"
+      ],
+      "tactics": [
+        "attack.command-and-control"
+      ],
+      "references": [
+        "https://attack.mitre.org/techniques/T1568/002/"
+      ],
+      "logsource": {
+        "product": "zeek",
+        "service": "dns"
+      },
+      "detection": {
+        "selection": {
+          "rcode": "NXDOMAIN",
+          "Source|exists": true,
+          "query|re": "^[a-z]{14,}\\.(com|net|org|info|biz|ru|top|xyz)$"
+        },
+        "condition": "selection"
+      },
+      "falsepositives": [
+        "Typos and stale bookmarks with long hostnames",
+        "Security scanners probing generated names"
+      ],
+      "level": "low",
+      "conversion": {
+        "splunk": "supported",
+        "elastic": "supported",
+        "kusto": "supported"
+      }
+    }
+  }
 }

@@ -6,16 +6,16 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
       "EventID": 1,
       "Image": "C:\\Windows\\System32\\schtasks.exe",
-      "CommandLine": "prefix-/Create-suffix"
+      "CommandLine": "schtasks.exe /Create /TN Lab\\\\task /SC ONLOGON /TR C:\\Users\\lab\\AppData\\Local\\Temp\\a.exe",
+      "_ts": 0
     }
   ],
   "assert_fields": {
     "EventID": 1,
     "Image": "C:\\Windows\\System32\\schtasks.exe",
-    "CommandLine": "prefix-/Create-suffix"
+    "CommandLine": "schtasks.exe /Create /TN Lab\\\\task /SC ONLOGON /TR C:\\Users\\lab\\AppData\\Local\\Temp\\a.exe"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

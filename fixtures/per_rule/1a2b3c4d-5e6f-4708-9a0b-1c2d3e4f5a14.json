@@ -6,12 +6,12 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
-      "destination_port": 443
+      "destination_port": 443,
+      "_ts": 0
     }
   ],
   "assert_fields": {
     "destination_port": 443
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

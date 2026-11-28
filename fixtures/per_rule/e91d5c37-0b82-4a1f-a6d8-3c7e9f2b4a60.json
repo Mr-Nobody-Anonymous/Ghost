@@ -6,16 +6,14 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
       "EventID": 1,
-      "Image": "C:\\Users\\lab\\\\_MEI",
-      "CommandLine": "C:\\Users\\lab\\\\_MEI"
+      "Image": "C:\\Users\\lab\\AppData\\Local\\Temp\\_MEI153742\\artifact.bin",
+      "_ts": 0
     }
   ],
   "assert_fields": {
     "EventID": 1,
-    "Image": "C:\\Users\\lab\\\\_MEI",
-    "CommandLine": "C:\\Users\\lab\\\\_MEI"
+    "Image": "C:\\Users\\lab\\AppData\\Local\\Temp\\_MEI153742\\artifact.bin"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

@@ -1,0 +1,335 @@
+{
+  "_meta": {
+    "description": "Elasticsearch ingest pipeline adding the canonical field names the rules read.",
+    "generated_by": "pipeline/build_field_map.py",
+    "install": "PUT _ingest/pipeline/sigma-canonical",
+    "attach_to": "the Sysmon / Windows integration data stream",
+    "warning": "Not executed against a live cluster. `set` with a mustache reference is the documented form; confirm the field resolves in your ECS version before enabling."
+  },
+  "processors": [
+    {
+      "set": {
+        "field": "AccessMask",
+        "value": "{{winlog.event_data.AccessMask}}",
+        "if": "ctx.winlog.event_data.AccessMask != null",
+        "description": "canonical alias for winlog.event_data.AccessMask",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "CertificateSelfSigned",
+        "value": "{{tls.server.x509.issuer.common_name}}",
+        "if": "ctx.tls.server.x509.issuer.common_name != null",
+        "description": "canonical alias for tls.server.x509.issuer.common_name",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "CommandLine",
+        "value": "{{process.command_line}}",
+        "if": "ctx.process.command_line != null",
+        "description": "canonical alias for process.command_line",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "Computer",
+        "value": "{{host.name}}",
+        "if": "ctx.host.name != null",
+        "description": "canonical alias for host.name",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "DestinationHostname",
+        "value": "{{destination.domain}}",
+        "if": "ctx.destination.domain != null",
+        "description": "canonical alias for destination.domain",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "DestinationPort",
+        "value": "{{destination.port}}",
+        "if": "ctx.destination.port != null",
+        "description": "canonical alias for destination.port",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "Details",
+        "value": "{{winlog.event_data.Details}}",
+        "if": "ctx.winlog.event_data.Details != null",
+        "description": "canonical alias for winlog.event_data.Details",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "EventID",
+        "value": "{{event.code}}",
+        "if": "ctx.event.code != null",
+        "description": "canonical alias for event.code",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "EventType",
+        "value": "{{winlog.event_data.EventType}}",
+        "if": "ctx.winlog.event_data.EventType != null",
+        "description": "canonical alias for winlog.event_data.EventType",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "GrantedAccess",
+        "value": "{{winlog.event_data.GrantedAccess}}",
+        "if": "ctx.winlog.event_data.GrantedAccess != null",
+        "description": "canonical alias for winlog.event_data.GrantedAccess",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "Image",
+        "value": "{{process.executable}}",
+        "if": "ctx.process.executable != null",
+        "description": "canonical alias for process.executable",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "IntegrityLevel",
+        "value": "{{process.Ext.token.integrity_level_name}}",
+        "if": "ctx.process.Ext.token.integrity_level_name != null",
+        "description": "canonical alias for process.Ext.token.integrity_level_name",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "ObjectName",
+        "value": "{{registry.path}}",
+        "if": "ctx.registry.path != null",
+        "description": "canonical alias for registry.path",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "ParentCommandLine",
+        "value": "{{process.parent.command_line}}",
+        "if": "ctx.process.parent.command_line != null",
+        "description": "canonical alias for process.parent.command_line",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "ParentImage",
+        "value": "{{process.parent.executable}}",
+        "if": "ctx.process.parent.executable != null",
+        "description": "canonical alias for process.parent.executable",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "Process",
+        "value": "{{process.name}}",
+        "if": "ctx.process.name != null",
+        "description": "canonical alias for process.name",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "ProcessGuid",
+        "value": "{{process.entity_id}}",
+        "if": "ctx.process.entity_id != null",
+        "description": "canonical alias for process.entity_id",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "QueryName",
+        "value": "{{dns.question.name}}",
+        "if": "ctx.dns.question.name != null",
+        "description": "canonical alias for dns.question.name",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "Signature",
+        "value": "{{process.code_signature.subject_name}}",
+        "if": "ctx.process.code_signature.subject_name != null",
+        "description": "canonical alias for process.code_signature.subject_name",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "Source",
+        "value": "{{source.ip}}",
+        "if": "ctx.source.ip != null",
+        "description": "canonical alias for source.ip",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "SourceAddress",
+        "value": "{{source.ip}}",
+        "if": "ctx.source.ip != null",
+        "description": "canonical alias for source.ip",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "SourceImage",
+        "value": "{{process.executable}}",
+        "if": "ctx.process.executable != null",
+        "description": "canonical alias for process.executable",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "TargetFilename",
+        "value": "{{file.path}}",
+        "if": "ctx.file.path != null",
+        "description": "canonical alias for file.path",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "TargetImage",
+        "value": "{{process.target.executable}}",
+        "if": "ctx.process.target.executable != null",
+        "description": "canonical alias for process.target.executable",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "TargetObject",
+        "value": "{{registry.path}}",
+        "if": "ctx.registry.path != null",
+        "description": "canonical alias for registry.path",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "Type",
+        "value": "{{winlog.event_data.Type}}",
+        "if": "ctx.winlog.event_data.Type != null",
+        "description": "canonical alias for winlog.event_data.Type",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "cs-header-Accept-Language",
+        "value": "{{http.request.headers.accept-language}}",
+        "if": "ctx.http.request.headers.accept-language != null",
+        "description": "canonical alias for http.request.headers.accept-language",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "cs-header-Cookie",
+        "value": "{{http.request.headers.cookie}}",
+        "if": "ctx.http.request.headers.cookie != null",
+        "description": "canonical alias for http.request.headers.cookie",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "cs-header-X-Id",
+        "value": "{{http.request.headers.x-id}}",
+        "if": "ctx.http.request.headers.x-id != null",
+        "description": "canonical alias for http.request.headers.x-id",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "cs-header-X-Seq",
+        "value": "{{http.request.headers.x-seq}}",
+        "if": "ctx.http.request.headers.x-seq != null",
+        "description": "canonical alias for http.request.headers.x-seq",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "cs-uri-query",
+        "value": "{{url.query}}",
+        "if": "ctx.url.query != null",
+        "description": "canonical alias for url.query",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "cs-uri-stem",
+        "value": "{{url.path}}",
+        "if": "ctx.url.path != null",
+        "description": "canonical alias for url.path",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "cs-user-agent",
+        "value": "{{user_agent.original}}",
+        "if": "ctx.user_agent.original != null",
+        "description": "canonical alias for user_agent.original",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "destination_port",
+        "value": "{{destination.port}}",
+        "if": "ctx.destination.port != null",
+        "description": "canonical alias for destination.port",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "query",
+        "value": "{{dns.question.name}}",
+        "if": "ctx.dns.question.name != null",
+        "description": "canonical alias for dns.question.name",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "field": "rcode",
+        "value": "{{dns.response_code}}",
+        "if": "ctx.dns.response_code != null",
+        "description": "canonical alias for dns.response_code",
+        "ignore_failure": true
+      }
+    }
+  ]
+}

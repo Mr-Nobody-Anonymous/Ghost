@@ -1,0 +1,21 @@
+{
+  "fixture_id": "NF-3b7e1c48",
+  "rule_id": "3b7e1c48-9d02-4a6f-8e15-c740b2d93af1",
+  "status": "designed",
+  "sample_ref": "benign",
+  "benign_lookalikes": [
+    "SCCM, Intune, monitoring agents",
+    "Patch-management agents registering a filter for a reboot-required query",
+    "Backup agents (Veeam, Windows Server Backup) registering a filter during the job",
+    "Lab or CI boxes creating filters as part of an exercise"
+  ],
+  "tuning_decision": "pending",
+  "must_not_match": {
+    "events": [
+      {
+        "_ts": 0,
+        "EventID": 999999
+      }
+    ]
+  }
+}

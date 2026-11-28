@@ -1,7 +1,8 @@
 title: SQLite Database Copied to Random Temp Filename
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a09
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a09:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: A browser SQLite database copied to a random .db filename in %TEMP%, consistent with credential collection staging.
 author: ghost-detection-lab
 date: 2026-11-27
@@ -12,7 +13,8 @@ min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
 tags: [attack.t1555.003]
-tactics: [attack.credential-access]
+tactics:
+  - attack.credential-access
 references:
   - https://attack.mitre.org/techniques/T1555.003/
   - inventory.md
@@ -27,4 +29,8 @@ detection:
   condition: selection
 falsepositives: [browser maintenance, backup agents, database tooling]
 level: medium
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a09.json

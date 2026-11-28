@@ -1,7 +1,8 @@
 title: autorun.inf Written Outside Trusted Install Paths
 id: 9b3f6a12-7c40-4e85-b2d1-5e8a0c4f7d63
 dedup_key: "rule:9b3f6a12-7c40-4e85-b2d1-5e8a0c4f7d63:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: >
   Detects creation of autorun.inf in user-writable or removable locations, a
   common USB spreading mechanism. Legitimate installers typically write it only
@@ -14,7 +15,11 @@ dedup_window: "5m"
 min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
-tactics: [attack.persistence, attack.lateral-movement]
+tactics:
+  - attack.initial-access
+  - attack.lateral-movement
+  - attack.persistence
+  - attack.privilege-escalation
 tags: [attack.t1091, attack.t1547.001]
 logsource:
   product: windows
@@ -22,15 +27,22 @@ logsource:
 detection:
   selection:
     EventID: 11
-    TargetFilename|endswith: '\\autorun.inf'
+    TargetFilename|endswith: '\autorun.inf'
   filter_trusted:
     TargetFilename|contains:
-      - '\\Program Files\\'
-      - '\\Program Files (x86)\\'
-      - '\\Windows\\'
+      - '\Program Files\'
+      - '\Program Files (x86)\'
+      - '\Windows\'
   condition: selection and not filter_trusted
 falsepositives:
   - Legitimate setup media and enterprise imaging tools
+  - ISO burners and imaging tools (Rufus, Ventoy) writing autorun.inf for autorun-capable media
+  - Enterprise deployment shares staging vendor setup media
+  - USB drives reused as install media between machines
 level: high
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 references:
   - https://attack.mitre.org/techniques/T1091/

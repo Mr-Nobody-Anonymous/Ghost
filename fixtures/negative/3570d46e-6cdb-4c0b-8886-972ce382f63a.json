@@ -1,0 +1,21 @@
+{
+  "fixture_id": "NF-3570d46e",
+  "rule_id": "3570d46e-6cdb-4c0b-8886-972ce382f63a",
+  "status": "designed",
+  "sample_ref": "benign",
+  "benign_lookalikes": [
+    "Legitimate installers and portable-app deployments to a USB stick",
+    "Backup and sync tools writing executables to an attached volume",
+    "Optical media authoring"
+  ],
+  "tuning_decision": "pending",
+  "must_not_match": {
+    "events": [
+      {
+        "_ts": 0,
+        "EventID": 999999,
+        "TargetFilename": "C:\\Windows\\System32\\svchost.exe"
+      }
+    ]
+  }
+}

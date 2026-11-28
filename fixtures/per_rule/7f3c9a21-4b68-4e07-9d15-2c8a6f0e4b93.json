@@ -1,0 +1,553 @@
+{
+  "fixture_id": "FX-7f3c9a21",
+  "rule_id": "7f3c9a21-4b68-4e07-9d15-2c8a6f0e4b93",
+  "attack_id": "T1497",
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
+    {
+      "EventID": 4663,
+      "Computer": "LAB-WS01",
+      "ObjectName": "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+      "AccessMask": "0x1",
+      "_ts": 0
+    },
+    {
+      "EventID": 1,
+      "Computer": "LAB-WS01",
+      "Image": "C:\\Windows\\System32\\sc.exe",
+      "CommandLine": "sc.exe stop windefend",
+      "_ts": 3
+    },
+    {
+      "EventID": 19,
+      "Computer": "LAB-WS01",
+      "_ts": 0
+    },
+    {
+      "EventID": 20,
+      "Computer": "LAB-WS01",
+      "Type": "CommandLineEventConsumer",
+      "_ts": 3
+    },
+    {
+      "EventID": 21,
+      "Computer": "LAB-WS01",
+      "_ts": 6
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 0
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 1
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 2
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 3
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 4
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 5
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 6
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 7
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 8
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 9
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 10
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 11
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 12
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 13
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 14
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 15
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 16
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 17
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 18
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 19
+    },
+    {
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 20
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 0
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 1
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 2
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 3
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 4
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 5
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 6
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 7
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 8
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 9
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 10
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 11
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 12
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 13
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 14
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 15
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 16
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 17
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 18
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 19
+    },
+    {
+      "rcode": "NXDOMAIN",
+      "Source": "192.0.2.10",
+      "query": "aaaaaaaaaaaaaa.com",
+      "_ts": 20
+    }
+  ],
+  "assert_fields": {
+    "EventID": 4663,
+    "Computer": "LAB-WS01",
+    "ObjectName": "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+    "AccessMask": "0x1"
+  },
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture. This fixture is the union of its members' verified sequences; analytics/campaign.py evaluates it, not detection-as-code/evaluate.py, which has no campaign operator.",
+  "members": {
+    "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05": {
+      "title": "CPU Information Enumeration Followed by Security Tool Tampering",
+      "id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05",
+      "dedup_key": "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05:host:user",
+      "status": "experimental",
+      "lifecycle": "designed",
+      "description": "Correlation of a CPU-identifier read with a follow-on attempt to weaken a security component shortly afterwards from the same user context: a service or driver stopped, an AMSI provider removed, a Defender preference altered, or a signed security service touched. The original draft chained a Security 4663 registry read to a Sysmon 10 process access; that pairing cannot fire, because 4663 carries no ProcessId shared with Sysmon and Sysmon 10 reports a process image rather than a loaded module. Both members carry Computer, so that is the join key. This version keeps only events that a default Windows audit policy can actually produce.\n",
+      "author": "ghost-detection-lab",
+      "date": "2026-11-27",
+      "sample_ref": "PIN-0000",
+      "sigma_spec_version": "2.1.0",
+      "dedup_window": "5m",
+      "min_eval_interval": "5s",
+      "min_os": "Windows 10 21H2",
+      "sysmon_min_version": 13,
+      "tags": [
+        "attack.t1685",
+        "attack.t1497"
+      ],
+      "tactics": [
+        "attack.defense-impairment",
+        "attack.discovery",
+        "attack.stealth"
+      ],
+      "references": [
+        "https://attack.mitre.org/techniques/T1685/",
+        "https://attack.mitre.org/techniques/T1497/",
+        "inventory.md",
+        "docs/sequence-rules.md"
+      ],
+      "logsource": {
+        "product": "windows"
+      },
+      "correlation": {
+        "type": "temporal",
+        "rules": [
+          "4663b1a0-0000-4000-8000-000000000001",
+          "5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3"
+        ],
+        "timespan": "5m",
+        "group-by": [
+          "Computer"
+        ]
+      },
+      "falsepositives": [
+        "Endpoint agents that inventory hardware and then restart their own service",
+        "Driver installation workflows that briefly stop a security service"
+      ],
+      "level": "medium",
+      "conversion": {
+        "splunk": "supported",
+        "elastic": "unsupported",
+        "kusto": "unsupported",
+        "note": "Only Splunk's pySigma backend implements correlation rules. The member rules convert everywhere; the temporal join must be built in the SIEM for Elastic and Kusto. See ci/convert_check.py.\n"
+      },
+      "fixture_ref": "fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05.json"
+    },
+    "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03": {
+      "title": "WMI Event Subscription Triple Create",
+      "id": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03",
+      "dedup_key": "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03:host:user",
+      "status": "experimental",
+      "lifecycle": "designed",
+      "description": "All three WMI subscription objects - event filter, command-line consumer and binding - created under root\\subscription for the same user inside one short window. A single object is common (SCCM, Intune, endpoint agents); the triple is the persistence shape. Member rules each convert to every backend; the temporal join converts only through the Splunk backend.\n",
+      "author": "ghost-detection-lab",
+      "date": "2026-11-27",
+      "sample_ref": "PIN-0000",
+      "sigma_spec_version": "2.1.0",
+      "dedup_window": "5m",
+      "min_eval_interval": "10s",
+      "min_os": "Windows 10 21H2",
+      "sysmon_min_version": 13,
+      "tags": [
+        "attack.t1546.003"
+      ],
+      "tactics": [
+        "attack.persistence",
+        "attack.privilege-escalation"
+      ],
+      "references": [
+        "https://attack.mitre.org/techniques/T1546/003/",
+        "https://learn.microsoft.com/windows/win32/wmisdk/creating-a-permanent-wmi-event-consumer",
+        "docs/sequence-rules.md"
+      ],
+      "logsource": {
+        "product": "windows"
+      },
+      "correlation": {
+        "type": "temporal",
+        "rules": [
+          "3b7e1c48-9d02-4a6f-8e15-c740b2d93af1",
+          "7c4f9e02-5b83-4d61-a0f2-8e1d3c6b9a74",
+          "9e0d4b71-6c25-4f38-b7a9-2d5e8c1f0a63"
+        ],
+        "timespan": "30s",
+        "group-by": [
+          "Computer"
+        ]
+      },
+      "falsepositives": [
+        "SCCM and Intune client remediation",
+        "Monitoring agents that recreate subscriptions after an update"
+      ],
+      "level": "high",
+      "conversion": {
+        "splunk": "supported",
+        "elastic": "unsupported",
+        "kusto": "unsupported",
+        "note": "correlation rules are a Splunk-backend feature in pySigma 1.x"
+      },
+      "fixture_ref": "fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03.json"
+    },
+    "8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52": {
+      "title": "Beaconing - High Request Frequency with Regular Intervals",
+      "id": "8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52",
+      "dedup_key": "rule:8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52:host:user",
+      "status": "experimental",
+      "lifecycle": "designed",
+      "description": "Many custom-header requests to the same destination from one client inside ten minutes. The original declared correlation type `frequency`, which does not exist in Sigma 2.1, so the rule failed to load in pySigma at all; `event_count` is the correct type. Frequency alone is weak evidence - poll rate is checked against the inter-arrival analysis in docs/sequence-rules.md before escalation.\n",
+      "author": "ghost-detection-lab",
+      "date": "2026-11-27",
+      "sample_ref": "PIN-0000",
+      "sigma_spec_version": "2.1.0",
+      "dedup_window": "5m",
+      "min_eval_interval": "60s",
+      "min_os": "Windows 10 21H2",
+      "sysmon_min_version": 13,
+      "tags": [
+        "attack.t1071.001"
+      ],
+      "tactics": [
+        "attack.command-and-control"
+      ],
+      "references": [
+        "https://attack.mitre.org/techniques/T1071/001/",
+        "docs/sequence-rules.md"
+      ],
+      "logsource": {
+        "category": "proxy"
+      },
+      "correlation": {
+        "type": "event_count",
+        "rules": [
+          "2d7f4b90-8e31-4c5a-b2d6-9f1a0c3e7d52"
+        ],
+        "group-by": [
+          "SourceAddress",
+          "DestinationHostname"
+        ],
+        "timespan": "10m",
+        "condition": {
+          "gte": 20
+        }
+      },
+      "falsepositives": [
+        "Polling dashboards and health checks",
+        "Software update clients",
+        "Chat clients holding a long-poll connection"
+      ],
+      "level": "medium",
+      "conversion": {
+        "splunk": "supported",
+        "elastic": "unsupported",
+        "kusto": "unsupported",
+        "note": "correlation rules convert only through the Splunk backend"
+      }
+    },
+    "5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84": {
+      "title": "Possible DGA - High Entropy Labels and NXDOMAIN Burst",
+      "id": "5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84",
+      "dedup_key": "rule:5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84:host:user",
+      "status": "experimental",
+      "lifecycle": "designed",
+      "description": "Many NXDOMAIN answers for long pseudo-random labels from one host inside five minutes - the fallback path of a domain-generation algorithm. Rewritten from the deprecated `selection | count() by Source > 20` pipe syntax into a member rule plus an event_count correlation, which is the format Sigma 2.1 and pySigma actually accept.\n",
+      "author": "ghost-detection-lab",
+      "date": "2026-11-27",
+      "sample_ref": "PIN-0000",
+      "sigma_spec_version": "2.1.0",
+      "dedup_window": "5m",
+      "min_eval_interval": "10s",
+      "min_os": "Windows 10 21H2",
+      "sysmon_min_version": 13,
+      "tags": [
+        "attack.t1568.002"
+      ],
+      "tactics": [
+        "attack.command-and-control"
+      ],
+      "references": [
+        "https://attack.mitre.org/techniques/T1568/002/",
+        "docs/sequence-rules.md"
+      ],
+      "logsource": {
+        "product": "zeek"
+      },
+      "correlation": {
+        "type": "event_count",
+        "rules": [
+          "d81f4a63-2c95-4b07-a3e8-6f10c5d92b47"
+        ],
+        "group-by": [
+          "Source"
+        ],
+        "timespan": "5m",
+        "condition": {
+          "gte": 20
+        }
+      },
+      "falsepositives": [
+        "CDN and telemetry hostnames with long random labels",
+        "DNS security products generating probe queries",
+        "Broken internal name resolution"
+      ],
+      "level": "medium",
+      "conversion": {
+        "splunk": "supported",
+        "elastic": "unsupported",
+        "kusto": "unsupported",
+        "note": "correlation rules convert only through the Splunk backend"
+      }
+    }
+  },
+  "campaign": {
+    "require_at_least": 3,
+    "window": "1h",
+    "group_by": "Computer",
+    "of": {
+      "recon": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05",
+      "persist": "1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a03",
+      "egress": "8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52",
+      "dns": "5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84"
+    }
+  }
+}

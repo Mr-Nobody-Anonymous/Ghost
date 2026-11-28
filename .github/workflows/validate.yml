@@ -8,15 +8,62 @@ on:
 jobs:
   gate:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.9 is the declared floor (Path.is_relative_to); 3.11 is what the
+        # pinned dependency set was resolved against. Testing both means the
+        # floor is a claim with evidence rather than a sentence in a README.
+        python-version: ['3.9', '3.11']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-      - name: Install validation and conversion dependencies
-        run: python -m pip install --upgrade pip pyyaml yara-python sigma-cli sigma-backend-splunk sigma-backend-kql
-      - name: Run the full gate (same command a stranger runs locally)
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install pinned dependencies
+        # Pinned in requirements.txt. Unpinned installs made the conversion
+        # results - which the gate compares against generated query text -
+        # reproducible only on the day they were measured.
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Att&CK bundle (optional - verification only, never committed)
+        continue-on-error: true
+        # 20.1, not 14.1: the pin moved when ATT&CK revoked T1562 and split
+        # Defense Evasion into Stealth and Defense Impairment. This line was
+        # left at the old version and the step is continue-on-error, so it
+        # silently verified a bundle nobody uses.
+        run: python tools/pin_attack_bundle.py --version 20.1 --fetch --verify
+
+      - name: Cache the upstream SigmaHQ snapshot
+        # 3,164 rules, ~14 MB, ~10 minutes to fetch through the contents API.
+        # Cached on the snapshot commit so the overlap check runs in CI instead
+        # of being skipped for lack of a snapshot. A cache miss costs one slow
+        # job, not a permanently unmeasured gap.
+        uses: actions/cache@v4
+        with:
+          path: attack/cache/sigmahq
+          key: sigmahq-overlap-${{ github.run_id }}
+          restore-keys: |
+            sigmahq-overlap-
+
+      - name: Run the full gate (the same command a stranger runs locally)
         run: bash ci/gate.sh
 
-  # The gate is intentionally allowed to fail: conversion of correlation rules
-  # is a known, recorded gap. See docs/maturity.md. Do not weaken this job.
+      - name: Keep the generated coverage and conversion reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-and-conversion
+          path: |
+            attack/matrix.md
+            attack/conversion.json
+            dist/detection-lab.tgz
+          if-no-files-found: warn
+
+  # The gate is meant to be green on the parts that are proven and to name the
+  # parts that are not. Do not weaken a stage to make this job pass; add the
+  # missing evidence instead. Current unproven areas are listed in
+  # docs/maturity.md (blind capture, benign corpus, volume measurement).

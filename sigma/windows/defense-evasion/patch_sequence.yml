@@ -1,8 +1,18 @@
-title: Anti-Analysis Triage Followed by AMSI or ETW Patch
+title: CPU Information Enumeration Followed by Security Tool Tampering
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05:host:user"
-status: designed
-description: Correlation of a CPU-info registry read with a process access to amsi.dll or ntdll.dll shortly after, from the same process.
+status: experimental
+lifecycle: designed
+description: >
+  Correlation of a CPU-identifier read with a follow-on attempt to weaken a
+  security component shortly afterwards from the same user context: a service
+  or driver stopped, an AMSI provider removed, a Defender preference altered,
+  or a signed security service touched. The original draft chained a Security
+  4663 registry read to a Sysmon 10 process access; that pairing cannot fire,
+  because 4663 carries no ProcessId shared with Sysmon and Sysmon 10 reports a
+  process image rather than a loaded module. Both members carry Computer, so
+  that is the join key. This version keeps only events
+  that a default Windows audit policy can actually produce.
 author: ghost-detection-lab
 date: 2026-11-27
 sample_ref: PIN-0000
@@ -11,25 +21,36 @@ dedup_window: "5m"
 min_eval_interval: "5s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
-tags: [attack.t1562.001, attack.t1497]
-tactics: [attack.defense-evasion]
+tags: [attack.t1685, attack.t1497]
+tactics:
+  - attack.defense-impairment
+  - attack.discovery
+  - attack.stealth
 references:
-  - https://attack.mitre.org/techniques/T1562.001/
+  - https://attack.mitre.org/techniques/T1685/
+  - https://attack.mitre.org/techniques/T1497/
   - inventory.md
+  - docs/sequence-rules.md
 logsource:
   product: windows
-  # Mixed logsource: member 4663b1a0 is Security 4663, member 7a1c3e40 is
-  # EDR/Sysmon. Declaring a single service made the pair unsatisfiable.
-  services: [security, sysmon, edr]
 correlation:
-  type: sequence
+  type: temporal
   rules:
     - 4663b1a0-0000-4000-8000-000000000001
-    - 7a1c3e40-9b12-4d6e-8f21-0c3b5a9d7e11
-  timespan: 5s
+    - 5e1c0f27-3a64-4b18-9d75-0c2f8a41b6e3
+  timespan: 5m
   group-by:
-    - ProcessId
-  ordered: true
-falsepositives: [security products inspecting their own modules after hardware inventory]
-level: high
+    - Computer
+falsepositives:
+  - Endpoint agents that inventory hardware and then restart their own service
+  - Driver installation workflows that briefly stop a security service
+level: medium
+conversion:
+  splunk: supported
+  elastic: unsupported
+  kusto: unsupported
+  note: >
+    Only Splunk's pySigma backend implements correlation rules. The member rules
+    convert everywhere; the temporal join must be built in the SIEM for Elastic
+    and Kusto. See ci/convert_check.py.
 fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a05.json

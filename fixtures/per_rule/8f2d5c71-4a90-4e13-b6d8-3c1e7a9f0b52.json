@@ -6,202 +6,222 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 0
     },
     {
-      "_ts": 1,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 1
     },
     {
-      "_ts": 2,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 2
     },
     {
-      "_ts": 3,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 3
     },
     {
-      "_ts": 4,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 4
     },
     {
-      "_ts": 5,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 5
     },
     {
-      "_ts": 6,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 6
     },
     {
-      "_ts": 7,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 7
     },
     {
-      "_ts": 8,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 8
     },
     {
-      "_ts": 9,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 9
     },
     {
-      "_ts": 10,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 10
     },
     {
-      "_ts": 11,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 11
     },
     {
-      "_ts": 12,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 12
     },
     {
-      "_ts": 13,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 13
     },
     {
-      "_ts": 14,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 14
     },
     {
-      "_ts": 15,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 15
     },
     {
-      "_ts": 16,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 16
     },
     {
-      "_ts": 17,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 17
     },
     {
-      "_ts": 18,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 18
     },
     {
-      "_ts": 19,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 19
     },
     {
-      "_ts": 20,
-      "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-      "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-      "cs-uri-query": "id=abc&seq=3",
-      "cs-user-agent": "Mozilla/5.0",
-      "cs-content-type": "application/octet-stream"
+      "cs-header-X-Id": "cs-header-x-id-value",
+      "cs-header-X-Seq": "cs-header-x-seq-value",
+      "SourceAddress": "sourceaddress-value",
+      "DestinationHostname": "cdn.example.net",
+      "_ts": 20
     }
   ],
   "assert_fields": {
-    "cs-header-X-Id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-    "cs-header-X-Seq": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-    "cs-uri-stem": "C:\\Users\\lab\\AppData\\Local\\Temp\\/poll",
-    "cs-uri-query": "id=abc&seq=3",
-    "cs-user-agent": "Mozilla/5.0",
-    "cs-content-type": "application/octet-stream"
+    "cs-header-X-Id": "cs-header-x-id-value",
+    "cs-header-X-Seq": "cs-header-x-seq-value",
+    "SourceAddress": "sourceaddress-value",
+    "DestinationHostname": "cdn.example.net"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture.",
+  "members": {
+    "2d7f4b90-8e31-4c5a-b2d6-9f1a0c3e7d52": {
+      "title": "Beacon with Custom X-Id / X-Seq Headers",
+      "id": "2d7f4b90-8e31-4c5a-b2d6-9f1a0c3e7d52",
+      "dedup_key": "rule:2d7f4b90-8e31-4c5a-b2d6-9f1a0c3e7d52:host:user",
+      "status": "experimental",
+      "lifecycle": "designed",
+      "description": "Detects outbound HTTP(S) requests carrying BOTH non-standard headers X-Id and X-Seq, or a request whose URI path is /poll with id= and seq= query terms under a browser-looking user agent. The original draft used `cs-uri-stem|endswith: '/poll'` with a conjunctive URI query, which never fired on the /poll?id=&seq= shape it was written for.\n",
+      "author": "ghost-detection-lab",
+      "date": "2026-11-27",
+      "sample_ref": "PIN-0000",
+      "sigma_spec_version": "2.1.0",
+      "dedup_window": "5m",
+      "min_eval_interval": "10s",
+      "min_os": "Windows 10 21H2",
+      "sysmon_min_version": 13,
+      "tags": [
+        "attack.t1071.001"
+      ],
+      "tactics": [
+        "attack.command-and-control"
+      ],
+      "references": [
+        "https://attack.mitre.org/techniques/T1071/001/",
+        "network/ja3-x509.md"
+      ],
+      "logsource": {
+        "category": "proxy"
+      },
+      "detection": {
+        "sel_headers": {
+          "cs-header-X-Id|exists": true,
+          "cs-header-X-Seq|exists": true,
+          "SourceAddress|exists": true,
+          "DestinationHostname|exists": true
+        },
+        "sel_uri": {
+          "cs-uri-query|contains|all": [
+            "id=",
+            "seq="
+          ]
+        },
+        "sel_path": {
+          "cs-uri-stem|endswith": "/poll",
+          "SourceAddress|exists": true,
+          "DestinationHostname|exists": true
+        },
+        "sel_ua": {
+          "cs-user-agent|startswith": "Mozilla/5.0"
+        },
+        "condition": "sel_headers or (sel_path and sel_uri and sel_ua)"
+      },
+      "falsepositives": [
+        "Internal applications that use similarly named custom headers",
+        "Misconfigured monitoring agents"
+      ],
+      "level": "high",
+      "conversion": {
+        "splunk": "supported",
+        "elastic": "supported",
+        "kusto": "supported"
+      }
+    }
+  }
 }

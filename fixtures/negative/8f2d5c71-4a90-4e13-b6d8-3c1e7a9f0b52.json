@@ -5,13 +5,16 @@
   "sample_ref": "benign",
   "benign_lookalikes": [
     "Polling dashboards and health checks",
-    "Software update clients"
+    "Software update clients",
+    "Chat clients holding a long-poll connection"
   ],
   "tuning_decision": "pending",
   "must_not_match": {
     "events": [
       {
-        "_ts": 0
+        "_ts": 0,
+        "Image": "C:\\Windows\\explorer.exe",
+        "EventID": 1
       }
     ]
   }

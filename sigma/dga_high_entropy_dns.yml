@@ -1,11 +1,14 @@
 title: Possible DGA - High Entropy Labels and NXDOMAIN Burst
 id: 5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84
 dedup_key: "rule:5c8e7a21-4d93-4b6f-8e02-1a7f3d9c5b84:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: >
-  Correlates long, high-entropy DNS labels (14+ chars from a lowercase alphabet)
-  with repeated NXDOMAIN responses from one host. Tune the threshold against your
-  environment; CDNs and telemetry endpoints also produce long labels.
+  Many NXDOMAIN answers for long pseudo-random labels from one host inside five
+  minutes - the fallback path of a domain-generation algorithm. Rewritten from
+  the deprecated `selection | count() by Source > 20` pipe syntax into a member
+  rule plus an event_count correlation, which is the format Sigma 2.1 and
+  pySigma actually accept.
 author: ghost-detection-lab
 date: 2026-11-27
 sample_ref: PIN-0000
@@ -14,21 +17,30 @@ dedup_window: "5m"
 min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
-tactics: [attack.command-and-control]
 tags: [attack.t1568.002]
+tactics:
+  - attack.command-and-control
+references:
+  - https://attack.mitre.org/techniques/T1568/002/
+  - docs/sequence-rules.md
 logsource:
   product: zeek
-  service: dns
-detection:
-  selection:
-    query|re: '([a-z]{14,})\.(com|net|org|info|biz|ru|top|xyz)$'
-    rcode: NXDOMAIN
-  condition: selection | count() by Source > 20
-timeframe: 5m
+correlation:
+  type: event_count
+  rules:
+    - d81f4a63-2c95-4b07-a3e8-6f10c5d92b47
+  group-by:
+    - Source
+  timespan: 5m
+  condition:
+    gte: 20
 falsepositives:
   - CDN and telemetry hostnames with long random labels
   - DNS security products generating probe queries
   - Broken internal name resolution
 level: medium
-references:
-  - https://attack.mitre.org/techniques/T1568/002/
+conversion:
+  splunk: supported
+  elastic: unsupported
+  kusto: unsupported
+  note: correlation rules convert only through the Splunk backend

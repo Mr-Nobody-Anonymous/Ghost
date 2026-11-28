@@ -6,16 +6,16 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
       "EventID": 1,
-      "Image": "C:\\Windows\\System32\\\\net.exe",
-      "CommandLine": "prefix-view-suffix"
+      "Image": "C:\\Windows\\System32\\net.exe",
+      "CommandLine": "net.exe view \\\\fileserver",
+      "_ts": 0
     }
   ],
   "assert_fields": {
     "EventID": 1,
-    "Image": "C:\\Windows\\System32\\\\net.exe",
-    "CommandLine": "prefix-view-suffix"
+    "Image": "C:\\Windows\\System32\\net.exe",
+    "CommandLine": "net.exe view \\\\fileserver"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

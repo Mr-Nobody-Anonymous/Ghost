@@ -1,0 +1,19 @@
+{
+  "fixture_id": "FX-9e0d4b71",
+  "rule_id": "9e0d4b71-6c25-4f38-b7a9-2d5e8c1f0a63",
+  "attack_id": "T1546.003",
+  "status": "designed",
+  "sample_ref": "PIN-0000",
+  "events": [
+    {
+      "EventID": 21,
+      "Computer": "LAB-WS01",
+      "_ts": 0
+    }
+  ],
+  "assert_fields": {
+    "EventID": 21,
+    "Computer": "LAB-WS01"
+  },
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
+}

@@ -1,12 +1,14 @@
 title: Beaconing - High Request Frequency with Regular Intervals
 id: 8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52
 dedup_key: "rule:8f2d5c71-4a90-4e13-b6d8-3c1e7a9f0b52:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: >
-  Sigma correlation rule: many requests to the same destination from one client
-  in a short window. Catches jittered long-poll beacons that evade simple
-  threshold rules. Backend support for correlation rules varies; validate with
-  sigma convert before deployment.
+  Many custom-header requests to the same destination from one client inside ten
+  minutes. The original declared correlation type `frequency`, which does not
+  exist in Sigma 2.1, so the rule failed to load in pySigma at all; `event_count`
+  is the correct type. Frequency alone is weak evidence - poll rate is checked
+  against the inter-arrival analysis in docs/sequence-rules.md before escalation.
 author: ghost-detection-lab
 date: 2026-11-27
 sample_ref: PIN-0000
@@ -15,23 +17,31 @@ dedup_window: "5m"
 min_eval_interval: "60s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
-tactics: [attack.command-and-control]
 tags: [attack.t1071.001]
+tactics:
+  - attack.command-and-control
+references:
+  - https://attack.mitre.org/techniques/T1071/001/
+  - docs/sequence-rules.md
 logsource:
   category: proxy
 correlation:
-  type: frequency
+  type: event_count
   rules:
     - 2d7f4b90-8e31-4c5a-b2d6-9f1a0c3e7d52
-  timespan: 10m
-  condition:
-    gte: 20
   group-by:
     - SourceAddress
     - DestinationHostname
+  timespan: 10m
+  condition:
+    gte: 20
 falsepositives:
   - Polling dashboards and health checks
   - Software update clients
+  - Chat clients holding a long-poll connection
 level: medium
-references:
-  - https://attack.mitre.org/techniques/T1071/001/
+conversion:
+  splunk: supported
+  elastic: unsupported
+  kusto: unsupported
+  note: correlation rules convert only through the Splunk backend

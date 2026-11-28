@@ -15,6 +15,14 @@
         "EventID": 999999,
         "TargetObject": "benign-no-match",
         "Image": "C:\\Windows\\System32\\msiexec.exe"
+      },
+      {
+        "EventID": 13,
+        "Image": "C:\\Windows\\System32\\msiexec.exe",
+        "ParentImage": "C:\\Windows\\explorer.exe",
+        "TargetObject": "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\SevenZip",
+        "Details": "C:\\Program Files\\7-Zip\\7zFM.exe",
+        "_ts": 1
       }
     ]
   }

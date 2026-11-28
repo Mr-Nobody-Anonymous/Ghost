@@ -1,0 +1,21 @@
+{
+  "fixture_id": "NF-7f3c9a21",
+  "rule_id": "7f3c9a21-4b68-4e07-9d15-2c8a6f0e4b93",
+  "status": "designed",
+  "sample_ref": "benign",
+  "benign_lookalikes": [
+    "A hardening script that reads the CPU key, stops a service, creates a WMI subscription, and beacons to a vendor endpoint inside an hour",
+    "Red-team exercises against the staging environment",
+    "An SCCM client doing inventory, remediation, subscription repair, and telemetry"
+  ],
+  "tuning_decision": "pending",
+  "must_not_match": {
+    "events": [
+      {
+        "_ts": 0,
+        "Image": "C:\\Windows\\explorer.exe",
+        "EventID": 1
+      }
+    ]
+  }
+}

@@ -6,14 +6,14 @@
   "sample_ref": "PIN-0000",
   "events": [
     {
-      "_ts": 0,
       "EventID": 11,
-      "TargetFilename": "C:\\Users\\lab\\AppData\\Local\\Temp\\.enc"
+      "TargetFilename": "C:\\Users\\lab\\AppData\\Local\\Temp\\artifact.enc",
+      "_ts": 0
     }
   ],
   "assert_fields": {
     "EventID": 11,
-    "TargetFilename": "C:\\Users\\lab\\AppData\\Local\\Temp\\.enc"
+    "TargetFilename": "C:\\Users\\lab\\AppData\\Local\\Temp\\artifact.enc"
   },
-  "note": "Concrete but authored from the rule. Replace with an independent blind capture."
+  "note": "Derived from the rule's own detection block by tools/generate_fixtures.py. Replace with an independent blind capture."
 }

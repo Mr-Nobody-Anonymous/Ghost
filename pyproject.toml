@@ -1,0 +1,57 @@
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+extend-exclude = ["dist", "attack/cache"]
+
+[tool.ruff.lint]
+# Correctness only. Style is not a defect, and a gate that fails on line length
+# trains people to ignore the gate - the same failure mode this repository keeps
+# finding in its own checks.
+#
+# E4/E7/E9  syntax-level mistakes (EOF in multi-line, undefined names)
+# F         unused/undefined names, f-string mistakes, shadowing
+# B         flake8-bugbear: late-binding closures (B023), mutable defaults,
+#           `assert` on tuples, loop-variable capture - real bugs, and B023
+#           found two in this repository's own test helper
+# I         import order (auto-fixable, keeps diffs honest)
+# UP        deprecated syntax the pinned interpreter no longer needs
+# SIM       simplifications that are always equivalent
+select = [
+  "E4", "E7", "E9",
+  "F",
+  "B",
+  "I",
+  "UP",
+  "SIM",
+  "C4",
+  "PIE",
+  "PERF",
+]
+
+# BLE001 (blind except) is intentional: several tools must report and continue
+# rather than die on one unreadable rule. Each site says why in a comment.
+# PLW1510 (subprocess without check=) is not applicable where the return code is
+# inspected immediately.
+ignore = [
+  "E501",     # line length: reported by the formatter, not a correctness gate
+  "SIM102",   # nested if: readability preference, not a defect
+  "SIM114",   # if-with-same-arms: explicit branches document intent
+  "UP031",    # printf formatting in generated shell snippets
+  "PERF102",  # dict iteration micro-optimisation
+  "PERF401",  # list.extend for a transformed list: readability preference
+  "B007",     # unused loop variable: used to keep an explicit iteration order
+  "PERF203",  # try/except in a loop: each iteration reports its own failure
+  "B904",     # `raise SystemExit` in except: message already names the cause
+  "PIE810",   # startswith/endswith tuple: reads better split
+  "ISC004",   # implicit string concatenation in a list literal
+]
+
+# E402: several tools insert detection-as-code/ on sys.path before importing
+# the modules that live there. The import must follow the path insertion, so
+# the ordering is required rather than sloppy.
+[tool.ruff.lint.per-file-ignores]
+"tools/*" = ["BLE001", "PLW1510", "E402"]
+"ci/*" = ["BLE001", "PLW1510"]
+"emulation/*" = ["BLE001", "E402"]
+"detection-as-code/*" = ["BLE001", "PLW1510"]
+"tests/*" = ["PLW1510", "E402", "PERF203"]

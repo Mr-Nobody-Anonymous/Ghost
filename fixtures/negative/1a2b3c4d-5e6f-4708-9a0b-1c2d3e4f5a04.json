@@ -4,7 +4,11 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "legitimate startup shortcuts created by installers"
+    "legitimate startup shortcuts created by installers",
+    "Dropbox, OneDrive, Slack, Teams recreate their Startup .lnk after each update",
+    "Corporate login scripts writing a per-user Startup shortcut",
+    "A `.cmd` shim in Startup installed by a vendor driver package (e.g. printer suites)",
+    "An MSI whose CustomAction writes Startup directly - `filter_installer` only sees msiexec when it is the writing Image, not the parent of a helper"
   ],
   "tuning_decision": "pending",
   "must_not_match": {

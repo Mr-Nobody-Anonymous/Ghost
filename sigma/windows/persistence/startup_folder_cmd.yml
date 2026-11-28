@@ -1,7 +1,8 @@
 title: Script Written to User Startup Folder
 id: 1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a04
 dedup_key: "rule:1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a04:host:user"
-status: designed
+status: experimental
+lifecycle: designed
 description: A .cmd/.bat/.lnk file created in the user Startup folder by a non-installer process.
 author: ghost-detection-lab
 date: 2026-11-27
@@ -12,7 +13,9 @@ min_eval_interval: "10s"
 min_os: "Windows 10 21H2"
 sysmon_min_version: 13
 tags: [attack.t1547.001]
-tactics: [attack.persistence]
+tactics:
+  - attack.persistence
+  - attack.privilege-escalation
 references:
   - https://attack.mitre.org/techniques/T1547.001/
   - inventory.md
@@ -27,6 +30,15 @@ detection:
   filter_installer:
     Image|endswith: ['\msiexec.exe', '\setup.exe']
   condition: selection and not filter_installer
-falsepositives: [legitimate startup shortcuts created by installers]
+falsepositives:
+  - legitimate startup shortcuts created by installers
+  - Dropbox, OneDrive, Slack, Teams recreate their Startup .lnk after each update
+  - Corporate login scripts writing a per-user Startup shortcut
+  - A `.cmd` shim in Startup installed by a vendor driver package (e.g. printer suites)
+  - An MSI whose CustomAction writes Startup directly - `filter_installer` only sees msiexec when it is the writing Image, not the parent of a helper
 level: medium
+conversion:
+  splunk: supported
+  elastic: supported
+  kusto: supported
 fixture_ref: fixtures/per_rule/1a2b3c4d-5e6f-4708-9a0b-1c2d3e4f5a04.json

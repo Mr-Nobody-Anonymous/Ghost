@@ -4,8 +4,8 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "installers removing temporary copies",
-    "update helpers"
+    "Updaters that delete their previous image after staging a replacement",
+    "Installers removing extracted temporary copies"
   ],
   "tuning_decision": "pending",
   "must_not_match": {

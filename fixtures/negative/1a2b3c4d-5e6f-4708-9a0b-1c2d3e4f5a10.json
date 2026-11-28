@@ -4,8 +4,8 @@
   "status": "designed",
   "sample_ref": "benign",
   "benign_lookalikes": [
-    "legitimate updaters",
-    "portable app self-update"
+    "Portable application self-updaters (VS Code, Discord, Slack)",
+    "Per-user MSI and Squirrel installers"
   ],
   "tuning_decision": "pending",
   "must_not_match": {
@@ -14,7 +14,8 @@
         "_ts": 0,
         "EventID": 999999,
         "TargetFilename": "benign-no-match",
-        "Image": "C:\\Windows\\System32\\msiexec.exe"
+        "Image": "C:\\Windows\\System32\\msiexec.exe",
+        "Signature": "Microsoft Windows"
       }
     ]
   }
