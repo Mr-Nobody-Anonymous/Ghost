@@ -1,0 +1,317 @@
+{
+  "_meta": {
+    "description": "Sigma canonical field -> per-platform field name. The rules are written against the canonical column, which is the vocabulary in telemetry/data-sources.md; nothing here changes a rule. Each platform's deployment maps it.",
+    "why": "Sigma `EventID` vs Splunk `EventCode` vs Elastic `event.code` vs Kusto `EventID`. A missing alias makes a rule evaluate against a null field, which matches nothing, silently. That failure has no symptom - a rule that never fires looks like a quiet rule.",
+    "validated_by": "pipeline/field_contract.py --platforms (gate stage 9); tests/test_field_map.py",
+    "not_validated_against": "A live Splunk, Elastic or Sentinel instance. These are the documented names for each platform, not names read back from a deployed index template."
+  },
+  "fields": {
+    "EventID": {
+      "splunk": "EventCode",
+      "elastic": "event.code",
+      "kusto": "EventID",
+      "note": "Splunk parses Windows event logs as EventCode. This alias is the one that most often goes missing."
+    },
+    "Computer": {
+      "splunk": "Computer",
+      "elastic": "host.name",
+      "kusto": "Computer",
+      "note": "Splunk's Computer is usually populated; on forwarders without it, coalesce with host."
+    },
+    "Image": {
+      "splunk": "Image",
+      "elastic": "process.executable",
+      "kusto": "FolderPath",
+      "note": "Sysmon 1 Image. In Kusto's DeviceProcessEvents this is FolderPath; the full command is ProcessCommandLine."
+    },
+    "CommandLine": {
+      "splunk": "CommandLine",
+      "elastic": "process.command_line",
+      "kusto": "ProcessCommandLine"
+    },
+    "ParentImage": {
+      "splunk": "ParentImage",
+      "elastic": "process.parent.executable",
+      "kusto": "InitiatingProcessFolderPath"
+    },
+    "ParentCommandLine": {
+      "splunk": "ParentCommandLine",
+      "elastic": "process.parent.command_line",
+      "kusto": "InitiatingProcessCommandLine"
+    },
+    "ParentProcessGuid": {
+      "splunk": "ParentProcessGuid",
+      "elastic": "process.parent.entity_id",
+      "kusto": "InitiatingProcessId",
+      "note": "The stage0->stage1 join key. Elastic's entity_id is not the same identifier as Sysmon's ProcessGuid - it must be derived at ingest, or the join in analytics/stage_join.py is expressed against whatever per-boot id the platform has."
+    },
+    "ProcessGuid": {
+      "splunk": "ProcessGuid",
+      "elastic": "process.entity_id",
+      "kusto": "ProcessId",
+      "note": "Same caveat as ParentProcessGuid: a per-boot process identity, not the raw PID."
+    },
+    "ProcessId": {
+      "splunk": "ProcessId",
+      "elastic": "process.pid",
+      "kusto": "ProcessId"
+    },
+    "TargetObject": {
+      "splunk": "TargetObject",
+      "elastic": "registry.path",
+      "kusto": "RegistryKey"
+    },
+    "ObjectName": {
+      "splunk": "ObjectName",
+      "elastic": "registry.path",
+      "kusto": "ObjectName",
+      "note": "Security 4663 objects. Elastic routes registry objects to registry.path and file objects to file.path; a single 4663 rule needs a shared field or two queries."
+    },
+    "AccessMask": {
+      "splunk": "AccessMask",
+      "elastic": "winlog.event_data.AccessMask",
+      "kusto": "AccessMask",
+      "note": "Elastic's ECS has no field for a Windows access mask; the raw event data is the only place it exists."
+    },
+    "TargetFilename": {
+      "splunk": "TargetFilename",
+      "elastic": "file.path",
+      "kusto": "FileName"
+    },
+    "TargetImage": {
+      "splunk": "TargetImage",
+      "elastic": "process.target.executable",
+      "kusto": "TargetProcessFilePath",
+      "note": "Only meaningful on Sysmon 8/10. There is no ECS field for 'the process whose memory was touched' until process.target.* was added; verify against the deployment's ECS version."
+    },
+    "SourceImage": {
+      "splunk": "SourceImage",
+      "elastic": "process.executable",
+      "kusto": "InitiatingProcessFolderPath"
+    },
+    "GrantedAccess": {
+      "splunk": "GrantedAccess",
+      "elastic": "winlog.event_data.GrantedAccess",
+      "kusto": "GrantedAccess"
+    },
+    "Details": {
+      "splunk": "Details",
+      "elastic": "winlog.event_data.Details",
+      "kusto": "Details"
+    },
+    "Type": {
+      "splunk": "Type",
+      "elastic": "winlog.event_data.Type",
+      "kusto": "Type"
+    },
+    "EventType": {
+      "splunk": "EventType",
+      "elastic": "winlog.event_data.EventType",
+      "kusto": "EventType"
+    },
+    "Signature": {
+      "splunk": "Signature",
+      "elastic": "process.code_signature.subject_name",
+      "kusto": "Signer",
+      "note": "Elastic resolves the signer to the certificate subject; Sysmon's Signature is the same value in most deployments but a self-signed or unverifiable binary is empty in both."
+    },
+    "IntegrityLevel": {
+      "splunk": "IntegrityLevel",
+      "elastic": "process.Ext.token.integrity_level_name",
+      "kusto": "ProcessIntegrityLevel",
+      "note": "Elastic's is a non-ECS extension field; it is present in the default Windows integration."
+    },
+    "QueryName": {
+      "splunk": "QueryName",
+      "elastic": "dns.question.name",
+      "kusto": "Name"
+    },
+    "query": {
+      "splunk": "query",
+      "elastic": "dns.question.name",
+      "kusto": "Name",
+      "note": "Zeek naming for the same object as QueryName. Two rules use one name and two the other; the map is what makes them the same on a platform."
+    },
+    "rcode": {
+      "splunk": "rcode",
+      "elastic": "dns.response_code",
+      "kusto": "ResponseCodeName"
+    },
+    "Source": {
+      "splunk": "src",
+      "elastic": "source.ip",
+      "kusto": "SrcIpAddr",
+      "note": "Zeek's Source. Splunk's `src` is only populated if the deployment maps it; the props.conf snippet in docs/deployment.md does."
+    },
+    "SourceAddress": {
+      "splunk": "src",
+      "elastic": "source.ip",
+      "kusto": "SrcIpAddr",
+      "note": "Proxy client address. Same canonical object as Zeek's Source, different exporter."
+    },
+    "DestinationHostname": {
+      "splunk": "dest_host",
+      "elastic": "destination.domain",
+      "kusto": "DstHostname"
+    },
+    "DestinationPort": {
+      "splunk": "dest_port",
+      "elastic": "destination.port",
+      "kusto": "DestinationPortNumber"
+    },
+    "destination_port": {
+      "splunk": "dest_port",
+      "elastic": "destination.port",
+      "kusto": "DestinationPortNumber",
+      "note": "Netflow naming for the same object as DestinationPort."
+    },
+    "Process": {
+      "splunk": "process_name",
+      "elastic": "process.name",
+      "kusto": "Process"
+    },
+    "cs-user-agent": {
+      "splunk": "cs_user_agent",
+      "elastic": "user_agent.original",
+      "kusto": "UserAgent",
+      "note": "Splunk renames proxy fields: the hyphen becomes an underscore."
+    },
+    "cs-uri-stem": {
+      "splunk": "cs_uri_stem",
+      "elastic": "url.path",
+      "kusto": "RequestURL"
+    },
+    "cs-uri-query": {
+      "splunk": "cs_uri_query",
+      "elastic": "url.query",
+      "kusto": "RequestURL",
+      "note": "Kusto's RequestURL holds path and query together; a query-only rule needs split()."
+    },
+    "cs-header-X-Id": {
+      "splunk": "cs_header_X_Id",
+      "elastic": "http.request.headers.x-id",
+      "kusto": "HttpRequestHeaders",
+      "note": "Requires full custom-header retention on the proxy. Elastic's field is only populated when the proxy emits headers as structured data, which most do not by default."
+    },
+    "cs-header-X-Seq": {
+      "splunk": "cs_header_X_Seq",
+      "elastic": "http.request.headers.x-seq",
+      "kusto": "HttpRequestHeaders"
+    },
+    "cs-header-Accept-Language": {
+      "splunk": "cs_header_Accept_Language",
+      "elastic": "http.request.headers.accept-language",
+      "kusto": "HttpRequestHeaders"
+    },
+    "cs-header-Cookie": {
+      "splunk": "cs_header_Cookie",
+      "elastic": "http.request.headers.cookie",
+      "kusto": "HttpRequestHeaders"
+    },
+    "certificate.subject": {
+      "splunk": "certificate_subject",
+      "elastic": "tls.server.x509.subject.common_name",
+      "kusto": "Subject",
+      "note": "Zeek x509 naming. Elastic's is the parsed common name, not the full DN string - a rule comparing full DNs needs the raw event data."
+    },
+    "certificate.issuer": {
+      "splunk": "certificate_issuer",
+      "elastic": "tls.server.x509.issuer.common_name",
+      "kusto": "Issuer"
+    },
+    "id.resp_h": {
+      "splunk": "id_resp_h",
+      "elastic": "destination.ip",
+      "kusto": "DstIpAddr"
+    },
+    "id.resp_p": {
+      "splunk": "id_resp_p",
+      "elastic": "destination.port",
+      "kusto": "DstPortNumber"
+    },
+    "CertificateSelfSigned": {
+      "splunk": "certificate_self_signed",
+      "elastic": "tls.server.x509.issuer.common_name",
+      "kusto": "CertificateSelfSigned",
+      "note": "Derived, not raw: self-signed means subject == issuer. Splunk and Kusto carry a boolean an EDR callback supplies; on Elastic the rule must compare subject to issuer, which is why this entry points at the issuer field."
+    }
+  },
+  "sourcetypes": {
+    "WinEventLog:Microsoft-Windows-Sysmon/Operational": [
+      "EventID",
+      "Computer",
+      "Image",
+      "CommandLine",
+      "ParentImage",
+      "ParentCommandLine",
+      "ParentProcessGuid",
+      "ProcessGuid",
+      "ProcessId",
+      "TargetObject",
+      "TargetFilename",
+      "TargetImage",
+      "SourceImage",
+      "GrantedAccess",
+      "Details",
+      "Type",
+      "EventType",
+      "Signature",
+      "IntegrityLevel",
+      "QueryName"
+    ],
+    "WinEventLog:Security": [
+      "EventID",
+      "Computer",
+      "ObjectName",
+      "AccessMask",
+      "ProcessId"
+    ],
+    "squid:access": [
+      "cs-user-agent",
+      "cs-uri-stem",
+      "cs-uri-query",
+      "cs-header-X-Id",
+      "cs-header-X-Seq",
+      "cs-header-Accept-Language",
+      "cs-header-Cookie",
+      "SourceAddress",
+      "DestinationHostname",
+      "DestinationPort",
+      "Process"
+    ],
+    "bluecoat:proxysg:access": [
+      "cs-user-agent",
+      "cs-uri-stem",
+      "cs-uri-query",
+      "SourceAddress",
+      "DestinationHostname"
+    ],
+    "zeek:dns": [
+      "query",
+      "rcode",
+      "Source"
+    ],
+    "zeek:conn": [
+      "id.resp_h",
+      "id.resp_p",
+      "destination_port"
+    ],
+    "zeek:x509": [
+      "certificate.subject",
+      "certificate.issuer",
+      "CertificateSelfSigned"
+    ],
+    "netflow": [
+      "Source",
+      "destination_port"
+    ]
+  },
+  "derived": {
+    "CertificateSelfSigned": {
+      "splunk": "eval CertificateSelfSigned = if(certificate_subject == certificate_issuer, 1, 0)",
+      "elastic": "runtime field `CertificateSelfSigned`: emit(true) if tls.server.x509.subject.common_name == tls.server.x509.issuer.common_name",
+      "kusto": "CertificateSelfSigned",
+      "why": "Self-signed means subject equals issuer. Aliasing it to either one produces a string where a rule tests a boolean, so every comparison is silently false."
+    }
+  }
+}

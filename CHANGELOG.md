@@ -343,7 +343,7 @@ check, so this entry is written after the fact from the commit log; the
   Defender-shaped file, which is the regression the corpus exists to catch. The
   corpus is generated, not committed: the no-binary-artifacts claim in
   `tests/test_scope.py` outranks the convenience of storing twelve small files.
-- **Measure overlap with upstream SigmaHQ** (`G-37`). `tools/sigmahq_overlap.py`
+- **Measure rule overlap with upstream SigmaHQ** (`G-37`). `tools/sigmahq_overlap.py`
   caches a 3,164-rule snapshot of `SigmaHQ/sigma` at a pinned commit and compares
   event families, products, ATT&CK techniques and selection coverage. The
   headline finding: **no duplicate and no divergent rule** - the two `near`
@@ -352,6 +352,18 @@ check, so this entry is written after the fact from the commit log; the
   literal logsource comparison, an exact-path comparison, and a normaliser that
   doubled every backslash), each time printing "0 relationships" and reading as
   "unique"; those three bugs are now regression tests.
+
+- **Name every field on every platform** (`G-28`). `telemetry/field-map.json`
+  holds one canonical Sigma field -> Splunk / Elastic / Kusto name, and
+  `pipeline/build_field_map.py` writes the three configs from it: a `props.conf`
+  of `FIELDALIAS` lines, an Elastic ingest pipeline, and Kusto views. The point
+  is not the files. It is that a rule reading `EventID` on Splunk, where the
+  field is `EventCode`, matches a null and *looks quiet* - the failure has no
+  symptom. Two of the mappings are not renames and say so: `CertificateSelfSigned`
+  is `subject == issuer` and must be computed, and Splunk's `cs_user_agent` has
+  to be aliased back to the hyphenated `cs-user-agent` the proxy rules use.
+  `pipeline/field_contract.py` already proved every field a rule reads is
+  documented; this proves every documented field has a name everywhere.
 
 ## Versioning
 

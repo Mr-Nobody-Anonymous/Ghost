@@ -44,6 +44,10 @@ python3 deploy/build_joins.py --check
 
 echo "[9/18] telemetry field contract (every field a rule reads is documented)"
 python3 pipeline/field_contract.py --strict
+# ...and every documented field has a name on every platform. A rule reading
+# EventID on Splunk, where it is EventCode, matches a null and looks quiet.
+echo "       field map: generated platform configs match the map"
+python3 pipeline/build_field_map.py --check
 
 echo "[10/18] query + Suricata lint (hunt queries, signatures, SIDs, ATT&CK metadata)"
 python3 pipeline/lint_queries.py

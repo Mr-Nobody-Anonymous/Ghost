@@ -55,17 +55,34 @@ Two things that break silently:
 Sigma says `EventID`; Splunk's Windows add-on produces `EventCode`. Do not edit
 38 rules to match one vendor. Map at ingest:
 
-```ini
-# props.conf on the indexer / heavy forwarder
-[WinEventLog:Microsoft-Windows-Sysmon/Operational]
-FIELDALIAS-sigma-eid = EventCode AS EventID
-EVAL-computer_sigma  = coalesce(Computer, host)
-FIELDALIAS-sigma-ua  = cs_user_agent AS cs-user-agent
+`deploy/fieldmap/props-sigma.conf` is generated, one stanza per sourcetype.
+Install it:
+
+```bash
+cp deploy/fieldmap/props-sigma.conf \
+   $SPLUNK_HOME/etc/system/local/props.conf   # then restart splunkd
 ```
+
+Elastic and Sentinel get the same map in their own shape:
+`deploy/fieldmap/ingest-pipeline.json` (PUT to `_ingest/pipeline/sigma-canonical`
+and attach it to the Windows data stream) and `deploy/fieldmap/sigma-views.kql`
+(one `let Sigma_<table>` projection per log table).
+
+All three are rendered from `telemetry/field-map.json` and checked by
+`pipeline/build_field_map.py --check` in the gate, so a field that a rule reads
+cannot be missing a name on a platform.
 
 If you skip this, `EventID` will not exist and every rule will evaluate against
 a null field — which matches nothing, silently. `pipeline/field_contract.py`
-exists to keep the repo's side of this honest; the mapping above is your side.
+keeps the repo's side honest (every field a rule reads is documented); the field
+map keeps the platform side honest (every documented field has a name there).
+
+Two mappings are not renames, and the map says so:
+
+- `CertificateSelfSigned` is `subject == issuer`. It is computed, not aliased.
+  A rename would put a certificate string where a rule tests a boolean.
+- On Splunk the proxy fields go the *other* way: `cs_user_agent AS cs-user-agent`.
+  Splunk has already rewritten the hyphen; the rules use the proxy's spelling.
 
 ## 4. Load the queries
 
