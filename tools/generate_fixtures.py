@@ -20,14 +20,14 @@ import pathlib
 import sys
 
 try:
-    import yaml
+    import yaml  # noqa: F401 - imported for the availability check below
 except ImportError:
     sys.stderr.write("FAIL: PyYAML required\n")
     raise SystemExit(1)
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "detection-as-code"))
-import evaluate  # noqa: E402
+import evaluate
 
 POS = ROOT / "fixtures" / "per_rule"
 NEG = ROOT / "fixtures" / "negative"

@@ -12,7 +12,7 @@ LOG = "emulator_traffic.log"
 
 
 def log(line):
-    stamp = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    stamp = datetime.datetime.now(datetime.UTC).isoformat()
     with open(LOG, "a", encoding="utf-8") as f:
         f.write(f"{stamp} {line}\n")
     print(f"[{stamp}] {line}")

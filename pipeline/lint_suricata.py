@@ -41,13 +41,13 @@ SID_RE = re.compile(r"\bsid\s*:\s*(\d+)\s*;")
 REV_RE = re.compile(r"\brev\s*:\s*(\d+)\s*;")
 MSG_RE = re.compile(r'\bmsg\s*:\s*"([^"]*)"\s*;')
 CLASSTYPE_RE = re.compile(r"\bclasstype\s*:\s*([\w-]+)\s*;")
-ATTACK_RE = re.compile(r"\bmetadata\s*:[^;]*?\battack\s+(T\d{4}(?:\.\d{3})?)", re.I)
+ATTACK_RE = re.compile(r"\bmetadata\s*:[^;]*?\battack\s+(T\d{4}(?:\.\d{3})?)", re.IGNORECASE)
 STICKY = {
     "http.uri", "http.header", "http.user_agent", "http.method", "http.host",
     "http.cookie", "http.request_body", "http.response_body", "dns.query",
     "tls.sni", "tls.cert_subject", "file.data", "file.name",
 }
-CONTENT_RE = re.compile(r'(?<![\w.])(content|pcre)\s*:', re.I)
+CONTENT_RE = re.compile(r'(?<![\w.])(content|pcre)\s*:', re.IGNORECASE)
 
 
 def split_options(text):

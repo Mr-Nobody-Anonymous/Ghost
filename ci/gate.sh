@@ -9,43 +9,52 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-echo "[0/11] environment matches requirements.txt (pinned pySigma + backends)"
+echo "[0/13] environment matches requirements.txt (pinned pySigma + backends)"
 python3 ci/check_env.py
 
-echo "[1/11] structural validation (schema, Sigma status, ATT&CK pin, conversion claims)"
+echo "[1/13] structural validation (schema, Sigma status, ATT&CK pin, conversion claims)"
 python3 detection-as-code/validate_rules.py
 
-echo "[2/11] rule and contract tests"
+echo "[2/13] python correctness lint (ruff: undefined names, closures, unused)"
+python3 -m ruff check .
+
+echo "[3/13] rule and contract tests"
 python3 -m unittest discover -s tests -p 'test_*.py'
 
-echo "[3/11] rule evaluation against concrete fixtures (TP/FP/sequence/frequency)"
+echo "[4/13] rule evaluation against concrete fixtures (TP/FP/sequence/frequency)"
 python3 detection-as-code/evaluate.py
 
-echo "[4/11] fixtures match their rules (stale fixture = failing test)"
+echo "[5/13] fixtures match their rules (stale fixture = failing test)"
 python3 tools/generate_fixtures.py --check
 
-echo "[5/11] emulation: descriptors verify, and the beacon emulator feeds its rules"
+echo "[6/13] emulation: descriptors verify, and the beacon emulator feeds its rules"
 python3 emulation/emit_expected_events.py >/dev/null
 python3 emulation/verify_emulation.py --dry-run
 python3 tools/generate_fixtures.py --check
 
-echo "[6/11] telemetry field contract (every field a rule reads is documented)"
+echo "[7/13] telemetry field contract (every field a rule reads is documented)"
 python3 pipeline/field_contract.py --strict
 
-echo "[7/11] query + Suricata lint (hunt queries, signatures, SIDs, ATT&CK metadata)"
+echo "[8/13] query + Suricata lint (hunt queries, signatures, SIDs, ATT&CK metadata)"
 python3 pipeline/lint_queries.py
 python3 pipeline/lint_suricata.py
 
-echo "[8/11] PENDING ratchet"
+echo "[9/13] PENDING ratchet"
 python3 ci/pending_ratchet.py main
 
-echo "[9/11] backend conversion: every rule's declared support is measured"
+echo "[10/13] backend conversion: every rule's declared support is measured"
 python3 ci/convert_check.py --backends splunk elastic kusto --quiet
 
-echo "[10/11] coverage + deployable bundle + package"
+echo "[11/13] coverage + deployable bundle + package"
 python3 tools/generate_matrix.py
 python3 tools/export_navigator.py
-python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl
+python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl \
+  --manifest dist/splunk-manifest.json
+python3 deploy/build_savedsearches.py
+
+echo "[12/13] saved searches: installable, disabled, uniquely named"
+python3 -m unittest tests.test_savedsearches
+
 mkdir -p dist
 tar --exclude=dist --exclude=__pycache__ --exclude='*.pyc' --exclude=attack/cache \
   -czf dist/detection-lab.tgz \

@@ -25,7 +25,6 @@ except ImportError:
 
 try:
     from sigma.collection import SigmaCollection
-    from sigma.correlations import SigmaCorrelationRule
 except ImportError:
     SigmaCollection = None
 
@@ -199,7 +198,7 @@ def main():
             queries = backend_cls().convert(SigmaCollection.from_yaml(combined))
             if not queries or not any(str(q).strip() for q in queries):
                 raise ValueError("empty conversion")
-        except Exception as exc:  # noqa: BLE001 - a rule that will not build is a finding
+        except Exception as exc:
             failures += 1
             print(f"FAIL {path}: {type(exc).__name__}: {exc}")
             continue

@@ -37,8 +37,9 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "detection-as-code"))
 
-import evaluate  # noqa: E402
-import xml.etree.ElementTree as ET  # noqa: E402
+import xml.etree.ElementTree as ET
+
+import evaluate
 
 NS = "{http://schemas.microsoft.com/win/2004/08/events/event}"
 
@@ -82,7 +83,7 @@ def normalise(events):
     """Mask identity only. Values a rule reads must survive verbatim."""
     for ev in events:
         for key in MASK:
-            if key in ev and ev[key]:
+            if ev.get(key):
                 ev[key] = "<masked>"
     return events
 
@@ -137,7 +138,7 @@ def main():
                            if str(t).lower().startswith("attack.t")), ""),
         "status": status,
         "sample_ref": args.sample_ref or "PIN-0000",
-        "captured_utc": datetime.datetime.now(datetime.timezone.utc)
+        "captured_utc": datetime.datetime.now(datetime.UTC)
                                  .replace(microsecond=0).isoformat(),
         "capture_source": {
             "input_sha256": _sha(pathlib.Path(args.input)),

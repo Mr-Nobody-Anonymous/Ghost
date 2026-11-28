@@ -19,7 +19,7 @@ except ImportError:
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "detection-as-code"))
-import evaluate  # noqa: E402
+import evaluate
 
 RULES = sorted((ROOT / "sigma").rglob("*.yml"))
 
@@ -286,8 +286,11 @@ class RuleTests(unittest.TestCase):
                     if k.endswith("|re") and isinstance(v, str):
                         re_values[k.split("|")[0]] = render_regex(v)
 
-            def probes_for(field, fkey, fval):
-                pos = re_values.get(field) or str(event.get(field, ""))
+            def probes_for(field, fkey, fval, _re=re_values, _ev=event):
+                # Defaults bind the loop variables: a closure over a loop
+                # variable is the classic late-binding bug (ruff B023), and in a
+                # test it produces a pass or fail that depends on the last rule.
+                pos = _re.get(field) or str(_ev.get(field, ""))
                 mods = fkey.split("|")[1:]
                 v = str(fval)
                 if "contains" in mods:

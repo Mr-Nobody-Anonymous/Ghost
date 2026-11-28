@@ -15,8 +15,8 @@ def main():
     refs = {}
     for f in sorted((ROOT / "sigma").rglob("*.yml")):
         text = f.read_text(encoding="utf-8")
-        m = re.search(r"^sample_ref:\s*(\S+)", text, re.M)
-        rid = re.search(r"^id:\s*(\S+)", text, re.M)
+        m = re.search(r"^sample_ref:\s*(\S+)", text, re.MULTILINE)
+        rid = re.search(r"^id:\s*(\S+)", text, re.MULTILINE)
         if m and rid:
             refs.setdefault(m.group(1), []).append(rid.group(1))
     fx = {}

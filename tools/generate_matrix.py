@@ -5,7 +5,6 @@ Techniques come only from `tags: [attack.tXXXX]`; tactics live in their own
 field and are never counted as techniques. Network-only rules are marked
 single-sourced. Correlation rules are flagged for backend-conversion risk.
 """
-import datetime
 import pathlib
 import re
 import sys
@@ -37,11 +36,11 @@ def load(path):
                 "correlation": "correlation" in doc,
                 "logsource": doc.get("logsource", {}),
             }
-    m = re.search(r"^tags:\s*\[([^\]]*)\]", text, re.M)
+    m = re.search(r"^tags:\s*\[([^\]]*)\]", text, re.MULTILINE)
     tags = [x.strip() for x in m.group(1).split(",")] if m else []
-    lt = re.search(r"^tactics:\s*\[([^\]]*)\]", text, re.M)
+    lt = re.search(r"^tactics:\s*\[([^\]]*)\]", text, re.MULTILINE)
     return {
-        "title": re.search(r"^title:\s*(.+)$", text, re.M).group(1) if "title:" in text else path.stem,
+        "title": re.search(r"^title:\s*(.+)$", text, re.MULTILINE).group(1) if "title:" in text else path.stem,
         "id": "", "status": "unknown", "level": "", "tags": tags,
         "tactics": [x.strip() for x in lt.group(1).split(",")] if lt else [],
         "sample_ref": "", "fixture_ref": "", "lifecycle": "",

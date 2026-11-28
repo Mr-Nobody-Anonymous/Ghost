@@ -177,7 +177,7 @@ def plan(rid, doc, rules):
         "**Convert and promote:**",
         "",
         "```bash",
-        f"python3 tools/evtx_to_fixture.py --input capture.xml \\",
+        "python3 tools/evtx_to_fixture.py --input capture.xml \\",
         f"  --rule-id {rid} --output fixtures/per_rule/{rid}.json",
         f"python3 detection-as-code/evaluate.py --rule {rid}",
         "python3 -m unittest discover -s tests -p 'test_*.py'",

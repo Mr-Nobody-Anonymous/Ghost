@@ -65,9 +65,7 @@ def render_path(items):
         root = "C:\\Users\\lab\\AppData\\Local"
     elif "appdata\\roaming" in lowered:
         root = "C:\\Users\\lab\\AppData\\Roaming"
-    elif re.search(r"(\\|^)(amsi|ntdll|kernel32|kernelbase)\.dll$", lowered):
-        root = "C:\\Windows\\System32"
-    elif "windows\\system32" in lowered or re.search(r"\\[a-z0-9_.-]+\.exe$", lowered):
+    elif re.search(r"(\\|^)(amsi|ntdll|kernel32|kernelbase)\.dll$", lowered) or "windows\\system32" in lowered or re.search(r"\\[a-z0-9_.-]+\.exe$", lowered):
         root = "C:\\Windows\\System32"
     else:
         root = "C:\\Users\\lab"
@@ -133,7 +131,7 @@ def render_uri(field, items):
 
 def render_commandline(items):
     contains = _contains(items)
-    bits = [c for c in contains]
+    bits = list(contains)
     if not bits:
         return "C:\\Windows\\System32\\cmd.exe /c whoami"
     joined = " ".join(bits)
@@ -238,9 +236,7 @@ def render_regex(pattern):
                 i = j + 1
             elif s.startswith("(?:", i):
                 i += 3
-            elif c == "(":
-                i += 1
-            elif c in ")*?":
+            elif c == "(" or c in ")*?":
                 i += 1
             elif c == "|":
                 break

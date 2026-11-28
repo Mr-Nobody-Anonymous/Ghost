@@ -10,7 +10,7 @@ import tempfile
 import unittest
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "detection-as-code"))
-import evaluate  # noqa: E402
+import evaluate
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RULES = evaluate.load_collection(ROOT)

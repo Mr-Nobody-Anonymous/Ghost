@@ -30,7 +30,7 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
-import yaml  # noqa: E402
+import yaml
 
 TACTIC_ORDER = [
     "reconnaissance", "resource-development", "initial-access", "execution",
@@ -100,7 +100,7 @@ def main():
         "versions": {"attack": version, "navigator": "5.1.0", "layer": "4.5"},
         "domain": "enterprise-attack",
         "description": (
-            f"Generated {datetime.datetime.now(datetime.timezone.utc).date().isoformat()} "
+            f"Generated {datetime.datetime.now(datetime.UTC).date().isoformat()} "
             f"from {len(rules)} Sigma rules. Score is evidence, not rule count: "
             f"1 = designed, 2 = captured, 3 = validated. "
             f"No rule has a captured fixture, so every score here is 1."),

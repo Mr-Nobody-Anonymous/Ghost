@@ -73,7 +73,7 @@ def known_fields():
 
 def fenced_blocks(path):
     text = path.read_text(encoding="utf-8")
-    return re.findall(r"```[a-zA-Z]*\n(.*?)```", text, re.S)
+    return re.findall(r"```[a-zA-Z]*\n(.*?)```", text, re.DOTALL)
 
 
 def balanced(block):
@@ -124,7 +124,7 @@ def main():
                 print(f"FAIL {doc.name} block {i}: index= combined with a boolean - unbounded search")
             if re.search(r"event\s+(dns|ssl|http|conn)_", block):
                 continue  # Zeek script: parameters are script variables, not log fields
-            if re.search(r"^\s*on\s+\w+\.log\s+record", block, re.M) or \
+            if re.search(r"^\s*on\s+\w+\.log\s+record", block, re.MULTILINE) or \
                     "Pseudocode" in block:
                 # Prose pseudocode: the identifiers are English, not fields.
                 # Checking them as field names produced 'not private' -> 'private'.
@@ -140,6 +140,9 @@ def main():
                 problems += 1
                 print(f"FAIL {doc.name} block {i}: field {name!r} is not in "
                       f"telemetry/data-sources.md (contract name: {resolved!r})")
+                continue
+            if args.verbose:
+                print(f"ok   {doc.name} block {i}: {name!r} -> {resolved!r}")
     print(f"query lint: {checked} blocks checked, {len(fields)} contract fields, "
           f"{problems} problems")
     return 1 if problems else 0

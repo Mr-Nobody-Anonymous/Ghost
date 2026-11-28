@@ -27,7 +27,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "detection-as-code"))
 
-import evaluate  # noqa: E402
+import evaluate
 
 
 def build(rules, only=None):

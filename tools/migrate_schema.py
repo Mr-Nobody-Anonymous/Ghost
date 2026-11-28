@@ -50,7 +50,7 @@ def migrate(path):
         insert_at = text.index("\n", text.index("tags:")) + 1 if "tags:" in text else 0
         text = text[:insert_at] + "tactics: [" + ", ".join(dict.fromkeys(tactics)) + "]\n" + text[insert_at:]
     if "dedup_key:" not in text:
-        m = re.search(r"^id:\s*(\S+)\s*$", text, re.M)
+        m = re.search(r"^id:\s*(\S+)\s*$", text, re.MULTILINE)
         rid = m.group(1) if m else "unknown"
         text = text.replace(
             f"id: {rid}\n",

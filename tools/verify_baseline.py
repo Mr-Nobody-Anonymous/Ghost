@@ -26,9 +26,8 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "detection-as-code"))
 
-import evaluate  # noqa: E402
-import yaml  # noqa: E402
-from evtx_to_fixture import parse_events  # noqa: E402
+import evaluate
+from evtx_to_fixture import parse_events
 
 # Fields that exist only on the *event* a rule matches, grouped by Sysmon event.
 # Used to explain "field missing" without pretending the baseline is wrong: an

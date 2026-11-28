@@ -87,7 +87,7 @@ def load_pin():
                 return set(), None, version
     globals()["TECHNIQUE_TACTICS"] = data.get("technique_tactics", {})
     return (
-        set(t.upper() for t in data.get("techniques", [])),
+        {t.upper() for t in data.get("techniques", [])},
         set(data.get("tactics", [])),
         version,
     )
@@ -249,7 +249,7 @@ def main():
     for f in files:
         errs = check(f, pinned, tactics, version)
         text = f.read_text(encoding="utf-8")
-        m = re.search(r"^id:\s*([0-9a-f-]{36})\s*$", text, re.M)
+        m = re.search(r"^id:\s*([0-9a-f-]{36})\s*$", text, re.MULTILINE)
         if m:
             rid = m.group(1).lower()
             if rid in seen_ids:

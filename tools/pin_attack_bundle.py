@@ -66,7 +66,7 @@ def fetch(version):
         try:
             req = urllib.request.Request(url, headers=headers)
             data = urllib.request.urlopen(req, timeout=600).read()
-        except Exception as exc:  # noqa: BLE001 - report and try the next source
+        except Exception as exc:
             print(f"  {url} -> {type(exc).__name__}: {exc}", file=sys.stderr)
             continue
         if data[:1] != b"{":

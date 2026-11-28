@@ -21,15 +21,13 @@ per-rule deployability instead of asserting it.
 Missing pySigma is a hard failure, not a skip.
 """
 import argparse
-import datetime
 import json
 import pathlib
 import sys
 
 try:
     from sigma.collection import SigmaCollection
-    from sigma.correlations import SigmaCorrelationRule
-except ImportError:
+except ImportError:  # availability probe, not a convenience import
     SigmaCollection = None
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent

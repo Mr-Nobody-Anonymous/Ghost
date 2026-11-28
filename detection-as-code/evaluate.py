@@ -9,7 +9,6 @@ values on the matched event rather than only a match count.
 No network, no target contact, no payload execution.
 """
 import argparse
-import datetime
 import json
 import pathlib
 import re

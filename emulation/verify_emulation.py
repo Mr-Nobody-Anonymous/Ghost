@@ -30,8 +30,8 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "detection-as-code"))
 
-import evaluate  # noqa: E402
-import yaml  # noqa: E402
+import evaluate
+import yaml
 
 DEFAULT_LOG = ROOT / "emulator_traffic.log"
 LINE_RE = re.compile(
@@ -73,7 +73,7 @@ def parse_log(path):
 def synthesise():
     """A minimal synthetic log, for --dry-run on a machine with no listener."""
     vid = "9f3c1a7e-2b64-4d18-8e75-0c2f8a41b6e3"
-    now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    now = datetime.datetime.now(datetime.UTC).isoformat()
     return (
         f"{now} GET /poll?id={vid}&seq=1 X-Id={vid} X-Seq=1 UA=Mozilla/5.0 bytes=0\n"
         f"{now} GET /poll?id={vid}&seq=2 X-Id={vid} X-Seq=2 UA=Mozilla/5.0 bytes=0\n"

@@ -36,6 +36,8 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | 21 | **No ATT&CK Navigator layer** | Coverage existed only as a Markdown table. | `tools/export_navigator.py`; scores evidence, not rule count, so it renders at 1 |
 | 22 | **No stated or tested Python floor** | `Path.is_relative_to` sets 3.9; nothing said so and CI tested only 3.11. | Floor declared and enforced in `ci/check_env.py`; CI matrixes 3.9 and 3.11; a test parses every file with 3.9 grammar |
 | 23 | **The gate rewrote the tree** | Wall clock in `conversion.json` and in the matrix header made `git status` dirty after every run, which hides real changes. | Two consecutive gate runs leave the tree clean |
+| 24 | **No Python correctness lint** | 4,500 lines; a lint run found two late-binding closure bugs (B023) in the test helper and a `--verbose` flag that did nothing. | `pyproject.toml` selects correctness rules only (F, B, E9, UP, PERF); gate stage 2 |
+| 25 | **No saved-search packaging** | Importing 38 searches with schedules and suppression was manual. | `deploy/build_savedsearches.py` emits `dist/savedsearches.conf`: 33 searches, all disabled, 5m schedule floor, suppression from each rule's own `dedup_key`, unique id-suffix tags |
 
 ---
 
@@ -89,7 +91,7 @@ These cannot be fixed with a query. They need a sensor decision.
 |---|---|---|
 | G-27 | **No deployment procedure** | The repo could emit 38 queries and a manifest but said nothing about ingesting telemetry, mapping `EventCode`->`EventID`, or applying suppression. Now `docs/deployment.md` — written, never executed. |
 | G-28 | **Field-name mapping is vendor-specific and undocumented per platform** | Sigma `EventID` vs Splunk `EventCode` vs ECS `event.code`. A missing alias makes a rule evaluate against a null, silently. `docs/deployment.md` gives the Splunk `props.conf`; Elastic/Kusto equivalents are not written. |
-| G-29 | **No saved-search packaging** | The bundle is a query per rule plus JSON. Importing 38 saved searches with schedules and suppression is manual; nothing generates a `savedsearches.conf` or an API payload. |
+| G-29 | **No saved-search packaging** | The bundle is a query per rule plus JSON. Importing 38 saved searches with schedules and suppression is manual; nothing generates a `savedsearches.conf` or an API payload. | **Closed - `deploy/build_savedsearches.py` + `tests/test_savedsearches.py` (8 tests, proven to fail on enabled/fast-cron/bad-key/duplicate-name).** |
 | G-30 | **No alert-quality feedback loop** | `docs/tuning-log.md` is empty and there is no link from an alert back to the rule's ceiling or triage step. |
 
 ### P2c. Reproducibility and scope
@@ -101,7 +103,7 @@ These cannot be fixed with a query. They need a sensor decision.
 | G-33 | **Fake Zeek** | Two blocks fenced as Zeek called functions Zeek does not have. Now labelled pseudocode with real log fields and a working `zeek-cut` command. |
 | G-34 | **The defensive-only claim was prose** | SCOPE.md's central promise had no test. Closed: `tests/test_scope.py` fails on capability imports/calls, a non-loopback emulator, or a committed binary. |
 
-| G-35 | **No Python linter or formatter** | 4,500 lines with no `ruff`/`black` enforcement; style drift is invisible. |
+| G-35 | **No Python linter or formatter** | 4,500 lines with no `ruff`/`black` enforcement; style drift is invisible. | **Closed - ruff correctness rules in `pyproject.toml`, pinned in `requirements.txt`, gate stage 2; 31 initial findings, 2 real closure bugs fixed.** |
 | G-36 | **No release or change discipline** | `CHANGELOG.md` is hand-maintained and was stale twice. Nothing derives a version or tags a release. |
 | G-37 | **No upstream Sigma rule overlap check** | This repo defines 38 rules; whether any duplicates an existing SigmaHQ rule (and diverges from it) is unknown. Citation and fork management are unhandled. |
 
