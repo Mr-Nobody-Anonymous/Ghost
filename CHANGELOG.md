@@ -318,6 +318,22 @@ check, so this entry is written after the fact from the commit log; the
   above. `dist/release.json` ships inside the bundle so a consumer can say what
   they have.
 
+- **Add local hooks and derive a release identity from the tree** (`G-20`, `G-36`).
+  `.githooks/pre-commit` runs ruff, the tests and the fixture check;
+  `commit-msg` rejects `fix`/`wip`. `tools/release.py` computes a content digest
+  over 196 behaviour files, derives `vYYYY.MM.DD.N`, and fails the gate on any
+  commit the changelog does not mention - it found 19 and this list is the
+  result. `dist/release.json` ships inside the bundle.
+- **Give the YARA rule a corpus** (`G-16`). `yara/corpus/` (generated, not committed) holds one synthetic
+  implant stand-in, six benign files that each carry a *real* indicator
+  (`AmsiScanBuffer` in a Defender-like binary, `_MEI` in a genuine PyInstaller
+  app, `X-Id` in a browser updater), and five partials. Built deterministically
+  by `tools/build_yara_corpus.py`, checked for staleness by a gate stage.
+  Widening one branch of the rule to `any of` is caught immediately as a
+  false positive on the Defender-shaped file. The corpus files are generated,
+  never committed: the defensive-only claim includes no binary artifacts in git,
+  and determinism makes committing them unnecessary.
+
 ## Versioning
 
 `tools/release.py` derives the version from the date and the existing tags

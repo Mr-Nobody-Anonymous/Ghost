@@ -43,7 +43,8 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | 28 | **No cross-source campaign rule** | Every correlation proved one ordering inside one source; nothing said "recon then tamper then persist then egress on one host". | `sigma/campaign_implant_sequence.yml` + `analytics/campaign.py`: 3-of-4 chains, with a 2-of-4 host in the fixture that must not fire |
 | 29 | **No pre-commit hook** | The gate existed and nothing ran it before a commit; 19 commits landed with no local check. | `.githooks/pre-commit` (ruff + tests + fixture freshness) and `commit-msg`; both proven to reject bad input by `tests/test_hooks.py` |
 | 30 | **No release or change discipline** | `CHANGELOG.md` was hand-maintained and stale twice; no tags, no derived version, no artifact identity. | `tools/release.py`: content digest over 196 behaviour files, derived `vYYYY.MM.DD.N`, and `--check-changelog` fails on any commit the changelog does not mention. Found 19 unrecorded commits; all now written up |
-| 31 | **No saved-search packaging** | Importing 38 searches with schedules and suppression was manual. | `deploy/build_savedsearches.py` emits `dist/savedsearches.conf`: 33 searches, all disabled, 5m schedule floor, suppression from each rule's own `dedup_key`, unique id-suffix tags |
+| 31 | **The YARA rule had no corpus** | It compiled, which is a syntax check; nothing proved it matched a build or stayed quiet on software. | `yara/corpus/` built by `tools/build_yara_corpus.py`: 1 implant stand-in, 6 benign files each carrying a real indicator, 5 partials. Widening one rule branch to `any of` is caught as a Defender-impersonating false positive |
+| 32 | **No saved-search packaging** | Importing 38 searches with schedules and suppression was manual. | `deploy/build_savedsearches.py` emits `dist/savedsearches.conf`: 33 searches, all disabled, 5m schedule floor, suppression from each rule's own `dedup_key`, unique id-suffix tags |
 
 ---
 
@@ -89,7 +90,7 @@ These cannot be fixed with a query. They need a sensor decision.
 | G-13 | The stage0 → stage1 join is not implemented | A process-tree join is not expressible in Sigma; it has to be built in the SIEM. Documented, not built. | **Closed - `analytics/stage_join.py` + `tests/test_stage_join.py` (11 tests; four distinct near-misses each asserted separately).** |
 | G-14 | Five correlations are Splunk-only | pySigma converts correlations only for Splunk. Elastic and Kusto users get the members and must build the join. | **Closed - `deploy/build_joins.py` (10 files in `deploy/joins/`) + `tests/test_joins.py` (13 tests, including a regression test for an OR/AND precedence bug the generator had).** |
 | G-15 | No `1 of` cross-source campaign rule | Sequence *across* techniques (triage → tamper → persist) is not modelled. | **Closed - `sigma/campaign_implant_sequence.yml` (3-of-4) + `analytics/campaign.py` + `tests/test_campaign.py` (10 tests; lowering the threshold to 2 is asserted to change the verdict).** |
-| G-16 | YARA rules have no corpus | `yara/ghost_implant_structural.yar` compiles, but nothing proves it matches a build or stays quiet on real software. |
+| G-16 | YARA rules have no corpus | `yara/ghost_implant_structural.yar` compiles, but nothing proves it matches a build or stays quiet on real software. | **Closed - `yara/corpus/` (12 files) + `tests/test_yara_corpus.py` (9 tests) + a gate stage; proven to catch a widened rule branch that would fire on `MpSvc.dll`.** |
 
 ### P2b. Operational path
 

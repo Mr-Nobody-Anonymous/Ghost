@@ -26,11 +26,13 @@ python3 detection-as-code/evaluate.py
 
 echo "[5/17] fixtures match their rules (stale fixture = failing test)"
 python3 tools/generate_fixtures.py --check
+python3 tools/build_yara_corpus.py
 
 echo "[6/17] emulation: descriptors verify, and the beacon emulator feeds its rules"
 python3 emulation/emit_expected_events.py >/dev/null
 python3 emulation/verify_emulation.py --dry-run
 python3 tools/generate_fixtures.py --check
+python3 tools/build_yara_corpus.py
 
 echo "[7/17] analytics: beacon jitter, stage0->stage1 join, cross-source campaign"
 python3 analytics/beacon_jitter.py --selftest

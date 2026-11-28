@@ -31,6 +31,14 @@ env/
 *.env
 .env.*
 
+# The YARA corpus is generated, never committed: this repository's defensive-only
+# claim includes "no binary artifacts in git" (tests/test_scope.py). The files
+# are deterministic, so the gate rebuilds them; yara/corpus/README.md explains
+# each one and is committed.
+yara/corpus/benign/
+yara/corpus/implant/
+yara/corpus/partial/
+
 # Large pinned bundles are cached locally, never committed
 attack/cache/
 fixtures/captured/

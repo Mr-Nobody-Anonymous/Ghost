@@ -37,9 +37,27 @@ if [ "$needs_python" -eq 0 ]; then
   exit 0
 fi
 
-python_bin="python3"
-if [ -x ".venv/bin/python" ]; then
-  python_bin=".venv/bin/python"
+# Pick an interpreter that actually has the pinned dependencies. Falling back to
+# a bare `python3` that lacks ruff would fail the commit with a message about a
+# missing module, which reads like a broken repository rather than a missing
+# environment - and teaches people to use --no-verify.
+python_bin=""
+for candidate in ".venv/bin/python" "$(command -v python3)" \
+                 "/tmp/venv/bin/python"; do
+  if [ -n "$candidate" ] && [ -x "$candidate" ] && \
+     "$candidate" -c 'import ruff' 2>/dev/null; then
+    python_bin="$candidate"
+    break
+  fi
+done
+if [ -z "$python_bin" ]; then
+  if [ -n "${VIRTUAL_ENV:-}" ] || [ -x ".venv/bin/python" ]; then
+    echo "pre-commit: no interpreter with ruff found; install -r requirements.txt" >&2
+    exit 1
+  fi
+  echo "pre-commit: no interpreter with ruff found; skipping the fast checks." >&2
+  echo "             CI runs the full gate. Install with: pip install -r requirements.txt" >&2
+  exit 0
 fi
 
 echo "pre-commit: [1/3] correctness lint"
