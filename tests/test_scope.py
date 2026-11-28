@@ -96,6 +96,22 @@ class ScopeTests(unittest.TestCase):
         self.assertNotIn('"0.0.0.0"', listener,
                          "local_listener must never bind all interfaces")
 
+    def test_python_floor_is_syntax_compatible(self):
+        """The declared floor is 3.9; nothing tested it.
+
+        CI now matrixes 3.9 and 3.11, but a syntax incompatibility is worth
+        catching locally too - a `match` statement or a 3.10-only annotation
+        would fail on the floor while passing on CI's default interpreter.
+        """
+        import ast
+        offenders = []
+        for f in python_files():
+            try:
+                ast.parse(f.read_text(encoding="utf-8"), feature_version=(3, 9))
+            except SyntaxError as exc:
+                offenders.append(f"{rel(f)}:{exc.lineno}: {exc.msg} (needs > 3.9)")
+        self.assertEqual(offenders, [], f"Python 3.9 syntax failures: {offenders}")
+
     def test_no_binary_artifacts_committed(self):
         """A sample is pinned by hash, never stored - SCOPE.md and samples/PINS.md.
 

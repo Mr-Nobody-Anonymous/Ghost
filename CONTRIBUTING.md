@@ -1,5 +1,15 @@
 # Contributing
 
+## Requirements
+
+- Python **3.9 or newer** (the floor: `Path.is_relative_to` in
+  `tools/evtx_to_fixture.py`; enforced by `ci/check_env.py`, and CI runs both
+  3.9 and 3.11)
+- `pip install -r requirements.txt` — the versions are pinned because the gate
+  compares generated query text against results produced with exactly those
+  versions. A backend upgrade is a deliberate commit, not a side effect.
+
+
 Thanks for helping improve the detection content.
 
 ## What belongs here

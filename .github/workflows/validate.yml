@@ -8,11 +8,18 @@ on:
 jobs:
   gate:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.9 is the declared floor (Path.is_relative_to); 3.11 is what the
+        # pinned dependency set was resolved against. Testing both means the
+        # floor is a claim with evidence rather than a sentence in a README.
+        python-version: ['3.9', '3.11']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: ${{ matrix.python-version }}
 
       - name: Install pinned dependencies
         # Pinned in requirements.txt. Unpinned installs made the conversion

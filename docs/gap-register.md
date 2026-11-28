@@ -34,7 +34,8 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | 19 | **The emulator was never checked against its rules** | Running it proved nothing about whether the beacon rules match its output. | `emulation/verify_emulation.py`, which does fail when they diverge |
 | 20 | **The defensive-only claim had no test** | SCOPE.md's central promise was prose; one commit could have made it false. | `tests/test_scope.py` - capability imports, calls, loopback-only, no binaries |
 | 21 | **No ATT&CK Navigator layer** | Coverage existed only as a Markdown table. | `tools/export_navigator.py`; scores evidence, not rule count, so it renders at 1 |
-| 22 | **The gate rewrote the tree** | Wall clock in `conversion.json` and in the matrix header made `git status` dirty after every run, which hides real changes. | Two consecutive gate runs leave the tree clean |
+| 22 | **No stated or tested Python floor** | `Path.is_relative_to` sets 3.9; nothing said so and CI tested only 3.11. | Floor declared and enforced in `ci/check_env.py`; CI matrixes 3.9 and 3.11; a test parses every file with 3.9 grammar |
+| 23 | **The gate rewrote the tree** | Wall clock in `conversion.json` and in the matrix header made `git status` dirty after every run, which hides real changes. | Two consecutive gate runs leave the tree clean |
 
 ---
 
@@ -99,10 +100,10 @@ These cannot be fixed with a query. They need a sensor decision.
 | G-32 | **The emulator was never checked against its rules** | `local_listener.py` + `inert_beacon.py` were documented as producing "comparable telemetry"; nothing tested it. Closed: `emulation/verify_emulation.py`, and it now does fail when the two diverge. |
 | G-33 | **Fake Zeek** | Two blocks fenced as Zeek called functions Zeek does not have. Now labelled pseudocode with real log fields and a working `zeek-cut` command. |
 | G-34 | **The defensive-only claim was prose** | SCOPE.md's central promise had no test. Closed: `tests/test_scope.py` fails on capability imports/calls, a non-loopback emulator, or a committed binary. |
-| G-35 | **No Python version matrix** | Everything is tested on 3.11. `str.is_relative_to` and match semantics need >= 3.9; older interpreters are untested and unstated. |
-| G-36 | **No formatter or linter for the Python** | 4,500 lines with no `ruff`/`black` enforcement; style drift is invisible. |
-| G-37 | **No release or change discipline** | `CHANGELOG.md` is hand-maintained and was stale twice. Nothing derives a version or tags a release. |
-| G-38 | **No upstream Sigma rule overlap check** | This repo defines 38 rules; whether any duplicates an existing SigmaHQ rule (and diverges from it) is unknown. Citation and fork management are unhandled. |
+
+| G-35 | **No Python linter or formatter** | 4,500 lines with no `ruff`/`black` enforcement; style drift is invisible. |
+| G-36 | **No release or change discipline** | `CHANGELOG.md` is hand-maintained and was stale twice. Nothing derives a version or tags a release. |
+| G-37 | **No upstream Sigma rule overlap check** | This repo defines 38 rules; whether any duplicates an existing SigmaHQ rule (and diverges from it) is unknown. Citation and fork management are unhandled. |
 
 
 ### P3. Engineering hygiene

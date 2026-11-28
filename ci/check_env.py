@@ -34,6 +34,17 @@ IMPORT_NAME = {
 }
 
 
+MIN_PYTHON = (3, 9)   # tools/evtx_to_fixture.py uses Path.is_relative_to (3.9+)
+
+
+def check_python():
+    if sys.version_info < MIN_PYTHON:
+        have = "%d.%d.%d" % sys.version_info[:3]
+        want = "%d.%d" % MIN_PYTHON
+        return [f"python {have} is older than the required {want}"]
+    return []
+
+
 def parse_requirements():
     out = {}
     for line in REQ.read_text(encoding="utf-8").splitlines():
@@ -70,7 +81,7 @@ def main():
         return 0 if args.report else 1
 
     required = parse_requirements()
-    problems, notes = [], []
+    problems, notes = check_python(), []
     for dist, want in sorted(required.items()):
         have = installed_version(dist)
         if want is None:
@@ -93,7 +104,8 @@ def main():
               "attack/conversion.json reflects the new backend.", file=sys.stderr)
         return 0 if args.report else 1
 
-    print(f"environment: {len(required)} pinned packages match requirements.txt")
+    print(f"environment: python {'%d.%d' % sys.version_info[:2]}, "
+          f"{len(required)} pinned packages match requirements.txt")
     return 0
 
 
