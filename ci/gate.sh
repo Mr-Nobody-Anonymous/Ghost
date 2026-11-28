@@ -9,66 +9,85 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-echo "[0/17] environment matches requirements.txt (pinned pySigma + backends)"
+echo "[0/18] environment matches requirements.txt (pinned pySigma + backends)"
 python3 ci/check_env.py
 
-echo "[1/17] structural validation (schema, Sigma status, ATT&CK pin, conversion claims)"
+echo "[1/18] structural validation (schema, Sigma status, ATT&CK pin, conversion claims)"
 python3 detection-as-code/validate_rules.py
 
-echo "[2/17] python correctness lint (ruff: undefined names, closures, unused)"
+echo "[2/18] python correctness lint (ruff: undefined names, closures, unused)"
 python3 -m ruff check .
 
-echo "[3/17] rule and contract tests"
+echo "[3/18] rule and contract tests"
 python3 -m unittest discover -s tests -p 'test_*.py'
 
-echo "[4/17] rule evaluation against concrete fixtures (TP/FP/sequence/frequency)"
+echo "[4/18] rule evaluation against concrete fixtures (TP/FP/sequence/frequency)"
 python3 detection-as-code/evaluate.py
 
-echo "[5/17] fixtures match their rules (stale fixture = failing test)"
+echo "[5/18] fixtures match their rules (stale fixture = failing test)"
 python3 tools/generate_fixtures.py --check
 python3 tools/build_yara_corpus.py
 
-echo "[6/17] emulation: descriptors verify, and the beacon emulator feeds its rules"
+echo "[6/18] emulation: descriptors verify, and the beacon emulator feeds its rules"
 python3 emulation/emit_expected_events.py >/dev/null
 python3 emulation/verify_emulation.py --dry-run
 python3 tools/generate_fixtures.py --check
 python3 tools/build_yara_corpus.py
 
-echo "[7/17] analytics: beacon jitter, stage0->stage1 join, cross-source campaign"
+echo "[7/18] analytics: beacon jitter, stage0->stage1 join, cross-source campaign"
 python3 analytics/beacon_jitter.py --selftest
 python3 analytics/stage_join.py --selftest
 python3 analytics/campaign.py --selftest
 
-echo "[8/17] cross-platform joins for the correlations pySigma will not convert"
+echo "[8/18] cross-platform joins for the correlations pySigma will not convert"
 python3 deploy/build_joins.py --check
 
-echo "[9/17] telemetry field contract (every field a rule reads is documented)"
+echo "[9/18] telemetry field contract (every field a rule reads is documented)"
 python3 pipeline/field_contract.py --strict
 
-echo "[10/17] query + Suricata lint (hunt queries, signatures, SIDs, ATT&CK metadata)"
+echo "[10/18] query + Suricata lint (hunt queries, signatures, SIDs, ATT&CK metadata)"
 python3 pipeline/lint_queries.py
 python3 pipeline/lint_suricata.py
 
-echo "[11/17] tuning loop: observations valid, no rule claims tuning it cannot prove"
+echo "[11/18] tuning loop: observations valid, no rule claims tuning it cannot prove"
 python3 tools/tuning_log.py --check --render
 
-echo "[12/17] release discipline: changelog covers every commit, digest is real"
+echo "[12/18] upstream overlap: every duplicate decision is recorded"
+# The 14 MB snapshot is gitignored, so a clean CI checkout has no cache. Running
+# the check against nothing would print "0 relationships" and read as "unique",
+# which is the exact failure this check was built to stop. So: fetch when the
+# network is available (a full fetch is ~10 min; CI caches attack/cache between
+# runs), and otherwise say out loud that the check was skipped for lack of a
+# snapshot rather than passing quietly.
+if [ ! -f attack/cache/sigmahq/index.json ]; then
+  echo "note: no upstream snapshot; attempting a fetch (first run only)"
+  python3 tools/sigmahq_overlap.py --fetch || \
+    echo "WARN: upstream snapshot unavailable - overlap NOT measured this run"
+fi
+if [ -f attack/cache/sigmahq/index.json ]; then
+  python3 tools/sigmahq_overlap.py --check
+else
+  echo "SKIP: upstream overlap not measured - no snapshot and no network."
+  echo "      docs/gap-register.md G-37 stays open until it runs somewhere."
+fi
+
+echo "[13/18] release discipline: changelog covers every commit, digest is real"
 python3 tools/release.py --check-changelog
 
-echo "[13/17] PENDING ratchet"
+echo "[14/18] PENDING ratchet"
 python3 ci/pending_ratchet.py main
 
-echo "[14/17] backend conversion: every rule's declared support is measured"
+echo "[15/18] backend conversion: every rule's declared support is measured"
 python3 ci/convert_check.py --backends splunk elastic kusto --quiet
 
-echo "[15/17] coverage + deployable bundle + package"
+echo "[16/18] coverage + deployable bundle + package"
 python3 tools/generate_matrix.py
 python3 tools/export_navigator.py
 python3 deploy/build_bundle.py --backend splunk --out dist/splunk-queries.spl \
   --manifest dist/splunk-manifest.json
 python3 deploy/build_savedsearches.py
 
-echo "[16/17] saved searches: installable, disabled, uniquely named"
+echo "[17/18] saved searches: installable, disabled, uniquely named"
 python3 -m unittest tests.test_savedsearches
 
 mkdir -p dist

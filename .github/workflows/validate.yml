@@ -31,7 +31,23 @@ jobs:
 
       - name: Att&CK bundle (optional - verification only, never committed)
         continue-on-error: true
-        run: python tools/pin_attack_bundle.py --version 14.1 --fetch --verify
+        # 20.1, not 14.1: the pin moved when ATT&CK revoked T1562 and split
+        # Defense Evasion into Stealth and Defense Impairment. This line was
+        # left at the old version and the step is continue-on-error, so it
+        # silently verified a bundle nobody uses.
+        run: python tools/pin_attack_bundle.py --version 20.1 --fetch --verify
+
+      - name: Cache the upstream SigmaHQ snapshot
+        # 3,164 rules, ~14 MB, ~10 minutes to fetch through the contents API.
+        # Cached on the snapshot commit so the overlap check runs in CI instead
+        # of being skipped for lack of a snapshot. A cache miss costs one slow
+        # job, not a permanently unmeasured gap.
+        uses: actions/cache@v4
+        with:
+          path: attack/cache/sigmahq
+          key: sigmahq-overlap-${{ github.run_id }}
+          restore-keys: |
+            sigmahq-overlap-
 
       - name: Run the full gate (the same command a stranger runs locally)
         run: bash ci/gate.sh

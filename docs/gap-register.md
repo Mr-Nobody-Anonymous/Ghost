@@ -44,7 +44,8 @@ audit, not a wishlist: the same list drove the commits dated 2026-11-27.
 | 29 | **No pre-commit hook** | The gate existed and nothing ran it before a commit; 19 commits landed with no local check. | `.githooks/pre-commit` (ruff + tests + fixture freshness) and `commit-msg`; both proven to reject bad input by `tests/test_hooks.py` |
 | 30 | **No release or change discipline** | `CHANGELOG.md` was hand-maintained and stale twice; no tags, no derived version, no artifact identity. | `tools/release.py`: content digest over 196 behaviour files, derived `vYYYY.MM.DD.N`, and `--check-changelog` fails on any commit the changelog does not mention. Found 19 unrecorded commits; all now written up |
 | 31 | **The YARA rule had no corpus** | It compiled, which is a syntax check; nothing proved it matched a build or stayed quiet on software. | `yara/corpus/` built by `tools/build_yara_corpus.py`: 1 implant stand-in, 6 benign files each carrying a real indicator, 5 partials. Widening one rule branch to `any of` is caught as a Defender-impersonating false positive |
-| 32 | **No saved-search packaging** | Importing 38 searches with schedules and suppression was manual. | `deploy/build_savedsearches.py` emits `dist/savedsearches.conf`: 33 searches, all disabled, 5m schedule floor, suppression from each rule's own `dedup_key`, unique id-suffix tags |
+| 32 | **Overlap with upstream SigmaHQ was unknown** | "Whether any rule duplicates an existing SigmaHQ rule is unknown" - and a re-invented rule inflates the coverage claim. | `tools/sigmahq_overlap.py`: 3,164-rule cached snapshot, family + product + technique + directed-coverage join. Result: **no duplicate, no divergence**; two ancestor-path artefacts recorded as artefacts. Three bugs in the check's own history are regression tests |
+| 33 | **No saved-search packaging** | Importing 38 searches with schedules and suppression was manual. | `deploy/build_savedsearches.py` emits `dist/savedsearches.conf`: 33 searches, all disabled, 5m schedule floor, suppression from each rule's own `dedup_key`, unique id-suffix tags |
 
 ---
 
@@ -112,7 +113,7 @@ These cannot be fixed with a query. They need a sensor decision.
 
 | G-35 | **No Python linter or formatter** | 4,500 lines with no `ruff`/`black` enforcement; style drift is invisible. | **Closed - ruff correctness rules in `pyproject.toml`, pinned in `requirements.txt`, gate stage 2; 31 initial findings, 2 real closure bugs fixed.** |
 | G-36 | **No release or change discipline** | `CHANGELOG.md` is hand-maintained and was stale twice. Nothing derives a version or tags a release. | **Closed - `tools/release.py` + `tests/test_release.py` (8 tests, including one that deletes a changelog line and asserts the check fails); gate stage 12; `dist/release.json` ships with the bundle.** |
-| G-37 | **No upstream Sigma rule overlap check** | This repo defines 38 rules; whether any duplicates an existing SigmaHQ rule (and diverges from it) is unknown. Citation and fork management are unhandled. |
+| G-37 | **No upstream Sigma rule overlap check** | This repo defines 38 rules; whether any duplicates an existing SigmaHQ rule (and diverges from it) is unknown. Citation and fork management are unhandled. | **Closed - `tools/sigmahq_overlap.py` + `attack/sigmahq-overlap.json` + `tests/test_sigmahq_overlap.py` (25 tests: family join, product guard, coverage direction, and each of the three historical bugs); gate stage 12.** |
 
 
 ### P3. Engineering hygiene

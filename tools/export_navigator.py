@@ -43,6 +43,25 @@ STATUS_SCORE = {"deprecated": 0, "desired": 0, "designed": 1,
                 "captured": 2, "validated": 3, "deployed": 3, "stale": 1}
 
 
+def deferred_paths():
+    """Rules this repository has decided upstream covers better.
+
+    `attack/sigmahq-overlap.json` is where that decision is recorded, with a
+    measured overlap and a rationale. A deferred rule must not contribute to the
+    layer: painting a technique this repository does not uniquely detect is the
+    same false claim as painting an unverified one, one level up.
+    """
+    path = ROOT / "attack" / "sigmahq-overlap.json"
+    if not path.is_file():
+        return set()
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return set()
+    return {r["ours"] for r in (data.get("reviewed") or [])
+            if r.get("decision") == "defer"}
+
+
 def load_rules():
     out = []
     for f in sorted((ROOT / "sigma").rglob("*.yml")):
@@ -66,7 +85,10 @@ def main():
 
     rules = load_rules()
     by_technique = {}
+    deferred = deferred_paths()
     for doc in rules:
+        if doc.get("_path") in deferred:
+            continue
         techs = [t.split(".", 1)[1].upper() for t in doc.get("tags", [])
                  if str(t).lower().startswith("attack.t")]
         score = STATUS_SCORE.get(doc.get("lifecycle"), 1)

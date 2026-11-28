@@ -1,0 +1,41 @@
+{
+  "upstream": "SigmaHQ/sigma",
+  "snapshot_commit": "ddf1d4f87fd283513ac1dbf7e178c8a4064047df",
+  "snapshot_date": "2026-11-28T02:07:14Z",
+  "snapshot_rules_scanned": 3164,
+  "note": "The measured relationship between this repository's 39 rules and upstream SigmaHQ. Regenerate with `python3 tools/sigmahq_overlap.py --fetch` then `--json`. A `duplicate` or `divergent` finding that is not reviewed here fails the gate. An empty result is not evidence of uniqueness unless snapshot_commit is current. Both findings below are ancestor-path artefacts and are recorded AS artefacts, not as real overlap.",
+  "headline": "No duplicate and no divergent rule. Two reviewer-visible `near` relationships, both false positives of the metric, both explained. On the measured evidence this repository does not re-implement an upstream SigmaHQ rule: the rules were written against a specific implant and choose different selections for the same techniques. That is a stronger claim than the one this file started with ('unknown') and it is falsifiable - the next `--fetch` re-measures it.",
+  "method": "event-family join (Sysmon EventID -> upstream category, with upstream's registry_event alias for 12/13/14), product guard, shared ATT&CK technique, then directed coverage: the fraction of THIS repository's (field, value) constraints that upstream's rule also selects. One direction only - a narrow upstream rule covering a broad one is the reverse of the truth. EventID is excluded from the vocabulary because the family join handles it.",
+  "decision_vocabulary": {
+    "defer": "upstream covers this and better; do not count it as unique coverage",
+    "narrower": "ours is a deliberate subset of upstream's scope",
+    "diverged": "same behaviour, different technique tags; one is probably mistagged",
+    "unrelated": "shared families, path ancestors or filters, different behaviour"
+  },
+  "known_measurement_limits": [
+    "Coverage compares string constraints only. Two rules that select the same key with different condition structure (all-of vs 1-of) score as equivalent.",
+    "A shared ancestor path or a shared filter image produces a non-zero score between unrelated rules. Both findings in this file are that artefact; read the rationale, not the percentage.",
+    "Upstream's filter sections are part of its signature, so a heavily filtered upstream rule looks broader than the event set it alerts on.",
+    "Nothing here has run against a live SIEM. This measures textual selection overlap, not whether either rule fires, and not whether either is a good rule."
+  ],
+  "reviewed": [
+    {
+      "ours": "sigma/windows/persistence/run_key_write.yml",
+      "upstream": "rules/windows/registry/registry_set/registry_set_disable_windows_event_log_access.yml",
+      "level": "near",
+      "overlap": 0.75,
+      "decision": "unrelated",
+      "rationale": "The 75% is the ancestor-path artefact this check's documentation warns about, and it is kept in the record as the worked example. Ours selects HKCU\\...\\CurrentVersion\\Run and filters three image names. Upstream selects the Windows event-log service key under HKLM\\SYSTEM\\CurrentControlSet\\Services\\EventLog with no image filter at all. The only shared constraint is the image filter setup.exe, worth one of four constraints. Different registry object, different technique (T1547.001 vs T1562.002).",
+      "reviewed": "2026-11-28"
+    },
+    {
+      "ours": "sigma/windows/process/mutex_single_instance.yml",
+      "upstream": "rules/windows/registry/registry_set/registry_set_disable_windows_event_log_access.yml",
+      "level": "near",
+      "overlap": 0.667,
+      "decision": "unrelated",
+      "rationale": "Same artefact one level further out. The mutex rule reads a mutex name and an unsigned-image filter on Sysmon 12/13/14; upstream reads an event-log service key on registry_set. The measured 67% comes from two shared image-filter values. Note the rule's own gap (G-09): mutex telemetry is EDR-only in this lab, so it may never fire.",
+      "reviewed": "2026-11-28"
+    }
+  ]
+}

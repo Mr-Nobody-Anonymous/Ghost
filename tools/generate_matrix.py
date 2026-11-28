@@ -5,6 +5,7 @@ Techniques come only from `tags: [attack.tXXXX]`; tactics live in their own
 field and are never counted as techniques. Network-only rules are marked
 single-sourced. Correlation rules are flagged for backend-conversion risk.
 """
+import json
 import pathlib
 import re
 import sys
@@ -58,11 +59,33 @@ def source_of(rule):
     return "host"
 
 
+def deferred_paths():
+    """Rules recorded as covered better by upstream SigmaHQ.
+
+    Counting a deferred rule as this repository's coverage would inflate the
+    matrix in exactly the way the overlap check just stopped being unknown about.
+    The rule still exists and still ships; it stops being *unique* coverage.
+    """
+    path = ROOT / "attack" / "sigmahq-overlap.json"
+    if not path.is_file():
+        return set()
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return set()
+    return {r["ours"] for r in (data.get("reviewed") or [])
+            if r.get("decision") == "defer"}
+
+
 def main():
-    rules = []
+    rules, deferred = [], deferred_paths()
+    deferred_rules = []
     for f in sorted((ROOT / "sigma").rglob("*.yml")):
         r = load(f)
         r["path"] = f.relative_to(ROOT).as_posix()
+        if r["path"] in deferred:
+            deferred_rules.append(r)
+            continue
         rules.append(r)
 
     by_tech = {}
@@ -80,7 +103,18 @@ def main():
     # run rewrites this file and `git status` can never be clean.
     out.append("Generated from rule metadata and attack/conversion.json. "
                "Do not edit by hand - run tools/generate_matrix.py.\n")
-    out.append(f"Rules: {len(rules)} | distinct techniques: {len(by_tech)} | tactics used: {len(tactic_tags)} of the pinned set (not counted as techniques)\n")
+    out.append(f"Rules: {len(rules)} | distinct techniques: {len(by_tech)} | "
+               f"tactics used: {len(tactic_tags)} of the pinned set "
+               f"(not counted as techniques)\n")
+    if deferred_rules:
+        # Said out loud, because a reader counting rows would otherwise assume
+        # every rule in sigma/ is being claimed here.
+        out.append(
+            f"**Excluded: {len(deferred_rules)} rule(s) deferred to upstream SigmaHQ** - "
+            f"{', '.join('`' + r['path'] + '`' for r in deferred_rules)}. "
+            f"`tools/sigmahq_overlap.py` measured the overlap and "
+            f"`attack/sigmahq-overlap.json` records the decision. These still "
+            f"ship, but their coverage belongs to upstream, not here.\n")
     out.append("| Technique | Rule | Source | Lifecycle | Level | Fixture | Pin | Flags |")
     out.append("|---|---|---|---|---|---|---|---|")
     for tech in sorted(by_tech):
