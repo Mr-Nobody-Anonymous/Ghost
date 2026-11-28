@@ -387,6 +387,19 @@ check, so this entry is written after the fact from the commit log; the
   never followed. **The gap stays partly open:** no VM image was built from the
   manifest, so captures are now attestable but still not reproducible.
 
+- **Make the response playbooks followable** (`G-18`). All 39 told the analyst
+  to check `rule:<id>:host:user`, an identifier that exists nowhere in the
+  repository, in a single sentence. `tools/generate_playbooks.py` now derives
+  five sections from each rule - what fired, triage over the fields *that rule*
+  reads, a containment action from a fixed vocabulary, artifacts to preserve by
+  technique family, and the benign behaviour that looks the same - and
+  `response/check_playbooks.py` reads all 39 to prove it. Two of the findings
+  were structural: six correlation rules got an empty triage list because they
+  have no `detection` block (their fields are `group-by` keys), and every
+  playbook shared one boilerplate triage paragraph about registry run keys,
+  including the DNS rules. **Still not worked by a human** - followable is not
+  followed, and every file says so.
+
 ## Versioning
 
 `tools/release.py` derives the version from the date and the existing tags
